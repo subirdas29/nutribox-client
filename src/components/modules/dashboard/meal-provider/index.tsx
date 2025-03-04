@@ -1,7 +1,7 @@
 "use client";
 // import { ICategory } from "@/types";
 // import CreateCategoryModal from "./CreateCategoryModal";
-import { NMTable } from "@/components/ui/core/NMTable";
+import { NMTable } from "@/components/ui/core/NBTable";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { Trash } from "lucide-react";

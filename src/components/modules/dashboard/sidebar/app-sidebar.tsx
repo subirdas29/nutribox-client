@@ -36,7 +36,7 @@ const data = {
       isActive: true,
     },
     {
-      title: "Shop",
+      title: "Meals",
       url: "/user/shop/products",
       icon: Bot,
       items: [
@@ -45,7 +45,7 @@ const data = {
           url: "/user/shop/products",
         },
         {
-          title: "Manage Categories",
+          title: "Manage Meals",
           url: "/user/shop/category",
         },
         {

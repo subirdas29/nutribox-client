@@ -1,13 +1,12 @@
+import ImageData from "@/components/modules/home/ImageData"
 import Footer from "@/components/shared/Footer"
 import Navbar from "@/components/shared/Navbar"
 
-const CommonLayout = ({children}:{children:React.ReactNode}) => {
+const CommonLayout = () => {
   return (
     <>
         <Navbar/>
-     <main className="min-h-screen">
-     {children}
-     </main>
+    <ImageData/>
       <Footer/>
     </>
   )
