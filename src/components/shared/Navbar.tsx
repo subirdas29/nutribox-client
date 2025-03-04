@@ -38,7 +38,7 @@ export default function Navbar() {
         <Link href="/">
           <h1 className="text-2xl font-black flex items-center">
             {/* <Logo /> */}
-             Next Mart
+             Nutri Box
           </h1>
         </Link>
         <div className="max-w-md  flex-grow">
