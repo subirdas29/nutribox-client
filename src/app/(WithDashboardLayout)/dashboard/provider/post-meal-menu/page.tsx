@@ -1,4 +1,4 @@
-import AddMealForm from "@/components/modules/meal/meal-menu/AddMealForm"
+import AddMealForm from "@/components/modules/dashboard/MealProvider/meal/AddMealForm"
 
 
 const CreateMenuPage = () => {
