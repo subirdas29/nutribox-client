@@ -76,7 +76,7 @@ export default function Navbar() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href={`/${user?.role}/dashboard`}>Dashboard</Link>
+                    <Link href={"/dashboard/provider/post-meal-menu"}>Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>My Shop</DropdownMenuItem>
                   <DropdownMenuSeparator />

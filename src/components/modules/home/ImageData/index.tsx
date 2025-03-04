@@ -17,12 +17,13 @@ console.log(imageFiles)
           imagePreview={imagePreview}
           setImagePreview={setImagePreview}
         />
-      ) : null}
+      ):
       <NBImageUploader
         setImageFiles={setImageFiles}
         setImagePreview={setImagePreview}
         label="Upload Logo"
       />
+    }
     </div>
   );
 };

@@ -31,21 +31,21 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/dashboard/provider",
+      url: "/dashboard/provider/post-meal-menu",
       icon: SquareTerminal,
       isActive: true,
     },
     {
       title: "Meals",
-      url: "/user/shop/products",
+      url: "/dashboard/provider/post-meal-menu",
       icon: Bot,
       items: [
         {
-          title: "Manage Products",
-          url: "/user/shop/products",
+          title: "Manage Meals",
+          url: "/dashboard/provider/post-meal-menu",
         },
         {
-          title: "Manage Meals",
+          title: "Manage Orders",
           url: "/user/shop/category",
         },
         {

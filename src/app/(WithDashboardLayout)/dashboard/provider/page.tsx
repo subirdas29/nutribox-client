@@ -1,4 +1,4 @@
-import AllMeals from "@/components/modules/dashboard/meal-provider";
+// import AllMeals from "@/components/modules/dashboard/meal-provider";
 import { getAllMeals } from "@/services/Meals";
 
 
@@ -10,7 +10,7 @@ const ProviderDashboard= async()=> {
     return (
       <div>
      
-     <AllMeals meals= {data}/>
+     {/* <AllMeals meals= {data}/> */}
         
       </div>
     );

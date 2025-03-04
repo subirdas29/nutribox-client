@@ -16,9 +16,8 @@ const NBImageUploader = ({
 }: TImageUploaderProps) => {
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files!;
-        const fileArray = Array.from(files); // Convert FileList to array
-      
-        // Loop through the selected files
+        const fileArray = Array.from(files); 
+        
         for (const file of fileArray) {
           const formData = new FormData();
           formData.append('file', file);
