@@ -5,7 +5,7 @@ export interface IUser  {
     role: "customer" | "mealprovider"; 
     phone?: string;
     isDeleted?: boolean;
-    imageUrl?: string;
+    profileImage?: string[];
     address?: string;
     city?: string;
     passwordChangedAt?: Date;

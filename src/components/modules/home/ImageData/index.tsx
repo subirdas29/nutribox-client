@@ -1,31 +1,227 @@
+// app/meals/[mealId]/order/page.tsx
+'use client'
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { 
+  CheckIcon, 
+  Loader2Icon, 
+  Clock, 
+  CalendarDays, 
+  Utensils, 
+  Flame, 
+  Salad, 
+  IndianRupee, 
+  Bike, 
+  ChefHat
+} from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
 
-"use client"
-import NBImageUploader from '@/components/ui/core/NBImageUploader';
-import ImagePreviewer from '@/components/ui/core/NBImageUploader/ImagePreviewer';
-import React, { useState } from 'react';
+const OrderPage = () => {
+  const router = useRouter();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [time, setTime] = useState("");
+  const [customizations, setCustomizations] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-const ImageData = () => {
-  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
-  const [imagePreview, setImagePreview] = useState<string[] | []>([]);
+  const customizationOptions = [
+    { label: "Extra Spicy", icon: "🌶️", desc: "Add extra chili flakes" },
+    { label: "Less Oil", icon: "🛢️", desc: "Reduce oil content" },
+    { label: "No Onion", icon: "🧅", desc: "Exclude onions completely" },
+    { label: "Extra Sauce", icon: "🥫", desc: "Double dipping sauce" },
+    { label: "Gluten Free", icon: "🌾", desc: "No gluten ingredients" },
+    { label: "Extra Cheese", icon: "🧀", desc: "Add cheese topping" }
+  ];
 
-console.log(imageFiles)
+  const handleCustomization = (option: string) => {
+    setCustomizations(prev => 
+      prev.includes(option) 
+        ? prev.filter(item => item !== option) 
+        : [...prev, option]
+    );
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    router.push("/order-confirmation");
+    setIsSubmitting(false);
+  };
+
   return (
-    <div className="flex items-center justify-center">
-      {imagePreview.length > 0 ? (
-        <ImagePreviewer
-          setImageFiles={setImageFiles}
-          imagePreview={imagePreview}
-          setImagePreview={setImagePreview}
-        />
-      ):
-      <NBImageUploader
-        setImageFiles={setImageFiles}
-        setImagePreview={setImagePreview}
-        label="Upload Logo"
-      />
-    }
+    <div className="container py-8">
+      <div className="max-w-2xl mx-auto">
+        {/* Header Section */}
+        <div className="flex items-center gap-3 mb-8 group">
+          <div className="p-3 bg-primary/10 rounded-lg transition-all duration-300 group-hover:rotate-12">
+            <ChefHat className="w-8 h-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold border-l-4 border-primary pl-4">
+              Customize Your Meal
+            </h1>
+            <p className="text-muted-foreground mt-2 flex items-center gap-1">
+              <Utensils className="w-4 h-4" />
+              Personalized dining experience
+            </p>
+          </div>
+        </div>
+
+        {/* Schedule Section */}
+        <Card className="mb-6 border-primary/20">
+          <CardHeader className="bg-primary/5">
+            <div className="flex items-center gap-3">
+              <CalendarDays className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-semibold">Delivery Schedule</h2>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-6">
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 text-primary/80">
+                <CalendarDays className="w-5 h-5" />
+                Select Delivery Date
+              </Label>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-lg border shadow-sm"
+                disabled={{ before: new Date() }}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="flex items-center gap-2 text-primary/80">
+                <Clock className="w-5 h-5" />
+                Preferred Time
+              </Label>
+              <Input 
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="[&::-webkit-calendar-picker-indicator]:bg-primary [&::-webkit-calendar-picker-indicator]:p-1 [&::-webkit-calendar-picker-indicator]:rounded-md"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Customizations Section */}
+        <Card className="mb-6 border-primary/20">
+          <CardHeader className="bg-primary/5">
+            <div className="flex items-center gap-3">
+              <Flame className="w-6 h-6 text-primary" />
+              <div>
+                <h2 className="text-xl font-semibold">Meal Preferences</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Select your customizations (Multiple choices allowed)
+                </p>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 gap-3 md:grid-cols-2 pt-6">
+            {customizationOptions.map((option) => (
+              <div 
+                key={option.label}
+                className={`group relative p-4 rounded-xl cursor-pointer transition-all duration-300
+                  ${customizations.includes(option.label) 
+                    ? "border-2 border-primary bg-primary/10 ring-2 ring-primary/20" 
+                    : "border hover:border-primary/30 bg-background"}`}
+                onClick={() => handleCustomization(option.label)}
+              >
+                <div className={`absolute top-2 right-2 w-5 h-5 flex items-center justify-center rounded-full 
+                  ${customizations.includes(option.label) 
+                    ? "bg-primary text-white" 
+                    : "bg-muted/50 text-transparent"}`}>
+                  <CheckIcon className="w-3 h-3" />
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">{option.icon}</span>
+                  <div>
+                    <h3 className="font-medium flex items-center gap-2">
+                      {option.label}
+                      {customizations.includes(option.label) && (
+                        <span className="text-xs text-primary animate-pulse">(Selected)</span>
+                      )}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">{option.desc}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Order Summary */}
+        <Card className="mb-6 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <CardHeader className="bg-primary/5">
+            <div className="flex items-center gap-3">
+              <IndianRupee className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-semibold">Order Breakdown</h2>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Utensils className="w-5 h-5 text-primary" />
+                <span>Meal Price</span>
+              </div>
+              <div className="flex items-center font-medium">
+                <IndianRupee className="w-4 h-4 mr-1" />
+                399
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Bike className="w-5 h-5 text-primary" />
+                <span>Delivery Fee</span>
+              </div>
+              <div className="flex items-center font-medium">
+                <IndianRupee className="w-4 h-4 mr-1" />
+                49
+              </div>
+            </div>
+
+            <div className="pt-4 border-t">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Salad className="w-6 h-6 text-primary" />
+                  <span className="font-bold text-lg">Total Amount</span>
+                </div>
+                <div className="flex items-center text-primary font-bold text-lg">
+                  <IndianRupee className="w-5 h-5 mr-1" />
+                  <span className="animate-pulse">448</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* CTA Button */}
+        <Button 
+          className="w-full h-14 text-lg font-bold rounded-xl transition-all duration-300 hover:shadow-xl hover:shadow-primary/20"
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <div className="flex items-center gap-2">
+              <Loader2Icon className="w-5 h-5 animate-spin" />
+              Finalizing Your Order...
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <CheckIcon className="w-5 h-5" />
+              Confirm & Pay Now
+            </div>
+          )}
+        </Button>
+      </div>
     </div>
   );
 };
 
-export default ImageData;
+export default OrderPage;

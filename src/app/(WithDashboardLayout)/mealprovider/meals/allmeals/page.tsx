@@ -4,7 +4,7 @@ import { getAllMeals } from "@/services/Meals"
 
 const AllMealsPage = async() => {
     const meals = await getAllMeals()
-    
+    console.log(meals,"allserver")
   return (
     <div>
       <AllMeals meals={meals.data}/>

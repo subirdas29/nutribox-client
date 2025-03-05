@@ -3,11 +3,7 @@
 import * as React from "react";
 import {
   Bot,
-  Frame,
-  LifeBuoy,
-  Map,
-  PieChart,
-  Send,
+
   Settings,
   SquareTerminal,
 } from "lucide-react";
@@ -73,7 +69,7 @@ const data = {
       title: "Settings",
       url: "#",
       icon: Settings,
-      items: [{ title: "Profile", url: "/profile" }],
+      items: [{ title: "Profile", url: "/mealprovider/profile" }],
     },
   ],
 };

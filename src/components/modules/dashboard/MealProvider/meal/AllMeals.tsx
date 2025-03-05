@@ -17,7 +17,7 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const router = useRouter();
 
-  console.log(meals)
+
   const handleDelete = (meal:TMealsForm) => {
     setSelectedId(meal?._id);
     setSelectedItem(meal?.name);
@@ -93,7 +93,7 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
             title="Edit"
             onClick={() =>
               router.push(
-                `/user/shop/products/update-product/${row.original._id}`
+                `/mealprovider/meals/updatemeals/${row.original._id}`
               )
             }
           >

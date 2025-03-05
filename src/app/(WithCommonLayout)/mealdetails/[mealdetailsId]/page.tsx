@@ -3,7 +3,7 @@ import { getSingleMeal } from "@/services/Meals"
 
 
 
-const UpdateMealPage = async({params}:{params:Promise<{mealId:string}>}) => {
+const MealDetailPage= async({params}:{params:Promise<{mealId:string}>}) => {
     
 
     const {mealId} = await params
@@ -14,9 +14,9 @@ const UpdateMealPage = async({params}:{params:Promise<{mealId:string}>}) => {
    
   return (
     <div className="flex justify-center items-center">
-      <UpdateMealForm meal={meal}/>
+      {/* <UpdateMealForm meal={meal}/> */}
     </div>
   )
 }
 
-export default UpdateMealPage
+export default MealDetailPage
