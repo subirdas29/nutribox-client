@@ -114,9 +114,9 @@ console.log(data)
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {user_roles.map((role) => (
-                        <SelectItem key={role?.name} value={role?.name}>
-                          {role?.name}
+                      {user_roles.map((role,idx) => (
+                        <SelectItem key={idx} value={role}>
+                          {role}
                         </SelectItem>
                       ))}
                     </SelectContent>

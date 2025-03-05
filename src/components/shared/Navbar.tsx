@@ -21,6 +21,7 @@ import { useUser } from "@/context/UserContext";
 
 export default function Navbar() {
   const { user, setIsLoading } = useUser();
+  console.log(user)
   const pathname = usePathname();
   const router = useRouter();
 
@@ -44,7 +45,7 @@ export default function Navbar() {
         <div className="max-w-md  flex-grow">
           <input
             type="text"
-            placeholder="Search for products"
+            placemeal-providerholder="Search for products"
             className="w-full max-w-6xl border border-gray-300 rounded-full py-2 px-5"
           />
         </div>
@@ -76,7 +77,7 @@ export default function Navbar() {
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link href={"/dashboard/provider/post-meal-menu"}>Dashboard</Link>
+                    <Link href={`/${user?.role}/dashboard`}>Dashboard</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>My Shop</DropdownMenuItem>
                   <DropdownMenuSeparator />

@@ -26,10 +26,10 @@ export const createMeals = async (meals: TMealsForm) => {
 export const getAllMeals = async (page?: string,limit?:string) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals?limit=${limit}&page=${page}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}/provider/meal-provider?limit=${limit}&page=${page}`,
         {
           next: {
-            tags: ["PRODUCT"],
+            tags: ["Meals"],
           },
         }
       );

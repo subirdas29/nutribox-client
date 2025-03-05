@@ -24,81 +24,66 @@ import {
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
 import Link from "next/link";
-// import Logo from "@/assets/svgs/Logo";
 
+import { useUser } from "@/context/UserContext";
 
 const data = {
-  navMain: [
+  customerNav: [
     {
-      title: "Dashboard",
-      url: "/dashboard/provider/post-meal-menu",
+      title: "DashboardCustomer",
+      url: "/customer/dashboard",
+      icon: SquareTerminal,
+      isActive: true,
+    },
+    {
+      title: "Shop",
+      url: "/customer/shop/category",
+      icon: Bot,
+      items: [
+        { title: "Browse Meals", url: "/customer/shop/category" },
+        { title: "Orders", url: "/customer/orders" },
+        { title: "Brands", url: "/customer/shop/brand" },
+      ],
+    },
+    {
+      title: "Settings",
+      url: "#",
+      icon: Settings,
+      items: [{ title: "Profile", url: "/profile" }],
+    },
+  ],
+  mealProviderNav: [
+    {
+      title: "DashboardProvider",
+      url: "/mealprovider/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
       title: "Meals",
-      url: "/dashboard/provider/post-meal-menu",
+      url: "/mealprovider/meals/allmeals",
       icon: Bot,
       items: [
-        {
-          title: "Manage Meals",
-          url: "/dashboard/provider/post-meal-menu",
-        },
-        {
-          title: "Manage Orders",
-          url: "/user/shop/category",
-        },
-        {
-          title: "Manage Brands",
-          url: "/user/shop/brand",
-        },
+        { title: "Manage Meals", url: "/mealprovider/meals/allmeals" },
+        { title: "Create Meals", url: "/mealprovider/meals/post-meal-menu" },
+        { title: "Manage Brands", url: "/mealprovider/brands" },
       ],
     },
-
     {
       title: "Settings",
       url: "#",
       icon: Settings,
-      items: [
-        {
-          title: "Profile",
-          url: "/profile",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      items: [{ title: "Profile", url: "/profile" }],
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { user } = useUser(); 
+  
+  const navItems =
+    user?.role === "mealprovider" ? data.mealProviderNav : data.customerNav;
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -118,7 +103,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={navItems} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
