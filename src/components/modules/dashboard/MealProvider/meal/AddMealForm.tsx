@@ -54,7 +54,7 @@ export default function AddMealForm() {
             };
 
             const res = await createMeals(mealData);
-            console.log(res, "response");
+            
 
             if (res.success) {
                 toast.success(res.message);

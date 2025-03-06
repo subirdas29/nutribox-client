@@ -1,27 +1,53 @@
-// app/recipes/[id]/page.tsx
+
 
 "use client"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import { useState } from "react";
-import { Clock, Utensils, Flame, ChefHat, Star, Leaf, Droplet, Wheat, Beef, Citrus } from "lucide-react";
+import { Clock, Utensils, Flame, ChefHat, Star, Leaf, Droplet, Wheat, Beef, Salad } from "lucide-react";
+import { TMealsForm } from "@/types/meals";
+import { currencyFormatter } from "@/lib/currencyFormatter";
+import Link from "next/link";
 
-export default function RecipePage() {
+
+interface Review {
+  id: string;
+  author: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+export default function RecipePage({meal}:{meal:TMealsForm }) {
+
+
+  const {category,description,dietaryPreferences,imageUrls,ingredients,mealProvider,name,price,_id,portionSize} = meal
+ 
+
+
+  const chef = mealProvider?.userId
+ 
+
   const [selectedImage, setSelectedImage] = useState(0);
-  
-  const images = [
-    { id: 1, main: '/images/recipe-main.jpg', thumbnail: '/images/recipe-thumb-1.jpg' },
-    { id: 2, main: '/images/recipe-alt-1.jpg', thumbnail: '/images/recipe-thumb-2.jpg' },
-    { id: 3, main: '/images/recipe-alt-2.jpg', thumbnail: '/images/recipe-thumb-3.jpg' },
-  ];
+ 
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
 
-  const ingredients = [
-    { name: "Coconut Milk", qty: "3/4 cup", icon: <Leaf className="w-5 h-5 text-primary" /> },
-    { name: "Chicken Strips", qty: "550g", icon: <Beef className="w-5 h-5 text-primary" /> },
-    { name: "Doritos® Hint of Salt", qty: "3 cups", icon: <Wheat className="w-5 h-5 text-primary" /> },
-    { name: "Peanut Butter", qty: "3 Tbsp", icon: <Citrus className="w-5 h-5 text-primary" /> },
-  ];
+
+ 
+  const handleReviewSubmit = () => {
+    if (newReview.rating > 0 && newReview.comment) {
+      setReviews([...reviews, {
+        id: Math.random().toString(),
+        author: "You",
+        rating: newReview.rating,
+        comment: newReview.comment,
+        date: new Date().toLocaleDateString()
+      }]);
+      setNewReview({ rating: 0, comment: "" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background mx-24">
@@ -30,7 +56,7 @@ export default function RecipePage() {
         <div className="mb-8 space-y-4">
           <div className="relative aspect-[3/1] rounded-xl overflow-hidden shadow-lg">
             <Image
-              src={images[selectedImage].main}
+              src={imageUrls[selectedImage]}
               alt="Main recipe image"
               fill
               className="object-cover"
@@ -43,9 +69,9 @@ export default function RecipePage() {
           </div>
 
           <div className="flex gap-4 pb-4 overflow-x-auto">
-            {images.map((img, index) => (
+            {imageUrls.map((url, index) => (
               <div
-                key={img.id}
+                key={index}
                 onClick={() => setSelectedImage(index)}
                 className={`relative aspect-square w-24 shrink-0 rounded-lg cursor-pointer transition-all border-2 ${
                   selectedImage === index 
@@ -54,7 +80,7 @@ export default function RecipePage() {
                 }`}
               >
                 <Image
-                  src={img.thumbnail}
+                  src={url}
                   alt={`Thumbnail ${index + 1}`}
                   fill
                   className="object-cover rounded"
@@ -66,18 +92,58 @@ export default function RecipePage() {
 
         {/* Recipe Header */}
         <div className="mb-8 space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Doritos® Loaded Chicken Satay
-          </h1>
+          <h1 className="text-4xl font-bold tracking-tight">{name}</h1>
           <div className="flex items-center gap-2 text-muted-foreground">
             <ChefHat className="w-4 h-4" />
-            <span>Signature Recipe by Chef Maria</span>
+            <span>Signature Recipe by {chef?.name}</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span className="text-2xl font-semibold text-primary">
+              {currencyFormatter(Number(price.toFixed(2)))}
+            </span>
+     
+
+
+
+
+
+          </div>
+          
+          <div className="flex items-center gap-4 text-muted-foreground">
+           <div className="flex items-center gap-2">
+           <ChefHat className="w-4 h-4" />
+           <span>Category: {category}</span>
+           </div>
+           <div className="flex items-center gap-2">
+           <ChefHat className="w-4 h-4" />
+           <span>Portionsize: {portionSize}</span>
+           </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {dietaryPreferences.map((pref) => (
+              <span key={pref} className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">
+                {pref}
+              </span>
+            ))}
           </div>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1fr_350px]">
           {/* Main Content */}
           <div className="space-y-8">
+            {/* //description */}
+          <Card className="border-primary/20">
+              <CardHeader className="bg-primary/5">
+                <div className="flex items-center gap-2">
+                  <ChefHat className="w-6 h-6 text-primary" />
+                  <h2 className="text-2xl font-semibold">About the Dish</h2>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <p className="text-muted-foreground">{description}</p>
+              </CardContent>
+            </Card>
             {/* Ingredients Card */}
             <Card className="border-primary/20">
               <CardHeader className="bg-primary/5">
@@ -90,12 +156,9 @@ export default function RecipePage() {
                 {ingredients.map((item, index) => (
                   <div key={index} className="flex items-center gap-4 p-3 rounded-lg bg-muted/10">
                     <div className="p-2 rounded-md bg-primary/10">
-                      {item.icon}
+                      <Salad className="w-5 h-5 text-primary" />
                     </div>
-                    <div>
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-sm text-muted-foreground">{item.qty}</p>
-                    </div>
+                    <p className="font-medium">{item}</p>
                   </div>
                 ))}
               </CardContent>
@@ -136,18 +199,78 @@ export default function RecipePage() {
                 ))}
               </CardContent>
             </Card>
+
+            {/* Reviews Section */}
+            <Card className="border-primary/20 hidden lg:block">
+              <CardHeader className="bg-primary/5">
+                <div className="flex items-center gap-2">
+                  <Star className="w-6 h-6 text-primary" />
+                  <h2 className="text-2xl font-semibold">Reviews</h2>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-6">
+                {/* Review Form */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-8 h-8 cursor-pointer ${
+                          newReview.rating >= star 
+                            ? "fill-yellow-400 text-yellow-400" 
+                            : "text-muted-foreground"
+                        }`}
+                        onClick={() => setNewReview({...newReview, rating: star})}
+                      />
+                    ))}
+                  </div>
+                  <textarea
+                    value={newReview.comment}
+                    onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
+                    className="w-full p-3 border rounded-lg"
+                    placeholder="Write your review..."
+                    rows={3}
+                  />
+                  <Button onClick={handleReviewSubmit} className="cursor-pointer">Submit Review</Button>
+                </div>
+
+                {/* Existing Reviews */}
+                {reviews.map((review) => (
+                  <div key={review.id} className="border-t pt-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              review.rating > i 
+                                ? "fill-yellow-400 text-yellow-400" 
+                                : "text-muted-foreground"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-medium">{review.author}</span>
+                      <span className="text-sm text-muted-foreground">{review.date}</span>
+                    </div>
+                    <p className="mt-2 text-muted-foreground">{review.comment}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
           </div>
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Chef Profile */}
-            <Card className="border-primary/20">
+
+                  {/* Chef Profile */}
+                  <Card className="border-primary/20">
               <CardContent className="p-6 space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center overflow-hidden">
                       <Image 
-                        src="/chef-maria.jpg"
+                        src={chef?.profileImage?.[0] || 'https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp'}
                         alt="Chef Maria"
                         width={64}
                         height={64}
@@ -159,7 +282,7 @@ export default function RecipePage() {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">Chef Maria</h3>
+                    <h3 className="font-semibold text-lg">{chef?.name}</h3>
                     <div className="flex items-center gap-2 mt-1">
                       {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -168,11 +291,11 @@ export default function RecipePage() {
                     </div>
                     <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
                       <Clock className="w-4 h-4" />
-                      <span>15+ Years Experience</span>
+                      <span>{mealProvider?.experience}+ Years Experience</span>
                     </div>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full gap-2">
+                <Button variant="outline" className="w-full gap-2 cursor-pointer">
                   <span>👩🍳 Follow Chef</span>
                 </Button>
               </CardContent>
@@ -186,6 +309,7 @@ export default function RecipePage() {
                   <h2 className="text-2xl font-semibold">Nutrition</h2>
                 </div>
               </CardHeader>
+              <CardContent className="pt-6 space-y-4">
               <CardContent className="pt-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
@@ -236,13 +360,74 @@ export default function RecipePage() {
                   </div>
                 </div>
               </CardContent>
+              </CardContent>
             </Card>
 
             {/* Order Button */}
-            <Button className="w-full h-14 text-lg font-bold gap-2 hover:shadow-lg transition-shadow">
+            <Button className="w-full h-14 text-lg font-bold gap-2 hover:shadow-lg transition-shadow cursor-pointer">
               <Utensils className="w-5 h-5" />
-              Customize & Order Now
+              <Link href={`/ordermeal/${_id}`}>Customize & Order Now</Link>
             </Button>
+
+            <Card className="border-primary/20 block lg:hidden">
+              <CardHeader className="bg-primary/5">
+                <div className="flex items-center gap-2">
+                  <Star className="w-6 h-6 text-primary" />
+                  <h2 className="text-2xl font-semibold">Reviews</h2>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-6">
+                {/* Review Form */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-8 h-8 cursor-pointer ${
+                          newReview.rating >= star 
+                            ? "fill-yellow-400 text-yellow-400" 
+                            : "text-muted-foreground"
+                        }`}
+                        onClick={() => setNewReview({...newReview, rating: star})}
+                      />
+                    ))}
+                  </div>
+                  <textarea
+                    value={newReview.comment}
+                    onChange={(e) => setNewReview({...newReview, comment: e.target.value})}
+                    className="w-full p-3 border rounded-lg"
+                    placeholder="Write your review..."
+                    rows={3}
+                  />
+                  <Button onClick={handleReviewSubmit} className="cursor-pointer">Submit Review</Button>
+                </div>
+
+                {/* Existing Reviews */}
+                {reviews.map((review) => (
+                  <div key={review.id} className="border-t pt-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`w-4 h-4 ${
+                              review.rating > i 
+                                ? "fill-yellow-400 text-yellow-400" 
+                                : "text-muted-foreground"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-medium">{review.author}</span>
+                      <span className="text-sm text-muted-foreground">{review.date}</span>
+                    </div>
+                    <p className="mt-2 text-muted-foreground">{review.comment}</p>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+
           </div>
         </div>
       </main>

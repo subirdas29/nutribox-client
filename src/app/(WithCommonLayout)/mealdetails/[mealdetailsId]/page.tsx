@@ -1,20 +1,21 @@
-import UpdateMealForm from "@/components/modules/dashboard/MealProvider/meal/UpdateMealForm"
+
+import RecipePage from "@/components/modules/MealDetails/RecipePage"
 import { getSingleMeal } from "@/services/Meals"
 
 
 
-const MealDetailPage= async({params}:{params:Promise<{mealId:string}>}) => {
+const MealDetailPage= async({params}:{params:Promise<{mealdetailsId:string}>}) => {
     
 
-    const {mealId} = await params
+    const {mealdetailsId} = await params
 
-    console.log(mealId)
+   
+    const {data:meal} = await getSingleMeal(mealdetailsId)
 
-    const {data:meal} = await getSingleMeal(mealId)
    
   return (
     <div className="flex justify-center items-center">
-      {/* <UpdateMealForm meal={meal}/> */}
+      <RecipePage meal={meal}/>
     </div>
   )
 }

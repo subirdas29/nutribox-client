@@ -32,20 +32,20 @@ const data = {
       isActive: true,
     },
     {
-      title: "Shop",
+      title: "My-Meal",
       url: "/customer/shop/category",
       icon: Bot,
       items: [
         { title: "Browse Meals", url: "/customer/shop/category" },
-        { title: "Orders", url: "/customer/orders" },
-        { title: "Brands", url: "/customer/shop/brand" },
+        { title: "Meal Orders", url: "/customer/myorder" },
+      
       ],
     },
     {
       title: "Settings",
       url: "#",
       icon: Settings,
-      items: [{ title: "Profile", url: "/profile" }],
+      items: [{ title: "Profile", url: "/customer/profile" }],
     },
   ],
   mealProviderNav: [
@@ -62,7 +62,6 @@ const data = {
       items: [
         { title: "Manage Meals", url: "/mealprovider/meals/allmeals" },
         { title: "Create Meals", url: "/mealprovider/meals/post-meal-menu" },
-        { title: "Manage Brands", url: "/mealprovider/brands" },
       ],
     },
     {

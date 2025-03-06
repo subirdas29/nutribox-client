@@ -9,6 +9,7 @@ export type TMealsForm = {
   description: string;
   imageUrls: string[];
   dietaryPreferences: string[];
+  mealProvider:TMealProvider
 };
 
 export type TMealProvider = {
@@ -19,6 +20,7 @@ export type TMealProvider = {
     email: string;
     preferences: string[];
     role: string;
+    profileImage?:string[]
     isDeleted: boolean;
     phone: string;
     address: string;

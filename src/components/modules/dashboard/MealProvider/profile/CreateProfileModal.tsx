@@ -26,8 +26,9 @@ import { toast } from "sonner";
 import { Edit } from "lucide-react";
 import ImagePreviewer from "@/components/ui/core/NBImageUploader/ImagePreviewer";
 import NBImageUploader from "@/components/ui/core/NBImageUploader";
-import { IUserUpdate, TProviderProfile} from ".";
+import {  TProviderProfile} from ".";
 import { updateUser } from "@/services/User";
+import { IUser } from "@/types/user";
 
 
 
@@ -35,7 +36,7 @@ import { updateUser } from "@/services/User";
 const CreateProfileModal = ({provider}:{provider:TProviderProfile}) => {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     if (provider?.userId?.profileImage?.length > 0) {
       setImagePreview(provider.userId.profileImage);
@@ -65,10 +66,11 @@ const CreateProfileModal = ({provider}:{provider:TProviderProfile}) => {
     console.log(data)
 
     try {
-        const modifiedData = {
-            ...data, profileImage:[...imagePreview]
-        }
-
+      const modifiedData = {
+        ...provider.userId, 
+        ...data, 
+        profileImage: [...imagePreview],
+      } as IUser; // 🚀 Explicitly cast to IUser
         console.log(modifiedData)
 
 
@@ -78,6 +80,7 @@ const CreateProfileModal = ({provider}:{provider:TProviderProfile}) => {
       console.log(res.message)
       if (res.success) {
         toast.success(res.message);
+        setOpen(false);
       } else {
         toast.error(res.message);
       }
@@ -87,9 +90,9 @@ const CreateProfileModal = ({provider}:{provider:TProviderProfile}) => {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-      <Edit className="cursor-pointer text-gray-600" />
+      <Edit className="cursor-pointer text-gray-600" onClick={() => setOpen(true)} />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

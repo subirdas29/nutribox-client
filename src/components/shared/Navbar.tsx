@@ -21,7 +21,7 @@ import { useUser } from "@/context/UserContext";
 
 export default function Navbar() {
   const { user, setIsLoading } = useUser();
-  console.log(user)
+
   const pathname = usePathname();
   const router = useRouter();
 

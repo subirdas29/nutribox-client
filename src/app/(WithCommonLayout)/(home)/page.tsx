@@ -1,14 +1,15 @@
 import OrderPage from "@/components/modules/home/ImageData"
-import ImageData from "@/components/modules/home/ImageData"
-import Footer from "@/components/shared/Footer"
-import Navbar from "@/components/shared/Navbar"
+import { OrderForm } from "@/components/modules/home/ImageData/order-form"
+
+
+
 
 const CommonLayout = () => {
   return (
-    <>
-        <Navbar/>
+    <>  
+    {/* <OrderPage/> */}
     <OrderPage/>
-      <Footer/>
+ <p>joy</p>
     </>
   )
 }

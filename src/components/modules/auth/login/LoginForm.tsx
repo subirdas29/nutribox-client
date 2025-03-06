@@ -99,7 +99,7 @@ const onSubmit:SubmitHandler<FieldValues> = async (data) =>{
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="mt-6">Email</FormLabel>
                 <FormControl>
                   <Input type="email" {...field} value={field.value || ""} />
                 </FormControl>
@@ -112,7 +112,7 @@ const onSubmit:SubmitHandler<FieldValues> = async (data) =>{
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="mt-3">Password</FormLabel>
                 <FormControl>
                   <Input type="password" {...field} value={field.value || ""} />
                 </FormControl>

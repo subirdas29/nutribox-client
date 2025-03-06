@@ -84,7 +84,13 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
       cell: ({ row }) => (
         
         <div className="flex space-x-3 ">
-          <button className="text-green-500 cursor-pointer" title="View Details">
+          <button className="text-green-500 cursor-pointer" title="View Details"
+          onClick={() =>
+            router.push(
+              `/mealdetails/${row.original._id}`
+            )
+          }
+          >
             <Eye className="w-5 h-5" />
           </button>
 

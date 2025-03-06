@@ -41,6 +41,7 @@ const MealProviderProfile = ({
 }: {
   mealProviderDetails: TProviderProfile[];
 }) => {
+  console.log(mealProviderDetails)
   const provider = mealProviderDetails?.[0]; 
 
   if (!provider) return <p className="text-center text-gray-500">No provider data available</p>;
@@ -89,7 +90,8 @@ const MealProviderProfile = ({
               <CardHeader className="flex">
                 <CardTitle>{meal.name}</CardTitle>
                 <div className=" flex gap-2">
-                <Eye className="cursor-pointer text-blue-500" />
+           
+             <Link href={`/mealdetails/${meal._id}`}><Eye className="cursor-pointer text-blue-500" /></Link>
                 <Link href={`/mealprovider/meals/updatemeals/${meal._id}`}><Edit className="cursor-pointer text-green-500" /></Link>
               </div>
               </CardHeader>
