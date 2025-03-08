@@ -1,6 +1,6 @@
 "use client";
 
-import { NMTable } from "@/components/ui/core/NBTable";
+import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
@@ -140,12 +140,12 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
 
           <button
   className={`text-gray-500 hover:text-blue-500 cursor-pointer ${
-    ["in-progress", "delivered"].includes(row.original.status)
+    ["in-progress", "delivered"].includes(row.original.status!)
       ? "opacity-50 cursor-not-allowed"
       : ""
   }`}
   title="Edit"
-  disabled={["in-progress", "delivered"].includes(row.original.status)}
+  disabled={["in-progress", "delivered"].includes(row.original.status!)}
   onClick={() => {
     if (row.original.status === "pending") {
       router.push(`/orderdetails/${row.original._id}`);
@@ -172,7 +172,7 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
     <div>
       <h1 className="text-xl font-bold mb-4">My Order Meals</h1>
       <div className="overflow-x-auto">
-      <NMTable columns={columns} data={myorder} />
+      <NBTable columns={columns} data={myorder} />
 
       </div>
       <DeleteConfirmationModal

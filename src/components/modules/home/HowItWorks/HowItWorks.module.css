@@ -6,11 +6,6 @@
     background: linear-gradient(to bottom, #f3faf7 0%, #e6f4f1 100%);
   }
   
-
-  
- 
-  
-
   .stepBounce {
     animation: stepBounce 2s ease-in-out infinite;
   }

@@ -21,7 +21,7 @@ export function HeroBanner() {
         <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-white/50 to-transparent" />
       </div>
 
-      <div className="container grid md:grid-cols-2 gap-12 items-center py-16 mx-12 md:mx-16 lg:mx-20">
+      <div className="container grid md:grid-cols-2 gap-12 items-center py-32 mx-12 md:mx-16 lg:mx-20">
         {/* Content */}
         <div className="space-y-6 max-w-2xl text-center md:text-left">
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 transition-all duration-500 transform hover:text-primary">
@@ -29,8 +29,7 @@ export function HeroBanner() {
             <span className="text-primary"> Delivered Daily</span>
           </h1>
           <p className="text-xl text-gray-600 md:text-2xl transition-all duration-500 hover:text-gray-800">
-            Chef-prepared meals designed for your lifestyle. Choose from 30+ weekly options, 
-            all cooked with fresh, seasonal ingredients.
+            Chef-prepared meals designed for your lifestyle.
           </p>
           
           <Button size="lg" className="text-lg px-8 h-14 gap-2 bg-primary hover:bg-primary-dark transition duration-300 ease-in-out">

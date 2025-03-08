@@ -21,7 +21,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
-export function NMTable<TData, TValue>({
+export function NBTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {

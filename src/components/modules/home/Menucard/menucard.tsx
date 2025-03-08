@@ -52,7 +52,7 @@ export function MenuCards() {
         <div className="embla__container flex">
           {menuItems.map((item, index) => (
             <div key={index} className="embla__slide flex-[0_0_90%] md:flex-[0_0_45%] lg:flex-[0_0_30%] px-4">
-              <Card className="relative w-full h-[350px] md:h-[400px] overflow-hidden shadow-lg rounded-lg bg-transparent">
+              <Card className="relative w-full h-[350px] md:h-[400px] overflow-hidden shadow-lg rounded-lg bg-transparent group">
                 {/* Container to make sure the image scales correctly */}
                
                   <Image 

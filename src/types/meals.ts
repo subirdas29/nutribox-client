@@ -10,6 +10,7 @@ export type TMealsForm = {
   imageUrls: string[];
   dietaryPreferences: string[];
   mealProvider:TMealProvider
+  isDeleted?:boolean
 };
 
 export type TMealProvider = {

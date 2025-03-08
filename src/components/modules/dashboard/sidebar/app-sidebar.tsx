@@ -62,6 +62,7 @@ const data = {
       items: [
         { title: "Manage Meals", url: "/mealprovider/meals/allmeals" },
         { title: "Create Meals", url: "/mealprovider/meals/post-meal-menu" },
+        { title: "All Orders", url: "/mealprovider/allorders" },
       ],
     },
     {

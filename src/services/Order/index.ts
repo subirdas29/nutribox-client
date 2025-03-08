@@ -43,6 +43,26 @@ export const getSingleOrder = async (orderId: string) => {
   };
 
 
+  export const getAllMealProviderOrder = async (page?: string,limit?:string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/orders/allorder/mealprovider?limit=${limit}&page=${page}`,
+        {
+          headers: {
+            Authorization: (await cookies()).get("accessToken")!.value,
+            "Content-Type": "application/json",
+          },
+          next: {
+            tags: ["Order"],
+          },
+        }
+      );
+      const data = await res.json();
+      return data;
+    } catch (error: any) {
+      return Error(error.message);
+    }
+  };
 
 
   // update order

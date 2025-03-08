@@ -2,8 +2,10 @@ import { HeroBanner } from "@/components/modules/home/Banner/banner"
 import BenefitsGrid from "@/components/modules/home/BenefitsForCustomers"
 import HowItWorks from "@/components/modules/home/HowItWorks"
 import { MenuCards } from "@/components/modules/home/Menucard/menucard"
-import { MainNav } from "@/components/modules/home/Navbar/navbar"
+import { Navbar } from "@/components/shared/Navbar"
 import MealPicker from "@/components/modules/home/PickYourMeal"
+
+
 
 
 
@@ -12,12 +14,14 @@ import MealPicker from "@/components/modules/home/PickYourMeal"
 const CommonLayout = () => {
   return (
     <>  
-   <MainNav/>
+   <Navbar/>
+   {/* <Navbar/> */}
    <HeroBanner/>
    <MenuCards/>
     <MealPicker/>
     <BenefitsGrid/>
     <HowItWorks/>
+    
     </>
   )
 }

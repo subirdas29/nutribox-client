@@ -1,6 +1,6 @@
 "use client";
 
-import { NMTable } from "@/components/ui/core/NBTable";
+import { NBTable } from "@/components/ui/core/NBTable";
 import {TMealProvider, TMealsForm } from "@/types/meals";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
@@ -10,32 +10,50 @@ import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
+import { updateMeal } from "@/services/Meals";
 
 const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
+  
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const router = useRouter();
 
 
-  const handleDelete = (meal:TMealsForm) => {
-    setSelectedId(meal?._id);
-    setSelectedItem(meal?.name);
-    setModalOpen(true);
-  };
+  // const handleDelete = (meal: TMealsForm) => {
+  //   console.log(meal,'lfjsdjfsfj')
+  //   if (!meal?._id) return; // Ensure _id exists before proceeding
+  
+  //   console.log(meal._id, "meal");
+  
+  //   setSelectedId(meal._id);
+  //   setSelectedItem("cancelled"); // Don't mutate state directly
+  //   setModalOpen(true);
+  // };
+  
+  // const handleDeleteConfirm = async () => {
+  //   try {
+  //     if (!selectedId) return; // Prevent unnecessary API calls
+  
+  //     // Create modified data with status "cancelled"
+  //     const modifiedData = {
+  //       status: "cancelled", // Change status instead of using isDeleted
+  //     };
+  
+  //     const res = await updateMeal(modifiedData, selectedId);
+  //     if (res.success) {
+  //       toast.success("Order Cancelled successfully!");
+  //       setModalOpen(false);
+  //     } else {
+  //       toast.error(res.message);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Failed to cancel order.");
+  //   }
+  // };
+  
 
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
-        console.log(selectedId)
-        toast.success(`Deleted ${selectedItem} successfully!`);
-        setModalOpen(false);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete meal.");
-    }
-  };
 
   const columns: ColumnDef<TMealsForm>[] = [
     {
@@ -122,7 +140,7 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
     <div>
       <h1 className="text-xl font-bold mb-4">Available Meals</h1>
       <div className="overflow-x-auto">
-      <NMTable columns={columns} data={meals[0]?.availableMeals || []} />
+      <NBTable columns={columns} data={meals[0]?.availableMeals || []} />
 
       </div>
       <DeleteConfirmationModal

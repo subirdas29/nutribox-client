@@ -1,29 +1,41 @@
 "use client";
-// import Logo from "@/assets/svgs/Logo";
-import { Button } from "../ui/button";
-import { Heart, LogOut, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { logout } from "@/services/AuthService";
-// import { useUser } from "@/context/UserContext";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Menu, Utensils, Box, HeartHandshake, Phone, LayoutDashboard } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { protectedRoutes } from "@/constant";
+import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useUser } from "@/context/UserContext";
+import { logout } from "@/services/AuthService";
+import { protectedRoutes } from "@/constant";
 
-
-export default function Navbar() {
+export function Navbar() {
   const { user, setIsLoading } = useUser();
-
+  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+
+  useEffect(() => {
+    // Redirect if logged-in user tries to access the login page
+    if (user?.email && pathname === "/login") {
+      router.push("/");
+   
+    }
+  }, [user, pathname, router]);
+
+  useEffect(() => {
+    if (pathname !== "/") return; 
+
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll); 
+  }, [pathname]);
 
   const handleLogOut = () => {
     logout();
@@ -33,73 +45,144 @@ export default function Navbar() {
     }
   };
 
+  const routes = [
+    { href: "/", label: "Home", active: pathname === "/", icon: <Utensils className="h-5 w-5" /> },
+    {
+      href: user?.role ?`/${user?.role}/dashboard`: "/login",label:"Dashboard" ,active:pathname ===`/${user?.role}/dashboard`,icon:<LayoutDashboard className="h-5 w-5" />},
+
+    { href: "/menu", label: "Our Menu", active: pathname === "/menu", icon: <Box className="h-5 w-5" /> },
+    { href: "/plans", label: "Meal Plans", active: pathname === "/plans", icon: <HeartHandshake className="h-5 w-5" /> },
+    { href: "/contact", label: "Contact", active: pathname === "/contact", icon: <Phone className="h-5 w-5" /> },
+  ];
+
   return (
-    <header className="border-b bg-background w-full sticky top-0 z-10">
-      <div className="container flex justify-between items-center mx-auto h-16 px-5">
-        <Link href="/">
-          <h1 className="text-2xl font-black flex items-center">
-            {/* <Logo /> */}
-             Nutri Box
-          </h1>
+    <nav
+      className={cn(
+        "w-full top-0 z-50 transition-all duration-300",
+        pathname === "/"
+          ? scrolled
+            ? "bg-white/80 backdrop-blur-md border-b shadow-md fixed"
+            : "bg-transparent backdrop-blur-none border-none fixed"
+          : "bg-white/80 backdrop-blur-md border-b shadow-md"
+      )}
+    >
+      <div className="flex h-20 items-center justify-between mx-12 md:mx-16 lg:mx-20">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2">
+          <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center">
+            <Utensils className="h-6 w-6 text-white" />
+          </div>
+          <span className="text-2xl font-bold text-primary">MealBox</span>
         </Link>
-        <div className="max-w-md  flex-grow">
-          <input
-            type="text"
-            placemeal-providerholder="Search for products"
-            className="w-full max-w-6xl border border-gray-300 rounded-full py-2 px-5"
-          />
-        </div>
-        <nav className="flex gap-2">
-          <Button variant="outline" className="rounded-full p-0 size-10">
-            <Heart />
-          </Button>
-       <Link href="/cart">
-       <Button variant="outline" className="rounded-full p-0 size-10">
-            <ShoppingBag />
-          </Button>
-       </Link>
 
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-8">
+          {routes.map((route) => (
+            <Link
+              key={route.href}
+              href={route.href}
+              className={cn(
+                "flex items-center gap-2 text-lg font-medium transition-colors hover:text-primary",
+                route.active ? "text-primary" : "text-gray-900"
+              )}
+            >
+              {route.icon}
+              {route.label}
+            </Link>
+          ))}
+
+          {/* Auth Buttons */}
           {user?.email ? (
-            <>
-              <Link href="/create-shop">
-                <Button className="rounded-full">Create Shop</Button>
-              </Link>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>User</AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Link href={`/${user?.role}/dashboard`}>Dashboard</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>My Shop</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    className="bg-red-500 cursor-pointer"
-                    onClick={handleLogOut}
-                  >
-                    <LogOut />
-                    <span>Log Out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </>
+<>
+<Link href="/profile">
+  <Avatar className="h-10 w-10">
+    <AvatarImage src={user.profileImage || "https://github.com/shadcn.png"} />
+  </Avatar>
+</Link>
+<Button size="lg" className="gap-2 text-lg" onClick={handleLogOut}>
+  <Box className="h-5 w-5" />
+  Logout
+</Button>
+</>
+           
           ) : (
+            <>
             <Link href="/login">
-              <Button className="rounded-full" variant="outline">
+              <Button size="lg" className="gap-2 text-lg">
+                <Box className="h-5 w-5" />
                 Login
               </Button>
             </Link>
-          )}
-        </nav>
+            <Link href="/register">
+              <Button size="lg" className="gap-2 text-lg">
+                <Box className="h-5 w-5" />
+                Sign up
+              </Button>
+            </Link>
+          </>
+          )
+          
+          }
+        </div>
+
+        {/* Mobile Navigation */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon" className="lg:hidden bg-primary hover:bg-green-700 hover:text-white text-white cursor-pointer">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-[300px] p-6">
+            <div className="flex flex-col gap-6 pt-10">
+              {routes.map((route) => (
+                <Link
+                  key={route.href}
+                  href={route.href}
+                  className={cn(
+                    "flex items-center gap-3 text-lg font-medium",
+                    route.active ? "text-primary" : "text-gray-900"
+                  )}
+                >
+                  {route.icon}
+                  {route.label}
+                </Link>
+              ))}
+
+              {/* Auth Buttons for Mobile */}
+              {!user?.email ? (
+                <>
+                  <Link href="/login">
+                    <Button size="lg" className="gap-2 text-lg w-full">
+                      <Box className="h-5 w-5" />
+                      Login
+                    </Button>
+                  </Link>
+                  <Link href="/register">
+                    <Button size="lg" className="gap-2 text-lg w-full">
+                      <Box className="h-5 w-5" />
+                      Sign Up
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/profile" className="flex justify-center">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={user.profileImage || "https://github.com/shadcn.png"} />
+                      <AvatarFallback>User</AvatarFallback>
+                    </Avatar>
+                  </Link>
+                  <Button size="lg" className="gap-2 text-lg w-full" onClick={handleLogOut}>
+                    <Box className="h-5 w-5" />
+                    Logout
+                  </Button>
+                </>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
-    </header>
+    </nav>
   );
 }

@@ -30,7 +30,7 @@ import { IOrder } from "@/types/order";
 
 const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
-   
+  console.log(ordermeal,'checkorder')
   const router = useRouter();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [time, setTime] = useState("");
@@ -105,8 +105,9 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
     const orderData:IOrder = {
       mealId: ordermeal._id,
       mealName: ordermeal.name,
+      category: ordermeal.category,
       basePrice: ordermeal.price,
-      portionSize:selectedPortion,
+      portionSize: selectedPortion,
       portionPrice: mealPrice,
       deliveryArea,
       deliveryCharge,
@@ -115,7 +116,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
       deliveryTime: time,
       deliveryAddress: address,
       customizations,
-      specialInstructions: instruction, // Add if you have additional notes field
+      specialInstructions: instruction
     };
 
     try {
@@ -131,18 +132,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
                 toast.error(res.message);
             }
 
-    //   const response = await fetch('/api/orders', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(orderData),
-    //   });
-
-    //   if (!response.ok) throw new Error('Order failed');
-      
-    //   const result = await response.json();
-    //   router.push(`/order-confirmation/${result.orderId}`);
+  
     } catch (error) {
       console.error('Order submission error:', error);
       alert("Order failed. Please try again.");
