@@ -19,14 +19,6 @@ export function Navbar() {
 
 
   useEffect(() => {
-    // Redirect if logged-in user tries to access the login page
-    if (user?.email && pathname === "/login") {
-      router.push("/");
-   
-    }
-  }, [user, pathname, router]);
-
-  useEffect(() => {
     if (pathname !== "/") return; 
 
     const handleScroll = () => {

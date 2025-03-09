@@ -131,3 +131,8 @@
   animation: bounce-horizontal 1.5s infinite;
 }
 
+/* You can add this CSS to your global stylesheet or CSS module */
+.selected-day {
+  background-color: green !important; /* Change background color to green */
+  color: white !important; /* Change text color to white */
+}

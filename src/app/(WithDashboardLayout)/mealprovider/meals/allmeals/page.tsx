@@ -3,11 +3,11 @@ import { getAllMeals } from "@/services/Meals"
 
 
 const AllMealsPage = async() => {
-    const meals = await getAllMeals()
-    console.log(meals,"allserver")
+    const {data} = await getAllMeals()
+    console.log(data,"allserver,meals")
   return (
     <div>
-      <AllMeals meals={meals.data}/>
+      <AllMeals meals={data}/>
     </div>
   )
 }

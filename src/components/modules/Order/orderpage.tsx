@@ -17,13 +17,15 @@ import {
   Bike, 
   ChefHat
 } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
+
 import { TMealsForm } from "@/types/meals";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import { toast } from "sonner";
 import { createOrder } from "@/services/Order";
 import { IOrder } from "@/types/order";
 
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 // const currencyFormatter = (value: number) => {
 //   return new Intl.NumberFormat('en-IN').format(value);
 // };
@@ -249,18 +251,17 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
             </div>
 
             <div className="space-y-2">
-              <Label className="flex items-center gap-2 text-primary/80">
-                <CalendarDays className="w-5 h-5" />
-                Select Delivery Date
-              </Label>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-lg border shadow-sm"
-                disabled={{ before: new Date() }}
-              />
-            </div>
+      <Label className="flex items-center gap-2 text-primary/80">
+        <CalendarDays className="w-5 h-5" />
+        Select Delivery Date
+      </Label>
+      <DatePicker
+        selected={date}
+        onChange={(date: Date | null) => setDate(date)} // Update date on selection
+        minDate={new Date()} // Disable past dates
+        className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
+      />
+    </div>
 
             <div className="space-y-2">
   <Label className="flex items-center gap-2 text-primary/80">

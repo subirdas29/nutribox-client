@@ -69,11 +69,11 @@ export const updateMeal = async (
 };
 
 
-// get all meals
+// get all meals of mealprovider own
 export const getAllMeals = async (page?: string,limit?:string) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/provider/meal-provider/mydata?limit=${limit}&page=${page}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals/mymeals?limit=${limit}&page=${page}`,
         {
           headers: {
             Authorization: (await cookies()).get("accessToken")!.value,

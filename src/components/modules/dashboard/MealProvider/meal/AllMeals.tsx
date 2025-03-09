@@ -12,46 +12,47 @@ import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import { updateMeal } from "@/services/Meals";
 
-const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
+const AllMeals = ({ meals}:{meals:TMealsForm[]}) => {
+  console.log(meals,'new')
   
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<TMealsForm | null>(null);
   const router = useRouter();
 
 
-  // const handleDelete = (meal: TMealsForm) => {
-  //   console.log(meal,'lfjsdjfsfj')
-  //   if (!meal?._id) return; // Ensure _id exists before proceeding
+  const handleDelete = (meal: TMealsForm) => {
+
+    if (!meal?._id) return; // Ensure _id exists before proceeding
   
-  //   console.log(meal._id, "meal");
+    setSelectedId(meal._id);
+    setSelectedItem(meal); 
+    setSelectedName(meal.name);
+    setModalOpen(true);
+
+  };
   
-  //   setSelectedId(meal._id);
-  //   setSelectedItem("cancelled"); // Don't mutate state directly
-  //   setModalOpen(true);
-  // };
-  
-  // const handleDeleteConfirm = async () => {
-  //   try {
-  //     if (!selectedId) return; // Prevent unnecessary API calls
-  
-  //     // Create modified data with status "cancelled"
-  //     const modifiedData = {
-  //       status: "cancelled", // Change status instead of using isDeleted
-  //     };
-  
-  //     const res = await updateMeal(modifiedData, selectedId);
-  //     if (res.success) {
-  //       toast.success("Order Cancelled successfully!");
-  //       setModalOpen(false);
-  //     } else {
-  //       toast.error(res.message);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     toast.error("Failed to cancel order.");
-  //   }
-  // };
+  const handleDeleteConfirm = async () => {
+    try {
+      if (!selectedItem || !selectedId) return; 
+      const modifiedData = {
+        ...selectedItem,
+        isDeleted:true, 
+      };
+
+      const res = await updateMeal(modifiedData, selectedId);
+      if (res.success) {
+        toast.success("Order Cancelled successfully!");
+        setModalOpen(false);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to cancel order.");
+    }
+  };
   
 
 
@@ -59,15 +60,18 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
     {
       accessorKey: "imageUrls",
       header: "Image",
-      cell: ({ row }) => (
-        <Image
-          src={row.original.imageUrls[0]}
-          alt={row.original.name}
-          width={50}
-          height={50}
-          className="w-12 h-12 rounded object-cover"
-        />
-      ),
+      cell: ({ row }) => 
+     
+        (
+          <Image
+            src={row.original.imageUrls[0]}
+            alt={row.original.name}
+            width={50}
+            height={50}
+            className="w-12 h-12 rounded object-cover"
+          />
+        )
+      
     },
     {
       accessorKey: "name",
@@ -93,6 +97,20 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
       cell: ({ row }) => (
         <span className="text-sm text-gray-600">
           {row.original.dietaryPreferences.join(", ")}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "available",
+      header: "Availability Status", // More meaningful header
+      cell: ({ row }) => (
+        <span
+          style={{
+            color: row.original.available ? "green" : "red", // Green for Available, Red for Unavailable
+            fontWeight: "bold",
+          }}
+        >
+          {row.original.available ? "Available" : "Unavailable"}
         </span>
       ),
     },
@@ -138,13 +156,13 @@ const AllMeals = ({ meals}:{meals:TMealProvider[]}) => {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-4">Available Meals</h1>
+      <h1 className="text-xl font-bold mb-4">All Meals</h1>
       <div className="overflow-x-auto">
-      <NBTable columns={columns} data={meals[0]?.availableMeals || []} />
+      <NBTable columns={columns} data={meals || []} />
 
       </div>
       <DeleteConfirmationModal
-        name={selectedItem}
+        name={selectedName}
         isOpen={isModalOpen}
         onOpenChange={setModalOpen}
         onConfirm={handleDeleteConfirm}

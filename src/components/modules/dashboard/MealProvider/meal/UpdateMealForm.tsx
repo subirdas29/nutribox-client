@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -57,7 +58,8 @@ export default function UpdateMealForm({ meal }:{meal:TMealsForm}) {
       dietaryPreferences: data.dietaryPreferences.split(",").map((item:string) => item.trim()),
     };
 
-    console.log(modifiedData)
+    console.log(modifiedData,'amoajfo')
+    console.log(meal?._id,meal?.name)
    
 
     try {
