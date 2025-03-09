@@ -42,7 +42,7 @@ export function Navbar() {
     {
       href: user?.role ?`/${user?.role}/dashboard`: "/login",label:"Dashboard" ,active:pathname ===`/${user?.role}/dashboard`,icon:<LayoutDashboard className="h-5 w-5" />},
 
-    { href: "/menu", label: "Our Menu", active: pathname === "/menu", icon: <Box className="h-5 w-5" /> },
+    { href: "/allmenu", label: "Our Menu", active: pathname === "/menu", icon: <Box className="h-5 w-5" /> },
     { href: "/plans", label: "Meal Plans", active: pathname === "/plans", icon: <HeartHandshake className="h-5 w-5" /> },
     { href: "/contact", label: "Contact", active: pathname === "/contact", icon: <Phone className="h-5 w-5" /> },
   ];
