@@ -25,17 +25,16 @@ export function HeroBanner() {
         {/* Content */}
         <div className="space-y-6 max-w-2xl text-center md:text-left relative">
           {/* Animated Icons Around Text */}
-          <div className="absolute -top-8  -left-8 animate-bounce">
+          <div className="absolute -top-8 -left-8 animate-bounce">
             <ChefHat className="w-10 h-10 text-green-600" />
           </div>
-         
           <div className="absolute top-90 -left-8 animate-pulse">
             <Soup className="w-10 h-10 text-green-600" />
           </div>
-          <div className="absolute top-90 lg:left-120 -right-8  animate-bounce">
+          <div className="absolute top-90 lg:left-120 -right-8 animate-bounce">
             <Utensils className="w-10 h-10 text-green-600" />
           </div>
-          <div className="absolute -top-8 lg:left-120 -right-8 animate-spin-slow">
+          <div className="absolute -top-8 lg:left-120 -right-8 animate-pulse">
             <Coffee className="w-10 h-10 text-green-600" />
           </div>
 
@@ -73,7 +72,7 @@ export function HeroBanner() {
         {/* Floating Food Images */}
         <div className="relative hidden md:block h-[500px]">
           {/* Image 1 - Top Left */}
-          <div className="absolute left-5 lg:-left-20 lg:top-0 w-[300px] h-[300px] animate-float">
+          <div className="absolute left-0 lg:left-10 top-0 w-[300px] h-[300px] animate-float">
             <Image
               src={img1}
               alt="Meal 1"
@@ -84,7 +83,7 @@ export function HeroBanner() {
           </div>
 
           {/* Image 2 - Top Right */}
-          <div className="absolute right-5 top-80 lg:right-20 lg:top-30  w-[280px] h-[280px] animate-float-delayed">
+          <div className="absolute right-0 lg:-right-10 top-40 w-[280px] h-[280px] animate-float-delayed">
             <Image
               src={img2}
               alt="Meal 2"
@@ -95,7 +94,7 @@ export function HeroBanner() {
           </div>
 
           {/* Image 3 - Bottom Center */}
-          <div className="absolute left-20 top-120 lg:left-80 lg:top-70 transform -translate-x-1/2  w-[260px] h-[260px] animate-float">
+          <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-10 w-[260px] h-[260px] animate-float">
             <Image
               src={img3}
               alt="Meal 3"

@@ -58,7 +58,7 @@ export function Navbar() {
           : "bg-white/80 backdrop-blur-md border-b shadow-md"
       )}
     >
-      <div className="flex h-20 items-center justify-between mx-12 md:mx-16 lg:mx-20">
+      <div className="flex h-20 items-center justify-between mx-6 md:mx-12 lg:mx-20">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center">
