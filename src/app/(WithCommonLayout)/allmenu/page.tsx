@@ -1,10 +1,12 @@
 import AllMenu from '@/components/modules/Menu/AllMenu'
+import { getAllMeals } from '@/services/Meals'
 import React from 'react'
 
-const AllMenuPage = () => {
+const AllMenuPage = async() => {
+  const {data} = await getAllMeals()
   return (
     <div>
-      <AllMenu/>
+      <AllMenu menu = {data}/>
     </div>
   )
 }

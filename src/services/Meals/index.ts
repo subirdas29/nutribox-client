@@ -70,7 +70,7 @@ export const updateMeal = async (
 
 
 // get all meals of mealprovider own
-export const getAllMeals = async (page?: string,limit?:string) => {
+export const getAllProviderMeals = async (page?: string,limit?:string) => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals/mymeals?limit=${limit}&page=${page}`,
@@ -79,6 +79,29 @@ export const getAllMeals = async (page?: string,limit?:string) => {
             Authorization: (await cookies()).get("accessToken")!.value,
             "Content-Type": "application/json",
           },
+          next: {
+            tags: ["Meals"],
+          },
+        }
+      );
+      const data = await res.json();
+      return data;
+    } catch (error: any) {
+      return Error(error.message);
+    }
+  };
+
+
+//all meals for everyone
+  export const getAllMeals = async (page?: string,limit?:string) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals?limit=${limit}&page=${page}`,
+        {
+          // headers: {
+          //   Authorization: (await cookies()).get("accessToken")!.value,
+          //   "Content-Type": "application/json",
+          // },
           next: {
             tags: ["Meals"],
           },

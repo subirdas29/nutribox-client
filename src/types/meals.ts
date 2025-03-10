@@ -9,7 +9,8 @@ export type TMealsForm = {
   description: string;
   imageUrls: string[];
   dietaryPreferences: string[];
-  mealProvider:TMealProvider
+  mealProvider:TMealProvider;
+  rating?:number;
   isDeleted?:boolean
 };
 

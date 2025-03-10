@@ -1,9 +1,9 @@
 import AllMeals from "@/components/modules/dashboard/MealProvider/meal/AllMeals"
-import { getAllMeals } from "@/services/Meals"
+import {  getAllProviderMeals } from "@/services/Meals"
 
 
 const AllMealsPage = async() => {
-    const {data} = await getAllMeals()
+    const {data} = await getAllProviderMeals()
     console.log(data,"allserver,meals")
   return (
     <div>

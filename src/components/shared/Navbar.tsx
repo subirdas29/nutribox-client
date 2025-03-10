@@ -101,13 +101,13 @@ export function Navbar() {
           ) : (
             <>
             <Link href="/login">
-              <Button size="lg" className="gap-2 text-lg">
+              <Button size="lg" className="gap-2 text-lg cursor-pointer">
                 <Box className="h-5 w-5" />
                 Login
               </Button>
             </Link>
             <Link href="/register">
-              <Button size="lg" className="gap-2 text-lg">
+              <Button size="lg" className="gap-2 text-lg cursor-pointer">
                 <Box className="h-5 w-5" />
                 Sign up
               </Button>
@@ -145,13 +145,13 @@ export function Navbar() {
               {!user?.email ? (
                 <>
                   <Link href="/login">
-                    <Button size="lg" className="gap-2 text-lg w-full">
+                    <Button size="lg" className="gap-2 text-lg w-full cursor-pointer">
                       <Box className="h-5 w-5" />
                       Login
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button size="lg" className="gap-2 text-lg w-full">
+                    <Button size="lg" className="gap-2 text-lg w-full cursor-pointer">
                       <Box className="h-5 w-5" />
                       Sign Up
                     </Button>
@@ -165,7 +165,7 @@ export function Navbar() {
                       <AvatarFallback>User</AvatarFallback>
                     </Avatar>
                   </Link>
-                  <Button size="lg" className="gap-2 text-lg w-full" onClick={handleLogOut}>
+                  <Button size="lg" className="gap-2 text-lg w-full cursor-pointer" onClick={handleLogOut}>
                     <Box className="h-5 w-5" />
                     Logout
                   </Button>

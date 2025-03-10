@@ -1,8 +1,5 @@
 
 
-
-
-import OrderPageDetails from "@/components/modules/Order/OrderDetails"
 import { OrderRolePageDetails } from "@/components/modules/Order/OrderDetailsPage"
 import { getSingleOrder } from "@/services/Order"
 

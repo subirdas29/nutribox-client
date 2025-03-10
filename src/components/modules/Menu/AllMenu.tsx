@@ -8,9 +8,15 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import Image from 'next/image';
+import { TMealProvider } from '@/types/meals';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { Star } from 'lucide-react';
+import { currencyFormatter } from '@/lib/currencyFormatter';
+import Link from 'next/link';
 
 interface Meal {
-  id: number;
+  _id: string;
   name: string;
   category: string;
   price: number;
@@ -20,84 +26,66 @@ interface Meal {
   description: string;
   imageUrls: string[];
   dietaryPreferences: string[];
-  mealProvider: string;
+  mealProvider: TMealProvider;
+  rating:number;
 }
 
-export default function AllMenu() {
+export default function AllMenu({menu}:{menu:Meal[]}) {
+  console.log(menu.map(d=>d.name))
+
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
+    name:[] as string[],
     category: '',
     minPrice: 0,
     maxPrice: 1000,
     portionSize: '',
     dietaryPreferences: [] as string[],
     availableOnly: false,
+    ingredients:[] as string[],
+    cuisine: [] as string[],
+    rating: null as number | null 
   });
 
-  const meals: Meal[] = [
-    {
-      id: 1,
-      name: 'Classic Burger',
-      category: 'Snack',
-      price: 300,
-      ingredients: ['Bun', 'Patty', 'Lettuce', 'Tomato', 'Cheese', 'Sauce'],
-      portionSize: 'medium',
-      available: true,
-      description: 'Juicy beef burger with fresh vegetables',
-      imageUrls: ['/burger.jpg'],
-      dietaryPreferences: ['Gluten-Free'],
-      mealProvider: 'Burger Co'
-    },
-    {
-      id: 2,
-      name: 'Caesar Salad',
-      category: 'Main Course',
-      price: 450,
-      ingredients: ['Chicken', 'Lettuce', 'Croutons', 'Parmesan', 'Dressing'],
-      portionSize: 'large',
-      available: true,
-      description: 'Fresh classic Caesar salad with grilled chicken',
-      imageUrls: ['/salad.jpg'],
-      dietaryPreferences: ['Dairy-Free'],
-      mealProvider: 'Healthy Kitchen'
-    },
-    {
-      id: 3,
-      name: 'Chocolate Cake',
-      category: 'Dessert',
-      price: 200,
-      ingredients: ['Flour', 'Sugar', 'Cocoa', 'Eggs', 'Butter'],
-      portionSize: 'small',
-      available: false,
-      description: 'Rich chocolate layer cake with frosting',
-      imageUrls: ['/cake.jpg'],
-      dietaryPreferences: ['Vegetarian'],
-      mealProvider: 'Sweet Treats'
-    },
-  ];
+  const ingredients = [...new Set(menu.flatMap((ingre)=>ingre.ingredients))]
+  const dietary = [...new Set(menu.flatMap((diet)=>diet.dietaryPreferences))]
+  const cuisine = [...new Set(menu.flatMap(cuis =>cuis.mealProvider.cuisineSpecialties))]
+  const name = menu.map(meal=>meal.name)
 
+  const handleRatingFilter = (rating:number) =>{
+    setFilters({...filters,rating})
+  }
+  
+ 
+ 
   const applyFilters = (meal: Meal) => {
     const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       meal.description.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesCategory = !filters.category || meal.category === filters.category;
+    const matchesMealName = filters.name.length === 0 || filters.name.some(pref => meal.name.includes(pref))
     const matchesPrice = meal.price >= filters.minPrice && meal.price <= filters.maxPrice;
     const matchesPortion = !filters.portionSize || meal.portionSize === filters.portionSize;
     const matchesDietary = filters.dietaryPreferences.length === 0 || 
       filters.dietaryPreferences.some(pref => meal.dietaryPreferences.includes(pref));
+    const matchesIngredients = filters.ingredients.length === 0 || filters.ingredients.some(pref => meal.ingredients.includes(pref))
+    const matchesCuisine = filters.cuisine.length === 0 || filters.cuisine.some(pref => meal.mealProvider.cuisineSpecialties.includes(pref))
     const matchesAvailability = !filters.availableOnly || meal.available;
 
+    const matchesRating = filters.rating === null || Math.floor(meal.rating as number) === filters.rating
+
     return matchesSearch && matchesCategory && matchesPrice && 
-           matchesPortion && matchesDietary && matchesAvailability;
+           matchesPortion && matchesDietary && matchesAvailability && matchesIngredients && matchesCuisine && matchesRating && matchesMealName ;
   };
 
-  const filteredMeals = meals.filter(applyFilters);
+  const filteredMeals = menu.filter(applyFilters);
 
   return (
     <div className="min-h-screen bg-gray-50">
      
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="mx-12 md:mx-16 lg:mx-20 px-4 py-8">
         <div className="lg:hidden mb-4">
           <Button 
             variant="outline" 
@@ -114,45 +102,61 @@ export default function AllMenu() {
             ${showFilters ? 'block' : 'hidden'} lg:block w-full lg:w-[300px]`}>
             <Card>
               <CardHeader>
-                <CardTitle>Filters</CardTitle>
+                <CardTitle className='font-bold text-xl'>Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
+
+                 {/* cuisine */}
+                 <div>
+                  <label className="block text-lg font-semibold mb-2 ">Meal Name</label>
+                  <div className="space-y-2">
+                    {name.map((pref) => (
+                      <div key={pref} className="flex items-center gap-2">
+                        <Checkbox
+                          id={pref}
+                          checked={filters.name.includes(pref)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setFilters({
+                                ...filters,
+                                name: [...filters.name, pref],
+                              });
+                            } else {
+                              setFilters({
+                                ...filters,
+                                name: filters.name.filter(p => p !== pref),
+                              });
+                            }
+                          }}
+                        />
+                        <label htmlFor={pref} className="text-sm">
+                          {pref}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2">Category</label>
+                  <label className="block text-lg font-semibold mb-2">Category</label>
                   <select
                     value={filters.category}
                     onChange={(e) => setFilters({...filters, category: e.target.value})}
                     className="w-full p-2 border rounded-md"
                   >
                     <option value="">All Categories</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Brunch">Brunch</option>
+                    <option value="Lunch">Lunch</option>
                     <option value="Snack">Snack</option>
-                    <option value="Main Course">Main Course</option>
+                    <option value="Dinner">Dinner</option>
                     <option value="Dessert">Dessert</option>
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Price Range</label>
-                  <Slider
-                    min={0}
-                    max={1000}
-                    value={[filters.minPrice, filters.maxPrice]}
-                    onValueChange={(value) => setFilters({
-                      ...filters,
-                      minPrice: value[0],
-                      maxPrice: value[1],
-                    })}
-                    step={50}
-                    className="w-full"
-                  />
-                  <div className="flex justify-between text-sm mt-2">
-                    <span>${filters.minPrice}</span>
-                    <span>${filters.maxPrice}</span>
-                  </div>
-                </div>
+               
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Portion Size</label>
+                  <label className="block text-lg font-semibold mb-2">Portion Size</label>
                   <select
                     value={filters.portionSize}
                     onChange={(e) => setFilters({...filters, portionSize: e.target.value})}
@@ -165,10 +169,42 @@ export default function AllMenu() {
                   </select>
                 </div>
 
+                    {/* Ingredients */}
                 <div>
-                  <label className="block text-sm font-medium mb-2">Dietary Preferences</label>
+                  <label className="block text-lg font-semibold mb-2">Ingredients</label>
                   <div className="space-y-2">
-                    {['Gluten-Free', 'Dairy-Free', 'Vegetarian', 'Vegan'].map((pref) => (
+                    {ingredients.map((pref) => (
+                      <div key={pref} className="flex items-center gap-2">
+                        <Checkbox
+                          id={pref}
+                          checked={filters.ingredients.includes(pref)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setFilters({
+                                ...filters,
+                                ingredients: [...filters.ingredients, pref],
+                              });
+                            } else {
+                              setFilters({
+                                ...filters,
+                                ingredients: filters.ingredients.filter(p => p !== pref),
+                              });
+                            }
+                          }}
+                        />
+                        <label htmlFor={pref} className="text-sm">
+                          {pref}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Dietery */}
+                <div>
+                  <label className="block text-lg font-semibold mb-2">Dietary Preferences</label>
+                  <div className="space-y-2">
+                    {dietary.map((pref) => (
                       <div key={pref} className="flex items-center gap-2">
                         <Checkbox
                           id={pref}
@@ -195,6 +231,87 @@ export default function AllMenu() {
                   </div>
                 </div>
 
+                {/* cuisine */}
+                <div>
+                  <label className="block text-lg font-semibold mb-2">Ingredients</label>
+                  <div className="space-y-2">
+                    {cuisine.map((pref) => (
+                      <div key={pref} className="flex items-center gap-2">
+                        <Checkbox
+                          id={pref}
+                          checked={filters.cuisine.includes(pref)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setFilters({
+                                ...filters,
+                                cuisine: [...filters.cuisine, pref],
+                              });
+                            } else {
+                              setFilters({
+                                ...filters,
+                                cuisine: filters.cuisine.filter(p => p !== pref),
+                              });
+                            }
+                          }}
+                        />
+                        <label htmlFor={pref} className="text-sm">
+                          {pref}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Price */}
+
+                <div>
+                  <label className="block text-lg font-semibold mb-2">Price Range</label>
+                  <Slider
+                    min={0}
+                    max={1000}
+                    value={[filters.minPrice, filters.maxPrice]}
+                    onValueChange={(value) => setFilters({
+                      ...filters,
+                      minPrice: value[0],
+                      maxPrice: value[1],
+                    })}
+                    step={50}
+                    className="w-full"
+                  />
+                  <div className="flex justify-between text-sm mt-2">
+                    <span>৳{filters.minPrice}</span>
+                    <span>৳{filters.maxPrice}</span>
+                  </div>
+                </div>
+
+                   {/* Rating */}
+      <div className="mb-6">
+        <h2 className="text-lg font-semibold mb-4">Rating</h2>
+        <RadioGroup className="space-y-3">
+          {[5, 4, 3, 2, 1,0].map((rating) => (
+            <div key={rating} className="flex items-center space-x-2">
+              <RadioGroupItem
+                onClick={() => handleRatingFilter(rating)}
+                
+                value={`${rating}`}
+                id={`rating-${rating}`}
+                checked = {filters.rating === rating}
+              />
+              <Label htmlFor={`rating-${rating}`} className="flex items-center">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <Star
+                    size={18}
+                    key={i}
+                    fill={i < rating ? "orange" : "lightgray"}
+                    stroke={i < rating ? "orange" : "lightgray"}
+                  />
+                ))}
+              </Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </div>
+
                 <div className="flex items-center gap-2">
                   <Checkbox
                     id="available"
@@ -209,14 +326,18 @@ export default function AllMenu() {
               <CardFooter className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full cursor-pointer hover:bg-gray-200"
                   onClick={() => setFilters({
+                    name: [] as string[],
                     category: '',
                     minPrice: 0,
                     maxPrice: 1000,
                     portionSize: '',
                     dietaryPreferences: [],
                     availableOnly: false,
+                    ingredients:[] as string[],
+                    cuisine:[] as string[],
+                    rating: null as number | null 
                   })}
                 >
                   Reset Filters
@@ -238,10 +359,10 @@ export default function AllMenu() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredMeals.map((meal) => (
-                <Card key={meal.id} className="hover:shadow-lg transition-shadow">
+                <Card key={meal._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <CardTitle>{meal.name}</CardTitle>
-                    <p className="text-sm text-gray-500">{meal.mealProvider}</p>
+                    {/* <p className="text-sm text-gray-500">{meal.mealProvider}</p> */}
                   </CardHeader>
                   <CardContent>
                     <div className="relative h-48 mb-4">
@@ -253,8 +374,17 @@ export default function AllMenu() {
                         className="w-full h-full object-cover rounded-lg"
                       />
                     </div>
-                    <p className="text-gray-600 mb-2">{meal.description}</p>
-                    <p className="font-bold">${meal.price}</p>
+                    <p className="text-gray-600 mb-2">{meal.description.slice(0,20)}...</p>
+                  <div className='flex justify-between'>
+                  <p className="font-bold">{currencyFormatter(Number(meal.price))}</p>
+                  <div className='flex items-center gap-2'>
+                  <Star
+                    size={18}
+                    fill={meal.rating === 0 ? 'lightgray' : 'orange' } 
+                    stroke={meal.rating === 0 ? 'lightgray' : 'orange' } 
+                  /> <p>{meal.rating}</p>
+                  </div>
+                  </div>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {meal.dietaryPreferences.map((pref) => (
                         <span 
@@ -270,9 +400,11 @@ export default function AllMenu() {
                     <span className={`text-sm ${meal.available ? 'text-green-600' : 'text-red-600'}`}>
                       {meal.available ? 'Available' : 'Out of Stock'}
                     </span>
-                    <Button disabled={!meal.available}>
-                      Add to Cart
+                    <Link href={`/mealdetails/${meal._id}`}>
+                    <Button  className='cursor-pointer'  disabled={!meal.available}>
+                      Menu Details
                     </Button>
+                    </Link>
                   </CardFooter>
                 </Card>
               ))}
