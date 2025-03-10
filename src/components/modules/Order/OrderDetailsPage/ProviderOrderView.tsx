@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Clock, CookingPot, CheckCircle, Utensils, MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
+import { Clock, CookingPot, CheckCircle, MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
 import Image from 'next/image'
 import { format } from "date-fns"
 import { updateOrder } from '@/services/Order'

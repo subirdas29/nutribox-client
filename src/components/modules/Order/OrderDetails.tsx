@@ -20,16 +20,16 @@ import {
 } from "lucide-react"
 import Image from 'next/image'
 import { Textarea } from "@/components/ui/textarea"
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils"
 import { format } from "date-fns"
-import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+
 import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { updateOrder } from '@/services/Order'
 import { toast } from 'sonner'
+import DatePicker from 'react-datepicker'
 
 
 type OrderStatus = 'pending' | 'in-progress' | 'delivered'
@@ -90,6 +90,7 @@ const OrderForm = ({
   editableFields?: Partial<Record<keyof IOrderDetails, boolean>>
 }) => {
   const [formData, setFormData] = useState<IOrderDetails>(initialValues)
+  const [date, setDate] = useState<Date | null>(null);
 
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
@@ -136,33 +137,17 @@ const OrderForm = ({
 
         {editableFields?.deliveryDate && (
           <div className="space-y-2">
-            <Label>Delivery Date</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !formData.deliveryDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.deliveryDate ? 
-                    format(formData.deliveryDate, "PPP") : 
-                    <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={formData.deliveryDate}
-                  onSelect={date => date && setFormData({...formData, deliveryDate: date})}
-                  disabled={{ before: new Date() }}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
+               <Label className="flex items-center gap-2 text-primary/80">
+                 <CalendarDays className="w-5 h-5" />
+                 Select Delivery Date
+               </Label>
+               <DatePicker
+                 selected={date}
+                 onChange={(date: Date | null) => setDate(date)} // Update date on selection
+                 minDate={new Date()} // Disable past dates
+                 className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
+               />
+             </div>
         )}
 
         {editableFields?.deliveryTime && (

@@ -1,0 +1,55 @@
+/* app/components/HowItWorks.module.css */
+.container {
+    padding: 5rem 0;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to bottom, #f3faf7 0%, #e6f4f1 100%);
+  }
+  
+  .stepBounce {
+    animation: stepBounce 2s ease-in-out infinite;
+  }
+  
+  .floatAnimation {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  .delayedFloat {
+    animation: float 6s ease-in-out infinite 2s;
+  }
+  
+  .shimmer {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255,255,255,0.4) 50%,
+      transparent 100%
+    );
+    background-size: 200% auto;
+    animation: shimmer 3s linear infinite;
+  }
+  
+  @keyframes cardEntrance {
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotate(0);
+    }
+  }
+  
+  @keyframes stepBounce {
+    50% {
+      transform: translateY(-10px) rotate(-15deg);
+    }
+  }
+  
+  @keyframes float {
+    50% {
+      transform: translateY(-40px) rotate(5deg);
+    }
+  }
+  
+  @keyframes shimmer {
+    to {
+      background-position: 200% 0;
+    }
+  }

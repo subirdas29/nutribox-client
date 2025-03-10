@@ -13,7 +13,7 @@ import { currencyFormatter } from "@/lib/currencyFormatter";
 import { updateMeal } from "@/services/Meals";
 
 const AllMeals = ({ meals}:{meals:TMealsForm[]}) => {
-  console.log(meals,'new')
+ 
   
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);

@@ -6,7 +6,7 @@ import {
   Bar,
   XAxis,
   YAxis,
-  LineChart,
+
   Line,
   ResponsiveContainer,
   PieChart,
@@ -15,7 +15,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import { Plus, Utensils, ShoppingCart, Activity, DollarSign } from "lucide-react";
+import { Plus, Utensils, ShoppingCart, Wallet } from "lucide-react";
 import Link from "next/link";
 
 const SALES_DATA = [
@@ -47,13 +47,13 @@ export default function MealProviderDashboard() {
           </div>
           <div className="flex gap-4 flex-wrap justify-center">
            <Link href='/mealprovider/meals/post-meal-menu'>
-           <Button className="bg-primary text-primary-foreground hover:bg-primary/80 gap-2">
+           <Button className="bg-primary text-primary-foreground hover:bg-primary/80 gap-2 cursor-pointer">
               <Plus className="h-4 w-4" />
               Add New Meal
             </Button>
            </Link>
            <Link href='/mealprovider/meals/allmeals'>
-           <Button variant="secondary" className="gap-2 border-2 text-secondary-foreground hover:bg-secondary/80">
+           <Button variant="secondary" className="gap-2 border-2 text-secondary-foreground hover:bg-secondary/80 cursor-pointer">
               <Utensils className="h-4 w-4" />
               Manage Menu
             </Button>
@@ -72,8 +72,8 @@ export default function MealProviderDashboard() {
         />
         <MetricCard 
           title="Total Revenue" 
-          value="$12,340" 
-          icon={<DollarSign className="h-6 w-6 text-primary" />}
+          value="৳1,23,400" 
+          icon={<Wallet className="h-6 w-6 text-primary" />}
           trend="+8.2% from last month"
         />
         <MetricCard 
@@ -88,24 +88,25 @@ export default function MealProviderDashboard() {
       <div className="md:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Meal Status Pie Chart */}
         <ChartCard title="Meal Status Distribution">
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={MEAL_STATUS_DATA}
-                dataKey="value"
-                nameKey="name"
-                outerRadius={120}
-                labelLine={false}
-                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
-              >
-                {MEAL_STATUS_DATA.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                ))}
-              </Pie>
-              <Tooltip />
-              <Legend />
-            </PieChart>
-          </ResponsiveContainer>
+        <ResponsiveContainer width="100%" height={300}>
+  <PieChart>
+    <Pie
+      data={MEAL_STATUS_DATA}
+      dataKey="value"
+      nameKey="name"
+      outerRadius={100}  // Reduce radius for better spacing
+      label={({ name, value }) => `${name}: ${value}`} // Show exact numbers
+      labelLine={false} // Remove lines if needed
+    >
+      {MEAL_STATUS_DATA.map((_, index) => (
+        <Cell key={`cell-${index}`} fill={COLORS[index]} />
+      ))}
+    </Pie>
+    <Tooltip />
+    <Legend />
+  </PieChart>
+</ResponsiveContainer>
+
         </ChartCard>
 
         {/* Sales & Revenue Combined Chart */}

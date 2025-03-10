@@ -1,11 +1,10 @@
 'use client'
 import { useState } from 'react'
 
-import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils, Star, MapPin, CalendarDays, ChefHat } from "lucide-react"
+import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils, Star, MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
 import Image from 'next/image'
 import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { cn } from "@/lib/utils"
+
 import { updateOrder } from '@/services/Order'
 import { toast } from 'sonner'
 import { Label } from '@/components/ui/label'
@@ -14,11 +13,11 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Calendar } from '@/components/ui/calendar'
+
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import DatePicker from 'react-datepicker'
 
 type OrderStatus = 'pending' | 'in-progress' | 'delivered'
 
@@ -37,25 +36,32 @@ interface IOrderDetails {
 
 const statusConfig = {
   pending: {
-    color: 'bg-green-400',
+    color: 'bg-amber-500',
     icon: <Clock className="w-5 h-5" />,
     illustration: 'https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741285770/istockphoto-1384432216-612x612-removebg-preview_b9e7xo.png',
     title: 'Order Pending!',
-    description: 'Your order is being processed'
+    description: 'Waiting for chef confirmation'
   },
   'in-progress': {
-    color: 'bg-green-500',
+    color: 'bg-blue-500',
     icon: <CookingPot className="w-5 h-5" />,
     illustration: 'https://cdn-icons-png.flaticon.com/512/3079/3079165.png',
-    title: 'Cooking in Progress',
-    description: 'Chef is preparing your meal'
+    title: 'Preparation in Progress',
+    description: 'Meal is being prepared'
   },
   delivered: {
-    color: 'bg-green-600',
+    color: 'bg-green-500', 
     icon: <CheckCircle className="w-5 h-5" />,
     illustration: 'https://cdn-icons-png.flaticon.com/512/751/751463.png',
     title: 'Order Delivered!',
-    description: 'Enjoy your meal!'
+    description: 'Meal successfully delivered'
+  },
+  cancelled: {
+    color: 'bg-red-500',
+    icon: <XCircle className="w-5 h-5" />,
+    illustration: 'https://cdn-icons-png.flaticon.com/512/753/753345.png',
+    title: 'Order Cancelled!',
+    description: 'This order has been cancelled'
   }
 }
 
@@ -69,6 +75,7 @@ const OrderForm = ({
   onCancel: () => void 
 }) => {
   const [formData, setFormData] = useState<IOrderDetails>(initialValues)
+    const [date, setDate] = useState<Date | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -106,34 +113,18 @@ const OrderForm = ({
           </Select>
         </div>
 
-        <div className="space-y-2">
-          <Label>Delivery Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !formData.deliveryDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {formData.deliveryDate ? 
-                  format(formData.deliveryDate, "PPP") : 
-                  <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={formData.deliveryDate}
-                onSelect={date => date && setFormData({...formData, deliveryDate: date})}
-                disabled={{ before: new Date() }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
+         <div className="space-y-2">
+                       <Label className="flex items-center gap-2 text-primary/80">
+                         <CalendarDays className="w-5 h-5" />
+                         Select Delivery Date
+                       </Label>
+                       <DatePicker
+                         selected={date}
+                         onChange={(date: Date | null) => setDate(date)} // Update date on selection
+                         minDate={new Date()} // Disable past dates
+                         className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
+                       />
+                     </div>
 
         <div className="space-y-2">
           <Label>Delivery Time</Label>
@@ -177,6 +168,7 @@ const OrderForm = ({
 export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [review, setReview] = useState({ rating: 0, comment: '' })
+  
 
   const handleEditSubmit = (updatedData: IOrderDetails) => {
     console.log(updatedData,'customer')
@@ -203,17 +195,17 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
           </div>
           
           <Badge className={`${statusConfig[order.status].color} hover:${statusConfig[order.status].color} mb-4`}>
-            {statusConfig[order.status].icon}
+            {statusConfig[order.status]?.icon}
             <span className="ml-2 text-sm font-medium capitalize">
               {order.status.replace('-', ' ')}
             </span>
           </Badge>
 
           <h1 className="text-3xl font-bold text-green-800 mb-2">
-            {statusConfig[order.status].title}
+            {statusConfig[order.status]?.title}
           </h1>
           <p className="text-green-600 max-w-md mx-auto">
-            {statusConfig[order.status].description}
+            {statusConfig[order.status]?.description}
           </p>
 
           {order.status === 'pending' && (
@@ -239,7 +231,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
             />
           </div>
           
-          <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-4 gap-4 text-center">
             {(Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
               <div key={stage} className="flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center 

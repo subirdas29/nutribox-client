@@ -4,6 +4,7 @@ import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
+import dayjs from "dayjs";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -80,6 +81,7 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
       header: "Price (BDT)",
       cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.totalPrice.toFixed(2)))}</span>,
     },
+    
     {
       accessorKey: "dietaryPreferences",
       header: "Dietary Preferences",
@@ -88,6 +90,17 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
           {row.original?.customizations && row.original.customizations.length > 0
             ? row.original.customizations.join(", ")
             : "No dietary preferences"}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "deliveryDate", // Ensure the key matches your data
+      header: "Delivery Date",
+      cell: ({ row }) => (
+        <span>
+          {row.original.deliveryDate
+            ? dayjs(row.original.deliveryDate).format("DD-MM-YYYY")
+            : "N/A"}
         </span>
       ),
     },
@@ -131,7 +144,7 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
           <button className="text-green-500 cursor-pointer" title="View Details"
           onClick={() =>
             router.push(
-              `/mealdetails/${row.original.mealId}`
+              `/orderdetails/${row.original._id}`
             )
           }
           >
@@ -139,13 +152,13 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
           </button>
 
           <button
-  className={`text-gray-500 hover:text-blue-500 cursor-pointer ${
-    ["in-progress", "delivered"].includes(row.original.status!)
-      ? "opacity-50 cursor-not-allowed"
-      : ""
+  className={` ${
+    ["in-progress", "delivered","cancelled"].includes(row.original.status!)
+      ? "opacity-50 cursor-not-allowed  "
+      : "hover:text-blue-500 text-gray-700, cursor-pointer"
   }`}
   title="Edit"
-  disabled={["in-progress", "delivered"].includes(row.original.status!)}
+  disabled={["in-progress", "delivered","cancelled"].includes(row.original.status!)}
   onClick={() => {
     if (row.original.status === "pending") {
       router.push(`/orderdetails/${row.original._id}`);

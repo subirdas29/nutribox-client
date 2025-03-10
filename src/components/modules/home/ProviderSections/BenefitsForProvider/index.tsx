@@ -1,45 +1,45 @@
-import { Calendar, Leaf, Recycle, Trophy } from "lucide-react"
+import {  Users, PieChart, Shield, Clock } from 'lucide-react';
 
-export default function BenefitsGrid() {
+export default function BenefitsForProvider() {
   const benefits = [
     {
-      icon: <Leaf className="w-6 h-6" />,
-      title: "10+ Dietary Plans",
-      desc: "From paleo to plant-based, we've got you covered",
+      icon: <Users className="w-6 h-6" />,
+      title: "Reach More Customers",
+      desc: "Expand your customer base with our platform's marketing tools.",
       bgColor: "bg-green-100",
       iconColor: "text-green-600",
       gradient: "from-green-50 to-green-100"
     },
     {
-      icon: <Calendar className="w-6 h-6" />,
-      title: "Pause or Skip Anytime",
-      desc: "No rigid contracts - you're in control",
+      icon: <PieChart className="w-6 h-6" />,
+      title: "Real-Time Analytics",
+      desc: "Track sales, orders, and customer preferences in real-time.",
       bgColor: "bg-blue-100",
       iconColor: "text-blue-600",
       gradient: "from-blue-50 to-blue-100"
     },
     {
-      icon: <Trophy className="w-6 h-6" />,
-      title: "Chef-Approved Recipes",
-      desc: "Crafted by nutritionists and top chefs",
+      icon: <Shield className="w-6 h-6" />,
+      title: "Secure Payments",
+      desc: "Get paid securely and on time with our trusted payment system.",
       bgColor: "bg-amber-100",
       iconColor: "text-amber-600",
       gradient: "from-amber-50 to-amber-100"
     },
     {
-      icon: <Recycle className="w-6 h-6" />,
-      title: "Zero-Waste Packaging",
-      desc: "Eco-friendly boxes, 100% recyclable",
+      icon: <Clock className="w-6 h-6" />,
+      title: "Save Time",
+      desc: "Automate order management and focus on what you do best - cooking!",
       bgColor: "bg-emerald-100",
       iconColor: "text-emerald-600",
       gradient: "from-emerald-50 to-emerald-100"
     }
-  ]
+  ];
 
   return (
-    <section className="py-16 bg-slate-50 relative overflow-hidden ">
+    <section className="py-16 bg-slate-50 relative overflow-hidden">
       {/* Animated background particles */}
-      <div className="absolute inset-0 opacity-10 ">
+      <div className="absolute inset-0 opacity-10">
         {[...Array(20)].map((_, i) => (
           <div 
             key={i}
@@ -53,12 +53,9 @@ export default function BenefitsGrid() {
         ))}
       </div>
 
-      <div className=" px-4 mx-4 md:mx-12 lg:mx-20">
+      <div className="px-4 mx-4 md:mx-12 lg:mx-20">
         <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">
-         
-            Why Choose Our Meals?
-         
-          
+          Why Partner With Us?
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -96,5 +93,5 @@ export default function BenefitsGrid() {
         </div>
       </div>
     </section>
-  )
+  );
 }

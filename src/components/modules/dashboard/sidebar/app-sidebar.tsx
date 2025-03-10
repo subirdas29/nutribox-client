@@ -3,8 +3,8 @@
 import * as React from "react";
 import {
   Bot,
-
   Settings,
+  ShoppingCart,
   SquareTerminal,
 } from "lucide-react";
 
@@ -26,17 +26,17 @@ import { useUser } from "@/context/UserContext";
 const data = {
   customerNav: [
     {
-      title: "DashboardCustomer",
+      title: "Dashboard",
       url: "/customer/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
-      title: "My-Meal",
-      url: "/customer/shop/category",
+      title: "My Meals",
+      url: "/customer/myorder",
       icon: Bot,
       items: [
-        { title: "Browse Meals", url: "/customer/shop/category" },
+     
         { title: "Meal Orders", url: "/customer/myorder" },
       
       ],
@@ -50,18 +50,25 @@ const data = {
   ],
   mealProviderNav: [
     {
-      title: "DashboardProvider",
+      title: "Dashboard",
       url: "/mealprovider/dashboard",
       icon: SquareTerminal,
       isActive: true,
     },
     {
-      title: "Meals",
+      title: "Manage Meals",
       url: "/mealprovider/meals/allmeals",
       icon: Bot,
       items: [
-        { title: "Manage Meals", url: "/mealprovider/meals/allmeals" },
+        { title: "All Meals", url: "/mealprovider/meals/allmeals" },
         { title: "Create Meals", url: "/mealprovider/meals/post-meal-menu" },
+      ],
+    },
+    {
+      title: "Manage Orders",
+      url: "/mealprovider/allorders",
+      icon: ShoppingCart,
+      items: [
         { title: "All Orders", url: "/mealprovider/allorders" },
       ],
     },
@@ -91,7 +98,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   {/* <Logo /> */}
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <h2 className="font-bold text-xl">NextMart</h2>
+                  <h2 className="font-bold text-xl">NutriBite</h2>
                 </div>
               </Link>
             </SidebarMenuButton>

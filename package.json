@@ -31,6 +31,7 @@
     "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "embla-carousel-react": "^8.5.2",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.477.0",

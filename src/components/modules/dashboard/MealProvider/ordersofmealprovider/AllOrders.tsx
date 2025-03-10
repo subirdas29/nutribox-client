@@ -1,7 +1,7 @@
 "use client";
 
 import { NBTable } from "@/components/ui/core/NBTable";
-import {TMealProvider, TMealsForm } from "@/types/meals";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
 import Image from "next/image";
@@ -13,6 +13,7 @@ import { currencyFormatter } from "@/lib/currencyFormatter";
 
 import { IOrder } from "@/types/order";
 import { updateOrder } from "@/services/Order";
+import dayjs from "dayjs";
 
 const AllOrdersOfMealProvider = ({ orders}:{orders:IOrder}) => {
 
@@ -92,11 +93,16 @@ const AllOrdersOfMealProvider = ({ orders}:{orders:IOrder}) => {
       <span>{row.original.category}</span>,
     },
     {
-      accessorKey: "deliverydate",
-      header: "Deliver Date",
-      cell: ({ row }) => 
-      <span>{row.original.deliveryDate}</span>,
-    },
+         accessorKey: "deliveryDate", // Ensure the key matches your data
+         header: "Delivery Date",
+         cell: ({ row }) => (
+           <span>
+             {row.original.deliveryDate
+               ? dayjs(row.original.deliveryDate).format("DD-MM-YYYY")
+               : "N/A"}
+           </span>
+         ),
+       },
     {
       accessorKey: "status",
       header: "Status",
@@ -104,19 +110,19 @@ const AllOrdersOfMealProvider = ({ orders}:{orders:IOrder}) => {
         // Get the status value from the row
         const status = row.original.status ?? "unknown";
     
-        // Define a function to determine the text color based on the status
+        
         const getStatusColor = (status: string) => {
           switch (status) {
             case "pending":
-              return "bg-amber-500 p-2 text-gray-100 rounded-md";  // Yellow for pending
+              return "bg-amber-500 p-2 text-gray-100 rounded-md";  
             case "in-progress":
-              return "bg-blue-500 p-2 text-gray-100 rounded-md";  // Blue for in-progress
+              return "bg-blue-500 p-2 text-gray-100 rounded-md";  
             case "delivered":
-              return "bg-green-500 p-2 text-gray-100 rounded-md";  // Green for delivered
+              return "bg-green-500 p-2 text-gray-100 rounded-md";  
               case "cancelled":
               return "bg-red-500 p-2 text-gray-100 rounded-md";
             default:
-              return "bg-gray-500 p-2 text-gray-100 rounded-md";  // Default color
+              return "bg-gray-500 p-2 text-gray-100 rounded-md";  
           }
         };
     

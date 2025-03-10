@@ -1,14 +1,14 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Clock, Salad, HeartHandshake, Bike } from "lucide-react";
+import { Clock, Salad, HeartHandshake, Bike, Utensils, ChefHat, Croissant, Coffee, Soup } from "lucide-react";
 import banner from '../../../../assets/banner/banner.jpg';
-import img1 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg'
-import img2 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg'
-import img3 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg'
+import img1 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg';
+import img2 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg';
+import img3 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg';
 
 export function HeroBanner() {
   return (
-    <section className="relative min-h-[600px] flex items-center bg-gradient-to-r from-green-200  to-transparent">
+    <section className="relative min-h-[600px] flex items-center bg-gradient-to-r from-green-200 to-transparent">
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -23,9 +23,25 @@ export function HeroBanner() {
 
       <div className="container grid md:grid-cols-2 gap-12 items-center py-32 mx-12 md:mx-16 lg:mx-20">
         {/* Content */}
-        <div className="space-y-6 max-w-2xl text-center md:text-left">
+        <div className="space-y-6 max-w-2xl text-center md:text-left relative">
+          {/* Animated Icons Around Text */}
+          <div className="absolute -top-8  -left-8 animate-bounce">
+            <ChefHat className="w-10 h-10 text-green-600" />
+          </div>
+         
+          <div className="absolute top-90 -left-8 animate-pulse">
+            <Soup className="w-10 h-10 text-green-600" />
+          </div>
+          <div className="absolute top-90 lg:left-120 -right-8  animate-bounce">
+            <Utensils className="w-10 h-10 text-green-600" />
+          </div>
+          <div className="absolute -top-8 lg:left-120 -right-8 animate-spin-slow">
+            <Coffee className="w-10 h-10 text-green-600" />
+          </div>
+
+          {/* Text Content */}
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-gray-900 transition-all duration-500 transform hover:text-primary">
-            Fresh, Healthy Meals 
+            Fresh, Healthy Meals
             <span className="text-primary"> Delivered Daily</span>
           </h1>
           <p className="text-xl text-gray-600 md:text-2xl transition-all duration-500 hover:text-gray-800">
@@ -41,7 +57,7 @@ export function HeroBanner() {
           <div className="flex flex-wrap gap-6 pt-6 justify-center">
             <div className="flex items-center gap-2 mx-auto text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
               <Clock className="h-6 w-6" />
-              <span className="font-medium">Ready in As fast as</span>
+              <span className="font-medium">Ready in Minutes</span>
             </div>
             <div className="flex items-center gap-2 mx-auto text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
               <HeartHandshake className="h-6 w-6" />
@@ -56,27 +72,38 @@ export function HeroBanner() {
 
         {/* Floating Food Images */}
         <div className="relative hidden md:block h-[500px]">
-          <Image
-            src={img1}
-            alt="Meal 1"
-            width={300}
-            height={300}
-            className="absolute left-0 top-0 shadow-xl rounded-2xl animate-float hover:scale-105 transition-transform duration-300"
-          />
-          <Image
-            src={img2}
-            alt="Meal 2"
-            width={280}
-            height={280}
-            className="absolute right-0 top-20 shadow-xl rounded-2xl animate-float-delayed hover:scale-105 transition-transform duration-300"
-          />
-          <Image
-            src={img3}
-            alt="Meal 3"
-            width={260}
-            height={260}
-            className="absolute left-10 bottom-0 shadow-xl rounded-2xl animate-float hover:scale-105 transition-transform duration-300"
-          />
+          {/* Image 1 - Top Left */}
+          <div className="absolute left-5 lg:-left-20 lg:top-0 w-[300px] h-[300px] animate-float">
+            <Image
+              src={img1}
+              alt="Meal 1"
+              width={300}
+              height={300}
+              className="rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+
+          {/* Image 2 - Top Right */}
+          <div className="absolute right-5 top-80 lg:right-20 lg:top-30  w-[280px] h-[280px] animate-float-delayed">
+            <Image
+              src={img2}
+              alt="Meal 2"
+              width={280}
+              height={280}
+              className="rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300"
+            />
+          </div>
+
+          {/* Image 3 - Bottom Center */}
+          <div className="absolute left-20 top-120 lg:left-80 lg:top-70 transform -translate-x-1/2  w-[260px] h-[260px] animate-float">
+            <Image
+              src={img3}
+              alt="Meal 3"
+              width={260}
+              height={260}
+              className="rounded-2xl shadow-xl hover:scale-105 transition-transform duration-300"
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -34,7 +34,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
   console.log(ordermeal,'checkorder')
   const router = useRouter();
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState("");
   const [customizations, setCustomizations] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -129,7 +129,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
             if (res.success) {
                 toast.success(res.message);
-                router.push("/");
+                router.push(`/orderdetails/${ordermeal._id}`);
             } else {
                 toast.error(res.message);
             }
