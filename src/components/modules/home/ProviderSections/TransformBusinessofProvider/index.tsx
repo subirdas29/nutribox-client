@@ -1,12 +1,35 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ShoppingCart, Users, Utensils, Monitor, Clock, BookOpen, Camera, Truck, PieChart } from 'lucide-react';
-import Image from 'next/image';
-import sectionBanner from '../../../../../assets/banner/banner.jpg';
+import Image, { StaticImageData } from 'next/image';
+
+// Import different images for each tab
+import foodBrandsImage from '../../../../../assets/menu/img1.jpg';
+import retailersImage from '../../../../../assets/menu/img2.jpg';
+import kitchenAppliancesImage from '../../../../../assets/menu/img3.jpg';
+import foodMediaImage from '../../../../../assets/menu/img4.jpg';
 
 const MealProviderBusinessTransform = () => {
   const [activeTab, setActiveTab] = useState('Food Brands');
-  const tabs = ['Food Brands', 'Retailers', 'Kitchen Appliances', 'Food Media'];
+
+  // Tabs array wrapped with useMemo to prevent unnecessary re-renders
+  const tabs = useMemo(() => ['Food Brands', 'Retailers', 'Kitchen Appliances', 'Food Media'], []);
+
+  // Different background colors for each tab
+  const bgColors: Record<string, string> = {
+    'Food Brands': 'bg-green-100',
+    'Retailers': 'bg-yellow-100',
+    'Kitchen Appliances': 'bg-blue-100',
+    'Food Media': 'bg-purple-100',
+  };
+
+  // Different images for each tab
+  const tabImages: Record<string, StaticImageData> = {
+    'Food Brands': foodBrandsImage,
+    'Retailers': retailersImage,
+    'Kitchen Appliances': kitchenAppliancesImage,
+    'Food Media': foodMediaImage,
+  };
 
   // Auto-rotate feature
   useEffect(() => {
@@ -16,15 +39,15 @@ const MealProviderBusinessTransform = () => {
         const nextIndex = (currentIndex + 1) % tabs.length;
         return tabs[nextIndex];
       });
-    }, 5000); // Change card every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [tabs]);
 
   return (
     <section className="py-20 bg-gradient-to-r from-green-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-green-900 mb-8">
+      <div className="mx-4 md:mx-12 lg:mx-32 px-4 text-center">
+        <h1 className="text-3xl md:text-4xl  font-bold text-green-900 mb-12">
           Let’s Transform Your Meal Business
         </h1>
 
@@ -46,21 +69,19 @@ const MealProviderBusinessTransform = () => {
         </div>
 
         {/* Card */}
-        <div className="relative h-[500px] md:h-[400px]">
+        <div className="relative h-auto md:h-[400px]">
           {tabs.map((tab) => (
             <div
               key={tab}
-              className={`absolute inset-0 p-8 bg-white rounded-lg shadow-lg transition-all duration-500 ${
-                activeTab === tab
-                  ? 'opacity-100 scale-100'
-                  : 'opacity-0 scale-95 pointer-events-none'
-              }`}
+              className={`absolute inset-0 p-8 rounded-lg shadow-lg transition-all duration-500 ${
+                activeTab === tab ? 'opacity-100 scale-100 relative' : 'opacity-0 scale-95 absolute pointer-events-none'
+              } ${bgColors[tab]}`}
             >
               <div className="flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
                 {/* Content */}
-                <div className="space-y-4 order-2 md:order-1">
+                <div className="space-y-4 order-2 md:order-1 text-left">
                   <h2 className="text-2xl font-bold text-green-900 mb-4">{tab}</h2>
-                  <ul className="text-left text-gray-600 space-y-2">
+                  <ul className="text-gray-600 space-y-2">
                     {tab === 'Food Brands' && (
                       <>
                         <li className="flex items-center gap-2">
@@ -161,13 +182,13 @@ const MealProviderBusinessTransform = () => {
                 </div>
 
                 {/* Image */}
-                <div className="order-1 md:order-2 w-full md:w-auto">
+                <div className="order-1 md:order-2 w-full">
                   <Image
                     width={400}
                     height={400}
-                    src={sectionBanner}
+                    src={tabImages[tab]}
                     alt={tab}
-                    className="rounded-lg shadow-md w-full md:w-[400px]"
+                    className="rounded-lg shadow-md w-full md:w-[600px] md:h-[300px] object-cover"
                   />
                 </div>
               </div>

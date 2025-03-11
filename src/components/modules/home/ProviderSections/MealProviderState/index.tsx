@@ -28,23 +28,18 @@ const MealProviderStats = () => {
       label: 'Revenue Generated',
       description: 'Annual sales through our platform',
     },
-    {
-      icon: <TrendingUp className="w-8 h-8 text-green-600" />,
-      value: 'Up to 16.21',
-      label: 'ROAS',
-      description: 'Seen in meal provider campaigns',
-    },
+
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-r from-green-50 to-white">
-      <div className="max-w-6xl mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-green-900 mb-8">
+    <section className="py-20 bg-gradient-to-r from-green-50 to-white ">
+      <div className=" mt-20 px-4 text-center">
+        <h2 className="  text-3xl md:text-4xl font-bold text-green-900 mb-8">
           Trusted by Clients. Loved by Customers.
         </h2>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mx-4 md:mx-12 lg:mx-20">
           {stats.map((stat, index) => (
             <div
               key={index}

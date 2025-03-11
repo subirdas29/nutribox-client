@@ -8,6 +8,7 @@ import Image from 'next/image';
 import img1 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg';
 import img2 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg';
 import img3 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg';
+import Link from 'next/link';
 
 export function MenuCards() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, draggable: true });
@@ -43,8 +44,8 @@ export function MenuCards() {
   ];
 
   return (
-    <div className="mx-4 md:mx-12 lg:mx-20 py-12 relative">
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8 text-center">
+    <div className="mx-4 md:mx-12 lg:mx-20 my-12 lg:my-20 py-12 relative ">
+      <h2 className="text-3xl md:text-4xl font-bold text-green-900 mb-12 text-center">
         Our Menu
       </h2>
 
@@ -95,7 +96,7 @@ export function MenuCards() {
 
       {/* View Menu Button */}
       <div className="mt-12 flex justify-center">
-        <Button className="px-12 py-6 text-lg md:text-xl bg-primary">Explore Full Menu →</Button>
+        <Link href='/allmenu'><Button className="px-12 py-6 text-lg md:text-xl bg-primary">Explore Full Menu →</Button></Link>
       </div>
     </div>
   );

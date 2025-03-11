@@ -19,9 +19,11 @@ import { loginUser, reCaptchaTokenVerification } from "@/services/AuthService";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loginSchema } from "./loginValidation";
-// Import useUser
-import { Loader2 } from "lucide-react"; // Import spinner icon
+import { Loader2 } from "lucide-react";
 import { useUser } from "@/context/UserContext";
+import Image from "next/image";
+
+import login from "../../../../assets/login/login.png";
 
 export default function LoginForm() {
   const form = useForm({
@@ -32,7 +34,7 @@ export default function LoginForm() {
     formState: { isSubmitting },
   } = form;
 
-  const { setIsLoading, isLoading } = useUser(); // Get loading state from context
+  const { setIsLoading } = useUser();
   const [reCaptchaStatus, setReCaptchaStatus] = useState(false);
 
   const searchParams = useSearchParams();
@@ -40,7 +42,6 @@ export default function LoginForm() {
   const router = useRouter();
 
   const handleReCaptcha = async (value: string | null) => {
-   
     try {
       const res = await reCaptchaTokenVerification(value!);
       if (res?.success) {
@@ -52,20 +53,18 @@ export default function LoginForm() {
   };
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true);
 
     try {
       const res = await loginUser(data);
       if (res?.success) {
         toast.success(res?.message);
-
         if (redirect) {
           router.push(redirect);
-          setIsLoading(false)
+          setIsLoading(false);
         } else {
           router.push("/");
-          // window.location.reload()
-          setIsLoading(false)
+          setIsLoading(false);
         }
       } else {
         toast.error(res?.message);
@@ -76,17 +75,23 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="border-2 border-gray-300 rounded-xl flex-grow max-w-md w-full p-5">
-      <div className="flex items-center space-x-4 ">
-        <div>
-          <h1 className="text-xl font-semibold">Login</h1>
-          <p className="font-extralight text-sm text-gray-600">
-            Welcome Back!
-          </p>
-        </div>
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen my-16 px-8 md:px-16 lg:px-20 gap-10 ">
+      {/* Image Section */}
+      <div className="w-full md:w-1/2 flex justify-center">
+        <Image
+          src={login}
+          alt="Login"
+          className="w-full max-w-sm md:max-w-md lg:max-w-lg object-cover"
+        />
       </div>
 
-     
+      {/* Login Form */}
+      <div className="w-full md:w-1/2 max-w-md bg-white p-6 rounded-lg shadow-md border border-gray-200">
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-semibold text-gray-900">Login</h1>
+          <p className="text-sm text-gray-600">Welcome Back!</p>
+        </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -94,7 +99,7 @@ export default function LoginForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="mt-6">Email</FormLabel>
+                  <FormLabel className="text-md">Email</FormLabel>
                   <FormControl>
                     <Input type="email" {...field} value={field.value || ""} />
                   </FormControl>
@@ -106,8 +111,8 @@ export default function LoginForm() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mt-3">Password</FormLabel>
+                <FormItem className="my-4">
+                  <FormLabel className="text-md ">Password</FormLabel>
                   <FormControl>
                     <Input type="password" {...field} value={field.value || ""} />
                   </FormControl>
@@ -116,31 +121,30 @@ export default function LoginForm() {
               )}
             />
 
-            <div className="flex mt-3">
+            <div className="flex mt-4 justify-center">
               <ReCAPTCHA
                 sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY!}
                 onChange={handleReCaptcha}
-                className="mx-auto"
               />
             </div>
 
             <Button
-              disabled={reCaptchaStatus ? false : true}
+              disabled={!reCaptchaStatus}
               type="submit"
-              className="mt-5 w-full"
+              className="mt-5 w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-md"
             >
-              {isSubmitting ? "Logging...." : "Login"}
+              {isSubmitting ? <Loader2 className="animate-spin h-5 w-5 mx-auto" /> : "Login"}
             </Button>
           </form>
         </Form>
-    
 
-      <p className="text-sm text-gray-600 text-center my-3">
-        Do not have an account?
-        <Link href="/register" className="text-primary">
-          Register
-        </Link>
-      </p>
+        <p className="text-sm text-gray-600 text-center mt-4">
+          Don't have an account?{" "}
+          <Link href="/register" className="text-primary font-semibold">
+            Register
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

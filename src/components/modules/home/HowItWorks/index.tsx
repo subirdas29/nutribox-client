@@ -24,7 +24,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className={`${styles.container} relative overflow-hidden`}>
+    <section className={`${styles.container} relative overflow-hidden mb-12 lg:mb-20`}>
       {/* Decorative Leaves */}
       <div className="absolute top-20 left-10 opacity-10 rotate-12">
         <Leaf className={`${styles.floatAnimation} w-36 h-36 text-emerald-300`} />
@@ -34,7 +34,7 @@ export default function HowItWorks() {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <h2 className="text-4xl font-bold text-center mb-16 bg-clip-text  text-black">
+        <h2 className="text-3xl md:text-4xl font-bold text-green-900  text-center mb-12 bg-clip-text  ">
           Fresh Journey Starts Here
         </h2>
 

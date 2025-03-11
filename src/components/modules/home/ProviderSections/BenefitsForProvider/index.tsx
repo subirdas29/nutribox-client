@@ -53,8 +53,8 @@ export default function BenefitsForProvider() {
         ))}
       </div>
 
-      <div className="px-4 mx-4 md:mx-12 lg:mx-20">
-        <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">
+      <div className="px-4 mx-4 md:mx-12 lg:mx-20 mb-12 lg:mb-20">
+        <h2 className="text-3xl md:text-4xl text-green-900 font-bold text-center mb-12 animate-fade-in-up">
           Why Partner With Us?
         </h2>
 

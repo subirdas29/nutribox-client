@@ -1,5 +1,7 @@
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
+import logo from '../../assets/logo/logo.png'
+import Image from "next/image";
 
 const Footer = () => {
   return (
@@ -8,7 +10,15 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 mb-12">
           {/* Brand Section */}
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold tracking-tighter">Nutri Bite</h2>
+             <div className="flex items-center gap-2">
+                      <Image
+                        src={logo}
+                        
+                        alt = 'footer-logo'
+                        className="h-10 w-10"
+                        />
+                      <span className="text-3xl font-bold">NutriBite</span>
+                      </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               Your premier destination for smart shopping. Discover quality products with unbeatable convenience.
             </p>

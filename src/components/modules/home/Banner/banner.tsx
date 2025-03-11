@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Clock, Salad, HeartHandshake, Bike, Utensils, ChefHat, Croissant, Coffee, Soup } from "lucide-react";
+import { Clock, Salad, HeartHandshake, Bike, Utensils, ChefHat, Coffee, Soup } from "lucide-react";
 import banner from '../../../../assets/banner/banner.jpg';
 import img1 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg';
 import img2 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg';
@@ -72,7 +72,7 @@ export function HeroBanner() {
         {/* Floating Food Images */}
         <div className="relative hidden md:block h-[500px]">
           {/* Image 1 - Top Left */}
-          <div className="absolute left-0 lg:left-10 top-0 w-[300px] h-[300px] animate-float">
+          <div className="absolute left-0 lg:left-10 top-0 w-[300px] h-[300px] ">
             <Image
               src={img1}
               alt="Meal 1"
@@ -83,7 +83,7 @@ export function HeroBanner() {
           </div>
 
           {/* Image 2 - Top Right */}
-          <div className="absolute right-0 lg:-right-10 top-40 w-[280px] h-[280px] animate-float-delayed">
+          <div className="absolute right-0 lg:-right-10 top-40 w-[280px] h-[280px] ">
             <Image
               src={img2}
               alt="Meal 2"
@@ -94,7 +94,7 @@ export function HeroBanner() {
           </div>
 
           {/* Image 3 - Bottom Center */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-10 w-[260px] h-[260px] animate-float">
+          <div className="absolute left-1/2 transform -translate-x-1/2 -bottom-10 w-[260px] h-[260px] ">
             <Image
               src={img3}
               alt="Meal 3"

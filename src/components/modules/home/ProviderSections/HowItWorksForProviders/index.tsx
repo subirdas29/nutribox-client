@@ -37,14 +37,14 @@ export default function HowItWorksProvider() {
         <Leaf className={`${styles.delayedFloat} w-36 h-36 text-green-300`} />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <h2 className="text-4xl font-bold text-center mb-16 bg-clip-text text-green-900">
+      <div className=" px-4 relative z-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-16 bg-clip-text text-green-900">
           Streamline Your Meal Business
         </h2>
 
-        <div className="grid md:grid-cols-4 gap-8 relative mx-4 md:mx-12 lg:mx-20">
+        <div className="grid md:grid-cols-4 gap-8 relative mx-4 md:mx-12 lg:mx-20 mb-12 lg:mb-20">
           {/* Animated Vine Connector */}
-          <div className="hidden md:block absolute top-1/4 left-1/2 w-4/5 h-1 bg-gradient-to-r from-green-200 via-teal-200 to-green-200 dark:from-gray-700 dark:to-gray-700 transform -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden">
+          <div className="hidden md:block absolute top-1/4 left-1/2 w-4/5 h-1 bg-gradient-to-r  from-green-200 via-teal-200 to-green-200 dark:from-gray-700 dark:to-gray-700 transform -translate-x-1/2 -translate-y-1/2 rounded-full overflow-hidden">
             <div className={`${styles.shimmer} absolute inset-0`} />
           </div>
 

@@ -37,7 +37,7 @@ export default function BenefitsGrid() {
   ]
 
   return (
-    <section className="py-16 bg-slate-50 relative overflow-hidden ">
+    <section className="py-16 bg-slate-50 relative overflow-hidden mb-12 lg:mb-20">
       {/* Animated background particles */}
       <div className="absolute inset-0 opacity-10 ">
         {[...Array(20)].map((_, i) => (
@@ -54,7 +54,7 @@ export default function BenefitsGrid() {
       </div>
 
       <div className=" px-4 mx-4 md:mx-12 lg:mx-20">
-        <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">
+        <h2 className="text-3xl md:text-4xl font-bold text-green-900  text-center mb-12 animate-fade-in-up">
          
             Why Choose Our Meals?
          

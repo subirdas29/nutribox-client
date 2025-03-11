@@ -11,9 +11,9 @@ import dessert from '../../../../assets/menu/img6.jpg'
 export default function MealPicker() {
 
   return (
-    <div className=" bg-green-100 py-20 my-20 px-4 sm:px-6 lg:px-8 ">
+    <div className=" bg-green-50 py-8 px-4 sm:px-6 lg:px-8 mb-12 lg:mb-20">
       <div className="mx-4 md:mx-12 lg:mx-20">
-        <h1 className="text-3xl font-bold text-center mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-green-900 text-center mb-12">
           Pick Your Meal
         </h1>
         
