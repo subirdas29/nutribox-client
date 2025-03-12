@@ -1,14 +1,15 @@
 import Image from "next/image";
+import notfound from '../assets/notfound/not-found.png'
 
 const NotFoundPage = () => {
   return (
-    <div className="w-[90%] mx-auto">
+    <div className="flex justify-center items-center">
       <Image
-        src="https://getpublii.com/docs/media/posts/30/404-error-page.png"
-        width={500}
-        height={500}
+        src={notfound}
+       width={600}
+       height={600}
         alt="not found page"
-        className="w-full"
+        // className="w-full h-full "
       />
     </div>
   );

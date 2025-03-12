@@ -31,8 +31,10 @@ interface Meal {
 }
 
 export default function AllMenu({menu}:{menu:Meal[]}) {
-  console.log(menu.map(d=>d.name))
-
+  
+  console.log("AllMenu Component Props:", menu); // Check if menu is received
+  
+ 
 
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -49,10 +51,10 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
     rating: null as number | null 
   });
 
-  const ingredients = [...new Set(menu.flatMap((ingre)=>ingre.ingredients))]
-  const dietary = [...new Set(menu.flatMap((diet)=>diet.dietaryPreferences))]
-  const cuisine = [...new Set(menu.flatMap(cuis =>cuis.mealProvider.cuisineSpecialties))]
-  const name = menu.map(meal=>meal.name)
+  const ingredients = [...new Set(menu?.flatMap((ingre)=>ingre.ingredients))]
+  const dietary = [...new Set(menu?.flatMap((diet)=>diet.dietaryPreferences))]
+  const cuisine = [...new Set(menu?.flatMap(cuis =>cuis.mealProvider.cuisineSpecialties))]
+  const name = menu?.map(meal=>meal?.name)
 
   const handleRatingFilter = (rating:number) =>{
     setFilters({...filters,rating})
@@ -61,26 +63,26 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
  
  
   const applyFilters = (meal: Meal) => {
-    const matchesSearch = meal.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      meal.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = meal?.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      meal?.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesCategory = !filters.category || meal.category === filters.category;
-    const matchesMealName = filters.name.length === 0 || filters.name.some(pref => meal.name.includes(pref))
-    const matchesPrice = meal.price >= filters.minPrice && meal.price <= filters.maxPrice;
-    const matchesPortion = !filters.portionSize || meal.portionSize === filters.portionSize;
-    const matchesDietary = filters.dietaryPreferences.length === 0 || 
-      filters.dietaryPreferences.some(pref => meal.dietaryPreferences.includes(pref));
-    const matchesIngredients = filters.ingredients.length === 0 || filters.ingredients.some(pref => meal.ingredients.includes(pref))
-    const matchesCuisine = filters.cuisine.length === 0 || filters.cuisine.some(pref => meal.mealProvider.cuisineSpecialties.includes(pref))
-    const matchesAvailability = !filters.availableOnly || meal.available;
+    const matchesCategory = !filters?.category || meal?.category === filters?.category;
+    const matchesMealName = filters?.name.length === 0 || filters?.name.some(pref => meal?.name.includes(pref))
+    const matchesPrice = meal?.price >= filters?.minPrice && meal?.price <= filters?.maxPrice;
+    const matchesPortion = !filters?.portionSize || meal?.portionSize === filters?.portionSize;
+    const matchesDietary = filters?.dietaryPreferences.length === 0 || 
+      filters?.dietaryPreferences.some(pref => meal?.dietaryPreferences.includes(pref));
+    const matchesIngredients = filters?.ingredients.length === 0 || filters?.ingredients.some(pref => meal?.ingredients.includes(pref))
+    const matchesCuisine = filters?.cuisine.length === 0 || filters?.cuisine.some(pref => meal?.mealProvider?.cuisineSpecialties.includes(pref))
+    const matchesAvailability = !filters?.availableOnly || meal?.available;
 
-    const matchesRating = filters.rating === null || Math.floor(meal.rating as number) === filters.rating
+    const matchesRating = filters?.rating === null || Math.floor(meal?.rating as number) === filters?.rating
 
     return matchesSearch && matchesCategory && matchesPrice && 
            matchesPortion && matchesDietary && matchesAvailability && matchesIngredients && matchesCuisine && matchesRating && matchesMealName ;
   };
 
-  const filteredMeals = menu.filter(applyFilters);
+  const filteredMeals = menu?.filter(applyFilters);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -110,7 +112,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                  <div>
                   <label className="block text-lg font-semibold mb-2 ">Meal Name</label>
                   <div className="space-y-2">
-                    {name.map((pref) => (
+                    {name?.map((pref) => (
                       <div key={pref} className="flex items-center gap-2">
                         <Checkbox
                           id={pref}
@@ -173,7 +175,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                 <div>
                   <label className="block text-lg font-semibold mb-2">Ingredients</label>
                   <div className="space-y-2">
-                    {ingredients.map((pref) => (
+                    {ingredients?.map((pref) => (
                       <div key={pref} className="flex items-center gap-2">
                         <Checkbox
                           id={pref}
@@ -204,7 +206,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                 <div>
                   <label className="block text-lg font-semibold mb-2">Dietary Preferences</label>
                   <div className="space-y-2">
-                    {dietary.map((pref) => (
+                    {dietary?.map((pref) => (
                       <div key={pref} className="flex items-center gap-2">
                         <Checkbox
                           id={pref}
@@ -235,7 +237,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                 <div>
                   <label className="block text-lg font-semibold mb-2">Ingredients</label>
                   <div className="space-y-2">
-                    {cuisine.map((pref) => (
+                    {cuisine?.map((pref) => (
                       <div key={pref} className="flex items-center gap-2">
                         <Checkbox
                           id={pref}
@@ -288,7 +290,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-4">Rating</h2>
         <RadioGroup className="space-y-3">
-          {[5, 4, 3, 2, 1,0].map((rating) => (
+          {[5, 4, 3, 2, 1,0]?.map((rating) => (
             <div key={rating} className="flex items-center space-x-2">
               <RadioGroupItem
                 onClick={() => handleRatingFilter(rating)}
@@ -358,7 +360,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMeals.map((meal) => (
+              {filteredMeals?.map((meal) => (
                 <Card key={meal._id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <CardTitle>{meal.name}</CardTitle>
@@ -386,7 +388,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                   </div>
                   </div>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {meal.dietaryPreferences.map((pref) => (
+                      {meal?.dietaryPreferences?.map((pref) => (
                         <span 
                           key={pref} 
                           className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded"

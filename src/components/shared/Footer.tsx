@@ -17,7 +17,7 @@ const Footer = () => {
                         alt = 'footer-logo'
                         className="h-10 w-10"
                         />
-                      <span className="text-3xl font-bold">NutriBite</span>
+                      <span className="text-3xl font-bold">NutriBox</span>
                       </div>
             <p className="text-gray-300 text-sm leading-relaxed">
               Your premier destination for smart shopping. Discover quality products with unbeatable convenience.
@@ -86,7 +86,7 @@ const Footer = () => {
               <input 
                 type="email" 
                 placeholder="Enter your email" 
-                className="flex-1 px-2 lg:px-4 lg:py-2 rounded-md bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-green/50"
+                className="flex-1 px-2 lg:px-4 lg:py-2 rounded-md  bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-green/50"
               />
               <button className="px-2 py-1 lg:px-6 lg:py-2 bg-white text-primary rounded-lg text-sm font-semibold hover:bg-gray-100 transition">
                 Subscribe

@@ -13,6 +13,7 @@ import { logout } from "@/services/AuthService";
 import { protectedRoutes } from "@/constant";
 import logo from '../../assets/logo/logo.png';
 import Image from "next/image";
+import CookingLoader from "@/app/loading";
 
 export function Navbar() {
   const { user, setIsLoading } = useUser();
@@ -60,7 +61,8 @@ export function Navbar() {
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-primary"></div>
+        {/* <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-primary"></div> */}
+        <CookingLoader/>
       </div>
     );
   }
@@ -80,7 +82,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image src={logo} alt="logo" className="h-8 w-8" />
-          <span className="text-3xl font-bold text-primary">NutriBite</span>
+          <span className="text-3xl font-bold text-primary">NutriBox</span>
         </Link>
 
         {/* Desktop Navigation */}

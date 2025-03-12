@@ -94,24 +94,29 @@ export const getAllProviderMeals = async (page?: string,limit?:string) => {
 
 
 //all meals for everyone
-  export const getAllMeals = async (page?: string,limit?:string) => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals?limit=${limit}&page=${page}`,
-        {
-          // headers: {
-          //   Authorization: (await cookies()).get("accessToken")!.value,
-          //   "Content-Type": "application/json",
-          // },
-          next: {
-            tags: ["Meals"],
-          },
-        }
-      );
-      const data = await res.json();
-      return data;
-    } catch (error: any) {
-      return Error(error.message);
+export const getAllMeals = async () => {
+  try {
+    console.log("Fetching meals from:", process.env.NEXT_PUBLIC_BASE_API);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/providers/meals`,
+      {
+        next: { tags: ["Meals"] },
+      }
+    );
+
+    // console.log("Response status:", res.status);
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! Status: ${res.status}`);
     }
-  };
+
+    const data = await res.json();
+    // console.log("Fetched meals data:", data);
+
+    return data;
+  } catch (error: any) {
+    console.error("Error fetching meals:", error.message);
+    return null;
+  }
+};
+
 
