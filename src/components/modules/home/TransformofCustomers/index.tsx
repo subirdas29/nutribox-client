@@ -41,7 +41,7 @@ const CustomerTransform = () => {
 
   return (
     <section className="py-20 bg-gradient-to-r from-blue-50 to-white mb-12 lg:mb-20">
-      <div className="max-w-6xl mx-auto px-4 text-center">
+      <div className="mx-4 md:mx-12 lg:mx-32 px-4  text-center">
         <h1 className="text-3xl md:text-4xl font-bold text-green-900 mb-12">
           Discover Delicious Meals
         </h1>
@@ -64,7 +64,7 @@ const CustomerTransform = () => {
         </div>
 
         {/* Card */}
-        <div className="relative h-[500px] md:h-[400px]">
+        <div className="relative h-auto md:h-[400px]">
           {tabs.map((tab) => (
             <div
               key={tab}
@@ -74,7 +74,7 @@ const CustomerTransform = () => {
             >
               <div className="flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
                 {/* Content */}
-                <div className="space-y-4 order-2 md:order-1">
+                <div className="space-y-4 order-2 md:order-1 text-left">
                   <h2 className="text-2xl font-bold text-green-900 mb-4">{tab}</h2>
                   <ul className="text-left text-gray-600 space-y-2">
                     {tab === 'Healthy Meals' && (

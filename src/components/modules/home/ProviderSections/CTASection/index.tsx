@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import Image from "next/image";
 import { useUser } from "@/context/UserContext"; 
-import banner2 from "../../../../../assets/banner/banner.jpg";
+import banner2 from "../../../../../assets/ctaimg/img.jpg";
 
 const CTASection = () => {
   const { user } = useUser(); // Get user details

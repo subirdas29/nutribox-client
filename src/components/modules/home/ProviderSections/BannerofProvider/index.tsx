@@ -1,22 +1,22 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Clock, Settings, PieChart, Truck } from "lucide-react";
+import { Clock, Settings, PieChart, Truck, ChefHat, Soup, Utensils, Coffee } from "lucide-react";
 import { useUser } from "@/context/UserContext"; // Import user context
-import banner from "../../../../../assets/banner/banner.jpg";
-import img1 from "../../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg";
-import img2 from "../../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg";
-import img3 from "../../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg";
+import banner from "../../../../../assets/banner/banner2.png";
+import img1 from "../../../../../assets/banner/providerimage/img1.jpg";
+import img2 from "../../../../../assets/banner/providerimage/img2.jpg";
+import img3 from "../../../../../assets/banner/providerimage/img3.jpg";
 import Link from "next/link";
 
 export function HeroBannerProvider() {
   const { user } = useUser(); // Get user info
 
-  // Determine banner type based on user role
+
   const isMealProvider = user?.role === "mealprovider";
   
 
   return (
-    <section className="relative min-h-[600px] flex items-center bg-gradient-to-r from-green-100 to-transparent">
+    <section className="relative min-h-[600px] flex items-center bg-gradient-to-r from-green-200 to-transparent">
       {/* Background Image */}
       <div className="absolute inset-0 -z-10">
         <Image
@@ -31,7 +31,20 @@ export function HeroBannerProvider() {
 
       <div className="container grid md:grid-cols-2 gap-12 items-center py-32 mx-12 md:mx-16 lg:mx-20">
         {/* Content */}
-        <div className="space-y-6 max-w-2xl text-center md:text-left">
+        <div className="space-y-6 max-w-2xl text-center md:text-left relative">
+               {/* Animated Icons Around Text */}
+               <div className="absolute -top-8 -left-8 animate-bounce">
+            <ChefHat className="w-10 h-10 text-green-600" />
+          </div>
+          <div className="absolute top-90 -left-8 animate-pulse">
+            <Soup className="w-10 h-10 text-green-600" />
+          </div>
+          <div className="absolute top-90 lg:left-120 -right-8 animate-bounce">
+            <Utensils className="w-10 h-10 text-green-600" />
+          </div>
+          <div className="absolute -top-8 lg:left-120 -right-8 animate-pulse">
+            <Coffee className="w-10 h-10 text-green-600" />
+          </div>
           {/* Conditional Content */}
           {isMealProvider ? (
             <>

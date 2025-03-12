@@ -73,9 +73,9 @@ export function Navbar() {
         "w-full top-0 z-50 transition-all duration-300 fixed",
         pathname === "/" || pathname === "/become-meal-provider"
           ? scrolled
-            ? "bg-white/80 backdrop-blur-md border-b shadow-md"
+            ? "bg-white/90 backdrop-blur-md border-b shadow-md"
             : "bg-transparent backdrop-blur-none border-none"
-          : "bg-white/80 backdrop-blur-md border-b shadow-md sticky"
+          : "bg-white/90 backdrop-blur-md border-b shadow-md sticky"
       )}
     >
       <div className="flex h-16 items-center justify-between px-4 md:px-8 lg:px-16">

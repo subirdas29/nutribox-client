@@ -5,9 +5,13 @@ import { Button } from "@/components/ui/button";
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 
-import img1 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg';
-import img2 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg';
-import img3 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg';
+import img1 from '../../../../assets/banner/providerimage/img1.jpg';
+import img2 from '../../../../assets/banner/providerimage/img2.jpg';
+import img3 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg';
+import img4 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg';
+import img5 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg';
+
+
 import Link from 'next/link';
 
 export function MenuCards() {
@@ -37,10 +41,10 @@ export function MenuCards() {
 
   const menuItems = [
     { title: "Lemon Yogurt Bundt Cake", ingredients: "ADD 10 INGREDIENTS", image: img1 },
-    { title: "Doritos® Loaded Nachos", ingredients: "ADD 8 INGREDIENTS", image: img2 },
+    { title: "Loaded Nachos", ingredients: "ADD 8 INGREDIENTS", image: img2 },
     { title: "Rum & Raisin Ice Cream", ingredients: "ADD 8 INGREDIENTS", image: img3 },
-    { title: "Vanilla Choco Delight", ingredients: "ADD 8 INGREDIENTS", image: img1 },
-    { title: "Berry Blast Smoothie", ingredients: "ADD 8 INGREDIENTS", image: img2 },
+    { title: "Vanilla Choco Delight", ingredients: "ADD 8 INGREDIENTS", image: img4 },
+    { title: "Berry Blast Smoothie", ingredients: "ADD 8 INGREDIENTS", image: img5 },
   ];
 
   return (
@@ -96,7 +100,7 @@ export function MenuCards() {
 
       {/* View Menu Button */}
       <div className="mt-12 flex justify-center">
-        <Link href='/allmenu'><Button className="px-12 py-6 text-lg md:text-xl bg-primary">Explore Full Menu →</Button></Link>
+        <Link href='/allmenu'><Button className="px-12 py-6 text-lg md:text-xl bg-primary cursor-pointer">Explore Full Menu →</Button></Link>
       </div>
     </div>
   );
