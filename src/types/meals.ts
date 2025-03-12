@@ -3,12 +3,13 @@ export type TMealsForm = {
   name: string;
   category: string;
   price: number;
-  ingredients: string[];
+
   portionSize: string;
   available: boolean;
   description: string;
   imageUrls: string[];
-  dietaryPreferences: string[];
+  ingredients: string | string[]; 
+  dietaryPreferences: string | string[];
   mealProvider:TMealProvider;
   rating?:number;
   isDeleted?:boolean

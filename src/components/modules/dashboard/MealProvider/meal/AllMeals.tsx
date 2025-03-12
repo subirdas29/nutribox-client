@@ -1,7 +1,7 @@
 "use client";
 
 import { NBTable } from "@/components/ui/core/NBTable";
-import {TMealProvider, TMealsForm } from "@/types/meals";
+import { TMealsForm } from "@/types/meals";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
 import Image from "next/image";
@@ -96,10 +96,13 @@ const AllMeals = ({ meals}:{meals:TMealsForm[]}) => {
       header: "Dietary Preferences",
       cell: ({ row }) => (
         <span className="text-sm text-gray-600">
-          {row.original.dietaryPreferences.join(", ")}
+          {Array.isArray(row.original.dietaryPreferences)
+            ? row.original.dietaryPreferences.join(", ")
+            : row.original.dietaryPreferences || "N/A"}
         </span>
       ),
     },
+    
     {
       accessorKey: "available",
       header: "Availability Status", // More meaningful header

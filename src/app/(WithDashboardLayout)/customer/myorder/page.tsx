@@ -4,6 +4,8 @@ import { getMyOrder } from "@/services/User"
 
 const MyOrderPage = async() => {
     const {data} = await getMyOrder()
+
+    console.log(data,"all-order manage")
    
   return (
     <div>

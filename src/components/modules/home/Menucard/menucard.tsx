@@ -11,7 +11,7 @@ import img3 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-uns
 import Link from 'next/link';
 
 export function MenuCards() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, draggable: true });
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, dragFree: true });
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 

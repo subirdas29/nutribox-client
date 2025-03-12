@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -139,7 +140,7 @@ export default function LoginForm() {
         </Form>
 
         <p className="text-sm text-gray-600 text-center mt-4">
-          Don't have an account?{" "}
+        {`Don't have an account?`}{" "}
           <Link href="/register" className="text-primary font-semibold">
             Register
           </Link>

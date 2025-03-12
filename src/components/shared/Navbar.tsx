@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -68,11 +69,11 @@ export function Navbar() {
     <nav
       className={cn(
         "w-full top-0 z-50 transition-all duration-300 fixed",
-        ["/", "/become-meal-provider"].includes(pathname)
+        pathname === "/" || pathname === "/become-meal-provider"
           ? scrolled
             ? "bg-white/80 backdrop-blur-md border-b shadow-md"
             : "bg-transparent backdrop-blur-none border-none"
-          : "bg-white/80 backdrop-blur-md border-b shadow-md"
+          : "bg-white/80 backdrop-blur-md border-b shadow-md sticky"
       )}
     >
       <div className="flex h-16 items-center justify-between px-4 md:px-8 lg:px-16">
@@ -113,7 +114,7 @@ export function Navbar() {
             <>
               <Link href="/profile">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.profileImage || "https://github.com/shadcn.png"} />
+                <AvatarImage src={user.profileImage?.[0] || "https://github.com/shadcn.png"} />
                 </Avatar>
               </Link>
               <Button size="sm" className="gap-1 text-[16px] px-3 py-2 cursor-pointer" onClick={handleLogOut}>
@@ -179,7 +180,7 @@ export function Navbar() {
                 <>
                   <Link href="/profile" className="flex justify-center">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.profileImage || "https://github.com/shadcn.png"} />
+                      <AvatarImage src={user.profileImage?.[0] || "https://github.com/shadcn.png"} />
                       <AvatarFallback>User</AvatarFallback>
                     </Avatar>
                   </Link>

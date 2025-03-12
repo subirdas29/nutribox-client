@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ import { IUser } from "@/types/user";
 const CustomerProfileModal = ({ customer }: { customer: IUser }) => {
     const [imageFiles, setImageFiles] = useState<File[]>([]);
     const [imagePreview, setImagePreview] = useState<string[]>([]);
-    const [open, setOpen] = useState(false); // ✅ State to manage modal visibility
+    const [open, setOpen] = useState(false); 
   console.log(imageFiles)
     useEffect(() => {
       if (customer?.profileImage && customer.profileImage.length > 0) {
@@ -76,7 +77,7 @@ const CustomerProfileModal = ({ customer }: { customer: IUser }) => {
         console.log(res.message);
         if (res.success) {
           toast.success(res.message);
-          setOpen(false); // ✅ Close the modal on success
+          setOpen(false);
         } else {
           toast.error(res.message);
         }

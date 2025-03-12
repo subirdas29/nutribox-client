@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useState } from "react";
 
 import { toast } from "sonner";
@@ -34,28 +35,28 @@ export default function AddMealForm() {
         console.log(data, "senddata");
 
         try {
-            // Split the ingredients and dietary preferences by commas and remove extra spaces
-            const ingredientsArray = data.ingredients
-                ? data.ingredients.split(",").map((ingredient) => ingredient.trim())
-                : [];
-            const dietaryPreferencesArray = data.dietaryPreferences
-                ? data.dietaryPreferences.split(",").map((preference) => preference.trim())
-                : [];
-
-            const uploadedImageUrls = imageFiles.map((file) =>
-                typeof file === "string" ? file : ""
-            ).filter(url => url !== "");
-
+            // Ensure ingredients and dietaryPreferences are strings before splitting
+            const ingredientsArray = typeof data.ingredients === "string"
+            ? data.ingredients.split(",").map((ingredient: string) => ingredient.trim()) // ✅ Explicit type
+            : [];
+        
+        const dietaryPreferencesArray = typeof data.dietaryPreferences === "string"
+            ? data.dietaryPreferences.split(",").map((preference: string) => preference.trim()) // ✅ Explicit type
+            : [];
+        
+            const uploadedImageUrls = imageFiles
+                .map((file) => (typeof file === "string" ? file : ""))
+                .filter((url) => url !== "");
+        
             const mealData: TMealsForm = {
                 ...data,
                 ingredients: ingredientsArray,
                 dietaryPreferences: dietaryPreferencesArray,
                 imageUrls: uploadedImageUrls,
             };
-
+        
             const res = await createMeals(mealData);
-            
-
+        
             if (res.success) {
                 toast.success(res.message);
                 router.push("/mealprovider/meals/allmeals");
@@ -66,6 +67,7 @@ export default function AddMealForm() {
             console.error(err);
             toast.error("An error occurred while adding the product.");
         }
+        
     };
 
     return (

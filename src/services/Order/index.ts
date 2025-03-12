@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import { IOrderDetails } from "@/components/modules/home/ImageData";
+
+
+import { IOrderDetails } from "@/components/modules/Order/OrderDetailsPage";
 import { IOrder } from "@/types/order";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -26,10 +29,15 @@ export const createOrder = async (order: IOrder) => {
 
 // get single product
 export const getSingleOrder = async (orderId: string) => {
+  console.log(orderId,'serverorder')
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_API}/orders/${orderId}`,
         {
+          headers: {
+            Authorization: (await cookies()).get("accessToken")!.value,
+            "Content-Type": "application/json",
+          },
           next: {
             tags: ["Order"],
           },
@@ -67,7 +75,7 @@ export const getSingleOrder = async (orderId: string) => {
 
   // update order
   export const updateOrder = async (
-    orderData:IOrderDetails,
+    orderData:Partial<IOrderDetails>,
     orderId: string
   ): Promise<any> => {
     try {

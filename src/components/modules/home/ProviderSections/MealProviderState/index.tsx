@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Users, Globe, Clock, ShoppingCart, TrendingUp } from 'lucide-react';
+import { Users, Globe, Clock, ShoppingCart} from 'lucide-react';
 
 const MealProviderStats = () => {
   const stats = [

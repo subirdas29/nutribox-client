@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
 import { IUser } from "@/types/user";
@@ -6,7 +8,7 @@ import { cookies } from "next/headers";
 
 // update meal
 export const updateUser = async (
-  mealData:IUser,
+  mealData:Partial<IUser>,
 ): Promise<any> => {
   try {
     const res = await fetch(
@@ -50,23 +52,24 @@ export const getMe = async () => {
   }
 };
 
-  export const getMyOrder = async () => {
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/orders/myorder/alldata`,
-        {
-          headers: {
-            Authorization: (await cookies()).get("accessToken")!.value,
-            "Content-Type": "application/json",
-          },
-          next: {
-            tags: ["Order"],
-          },
-        }
-      );
-      const data = await res.json();
-      return data;
-    } catch (error: any) {
-      return Error(error.message);
-    }
-  };
+
+
+export const getMyOrder = async () => {
+  try {
+    const token = (await cookies()).get("accessToken")?.value || "";
+    if (!token) return { data: [] };
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/orders/myorder/alldata`, {
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store", 
+    });
+
+    if (!res.ok) return { data: [] };
+    return await res.json();
+  } catch (error) {
+    return { data: [] };
+  }
+};

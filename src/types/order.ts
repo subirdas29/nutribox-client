@@ -2,6 +2,7 @@ import { IUser } from "./user";
 
 
 export interface IOrder {
+
   _id?:string;
   mealId: string;
   category:string;
@@ -12,13 +13,12 @@ export interface IOrder {
   portionPrice:number;
   totalPrice: number;
   orderDate?: Date;
-  deliveryDate: string;
-  deliveryTime?: string;
+  deliveryDate: Date
+  deliveryTime: string
   portionSize: string
   deliveryArea: string
   deliveryAddress: string; // 
-  // Specific address
-  status?:string;
+  status?: 'pending' | 'in-progress' | 'delivered' | 'cancelled'
   customizations?: string[];
   specialInstructions?:string
 }

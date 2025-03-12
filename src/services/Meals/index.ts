@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
 import { TMealsForm } from "@/types/meals";
@@ -45,7 +46,7 @@ export const getSingleMeal = async (mealId: string) => {
 
 // update meal
 export const updateMeal = async (
-  mealData:TMealsForm,
+  mealData:Partial<TMealsForm>,
   mealId: string
 ): Promise<any> => {
   try {

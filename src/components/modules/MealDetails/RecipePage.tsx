@@ -121,11 +121,15 @@ export default function RecipePage({meal}:{meal:TMealsForm }) {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {dietaryPreferences.map((pref) => (
-              <span key={pref} className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">
-                {pref}
-              </span>
-            ))}
+          {(Array.isArray(dietaryPreferences) ? dietaryPreferences : [])
+    .map((pref) => (
+      <span
+        key={pref}
+        className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary"
+      >
+        {pref}
+      </span>
+    ))}
           </div>
         </div>
 
@@ -153,14 +157,14 @@ export default function RecipePage({meal}:{meal:TMealsForm }) {
                 </div>
               </CardHeader>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
-                {ingredients.map((item, index) => (
-                  <div key={index} className="flex items-center gap-4 p-3 rounded-lg bg-muted/10">
-                    <div className="p-2 rounded-md bg-primary/10">
-                      <Salad className="w-5 h-5 text-primary" />
-                    </div>
-                    <p className="font-medium">{item}</p>
-                  </div>
-                ))}
+              {(Array.isArray(ingredients) ? ingredients : []).map((item, index) => (
+  <div key={index} className="flex items-center gap-4 p-3 rounded-lg bg-muted/10">
+    <div className="p-2 rounded-md bg-primary/10">
+      <Salad className="w-5 h-5 text-primary" />
+    </div>
+    <p className="font-medium">{item}</p>
+  </div>
+))}
               </CardContent>
             </Card>
 

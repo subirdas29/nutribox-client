@@ -37,7 +37,7 @@ const AllOrdersOfMealProvider = ({ orders}:{orders:IOrder}) => {
     try {
       if (selectedId) {
 
-        const res =await updateOrder({ status: "cancelled" }, selectedId)
+        const res =await updateOrder({status: "cancelled" }, selectedId)
         if (res.success) {
           toast.success(" Order Cancelled successfully!");
           setModalOpen(false);

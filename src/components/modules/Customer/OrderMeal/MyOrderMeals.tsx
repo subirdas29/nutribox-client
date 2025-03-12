@@ -3,29 +3,27 @@
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash, Eye } from "lucide-react";
+import { Edit, Eye } from "lucide-react";
 import dayjs from "dayjs";
-import Image from "next/image";
-import { useState } from "react";
-import { toast } from "sonner";
-import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
+
+// import { useState } from "react";
+// import { toast } from "sonner";
+// import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import { IOrder } from "@/types/order";
 
-type TMyOrderProps = {
-  categories: IOrder[];
-};
-
-
-const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
-  console.log(myorder.data,'allorder')
 
 
 
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+const MyOrderMeals= ({ myorder}:{myorder:IOrder[]}) => {
+
+
+
+
+  // const [isModalOpen, setModalOpen] = useState(false);
+  // const [selectedId, setSelectedId] = useState<string | null>(null);
+  // const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const router = useRouter();
 
 
@@ -35,18 +33,18 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
   //   setModalOpen(true);
   // };
 
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
-        console.log(selectedId)
-        toast.success(`Deleted ${selectedItem} successfully!`);
-        setModalOpen(false);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete meal.");
-    }
-  };
+  // const handleDeleteConfirm = async () => {
+  //   try {
+  //     if (selectedId) {
+  //       console.log(selectedId)
+  //       toast.success(`Deleted ${selectedItem} successfully!`);
+  //       setModalOpen(false);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     toast.error("Failed to delete meal.");
+  //   }
+  // };
 
   const columns: ColumnDef<IOrder>[] = [
     // {
@@ -87,7 +85,7 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
       header: "Dietary Preferences",
       cell: ({ row }) => (
         <span className="text-sm text-gray-600">
-          {row.original?.customizations && row.original.customizations.length > 0
+          {row.original?.customizations && row.original.customizations?.length > 0
             ? row.original.customizations.join(", ")
             : "No dietary preferences"}
         </span>
@@ -116,20 +114,21 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
         const getStatusColor = (status: string) => {
           switch (status) {
             case "pending":
-              return "text-yellow-500";  // Yellow for pending
+              return "text-yellow-500";  
             case "in-progress":
-              return "text-blue-500";  // Blue for in-progress
+              return "text-blue-500";  
             case "delivered":
-              return "text-green-500";  // Green for delivered
+              return "text-green-500"; 
             default:
-              return "text-gray-500";  // Default color
+              return "text-gray-500";  
           }
         };
     
         return (
-          <span className={`font-bold ${getStatusColor(status)}`}>
-            {status}
-          </span>
+          <span className={`font-bold ${getStatusColor(status ?? "default")}`}>
+          {status ?? "Unknown"}
+        </span>
+        
         );
       },
     },
@@ -188,12 +187,12 @@ const MyOrderMeals= ({ myorder}:TMyOrderProps) => {
       <NBTable columns={columns} data={myorder} />
 
       </div>
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         name={selectedItem}
         isOpen={isModalOpen}
         onOpenChange={setModalOpen}
         onConfirm={handleDeleteConfirm}
-      />
+      /> */}
     </div>
   );
 };

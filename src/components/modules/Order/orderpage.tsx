@@ -111,10 +111,11 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
       basePrice: ordermeal.price,
       portionSize: selectedPortion,
       portionPrice: mealPrice,
+      status:"pending",
       deliveryArea,
       deliveryCharge,
       totalPrice,
-      deliveryDate: date?.toISOString(),
+      deliveryDate: date ? new Date(date) : new Date(),
       deliveryTime: time,
       deliveryAddress: address,
       customizations,
@@ -125,11 +126,11 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
         console.log(orderData,"orderData")
 
         const res = await createOrder(orderData);
-            console.log(res)
+            console.log(res.data._id,'new orderData')
 
             if (res.success) {
                 toast.success(res.message);
-                router.push(`/orderdetails/${ordermeal._id}`);
+                router.push(`/orderdetails/${res.data._id}`);
             } else {
                 toast.error(res.message);
             }
@@ -257,9 +258,9 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
       </Label>
       <DatePicker
         selected={date}
-        onChange={(date: Date | null) => setDate(date)} // Update date on selection
+        onChange={(date: Date | null) => setDate(date)} 
         minDate={new Date()} // Disable past dates
-        className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
+        className="rounded-lg border shadow-sm p-2" 
       />
     </div>
 

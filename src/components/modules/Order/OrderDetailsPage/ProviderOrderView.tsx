@@ -11,21 +11,9 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { IOrderDetails, OrderStatus } from '.'
 
-type OrderStatus = 'pending' | 'in-progress' | 'delivered' | 'cancelled'
 
-interface IOrderDetails {
-  _id: string
-  status: OrderStatus
-  mealName: string
-  totalPrice: number
-  deliveryDate: Date
-  deliveryTime: string
-  deliveryAddress: string
-  portionSize: string
-  customizations: string[]
-  specialInstructions: string
-}
 
 const statusConfig = {
   pending: {

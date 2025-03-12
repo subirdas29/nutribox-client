@@ -29,6 +29,14 @@ export default function UpdateMealForm({ meal }:{meal:TMealsForm}) {
   const [imagePreview, setImagePreview] = useState<string[] | []>(meal?.imageUrls || []);
   const router = useRouter();
 
+  const dietaryPreferences = Array.isArray(meal?.dietaryPreferences)
+  ? meal.dietaryPreferences.join(", ")
+  : meal?.dietaryPreferences || "";
+
+const ingredients = Array.isArray(meal?.ingredients)
+  ? meal.ingredients.join(", ")
+  : meal?.ingredients || "";
+  
     console.log(imageFiles)
 
   const form = useForm({
@@ -36,11 +44,12 @@ export default function UpdateMealForm({ meal }:{meal:TMealsForm}) {
       name: meal?.name || "",
       category: meal?.category || "",
       price: meal?.price || "",
-      ingredients: meal?.ingredients.join(", ") || "",
+     
       portionSize: meal?.portionSize || "",
       available: meal?.available || false,
       description: meal?.description || "",
-      dietaryPreferences: meal?.dietaryPreferences?.join(", ") || "",
+      dietaryPreferences,
+      ingredients
      
     },
   });

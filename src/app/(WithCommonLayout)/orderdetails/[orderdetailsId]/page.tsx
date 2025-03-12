@@ -10,10 +10,10 @@ const MealDetailPage= async({params}:{params:Promise<{orderdetailsId:string}>}) 
 
     const {orderdetailsId} = await params
 
-   
+   console.log(orderdetailsId,'id')
     const {data} = await getSingleOrder(orderdetailsId)
      
-    
+    console.log(data,'orderdata')
    
   return (
     <div className="flex justify-center items-center">

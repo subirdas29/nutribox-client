@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // app/components/HowItWorks.tsx
 'use client';
 import { useInView } from 'react-intersection-observer';

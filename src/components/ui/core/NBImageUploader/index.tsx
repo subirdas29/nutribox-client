@@ -41,9 +41,9 @@ const NBImageUploader = ({
             console.log("Cloudinary API Response:", data); 
       
             if (data.secure_url) {
-              // Ensure the previous URLs are not cleared, and add the new one
+          
               setImagePreview((prev) => [...prev, data.secure_url]);
-              setImageFiles((prev) => [...prev, data.secure_url]); // Add the secure_url to imageFiles
+              setImageFiles((prev) => [...prev, data.secure_url]); 
             } else {
               console.error("Upload Error:", data.error?.message || "Unknown error");
             }

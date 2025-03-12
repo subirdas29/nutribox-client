@@ -1,6 +1,6 @@
 "use client";
 import { useUser } from "@/context/UserContext";
-import { Navbar } from "@/components/shared/Navbar";
+
 import { HeroBanner } from "@/components/modules/home/Banner/banner";
 import BenefitsGrid from "@/components/modules/home/BenefitsForCustomers";
 import HowItWorks from "@/components/modules/home/HowItWorks";
@@ -22,7 +22,7 @@ const CommonLayout = () => {
 
   return (
     <>
-      <Navbar />
+     
       
       {/* If user is NOT logged in or is a customer, show Customer Sections */}
       {!user || user.role === "customer" ? (

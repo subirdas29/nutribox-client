@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils, Star, MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
 import Image from 'next/image'
-import { format } from "date-fns"
+
 
 import { updateOrder } from '@/services/Order'
 import { toast } from 'sonner'
@@ -18,21 +18,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DatePicker from 'react-datepicker'
+import { IOrderDetails, OrderStatus } from '.'
+import dayjs from 'dayjs'
 
-type OrderStatus = 'pending' | 'in-progress' | 'delivered'
 
-interface IOrderDetails {
-  _id: string
-  status: OrderStatus
-  mealName: string
-  totalPrice: number
-  deliveryDate: Date
-  deliveryTime: string
-  deliveryAddress: string
-  portionSize: string
-  customizations: string[]
-  specialInstructions: string
-}
 
 const statusConfig = {
   pending: {
@@ -113,18 +102,18 @@ const OrderForm = ({
           </Select>
         </div>
 
-         <div className="space-y-2">
-                       <Label className="flex items-center gap-2 text-primary/80">
-                         <CalendarDays className="w-5 h-5" />
-                         Select Delivery Date
-                       </Label>
-                       <DatePicker
-                         selected={date}
-                         onChange={(date: Date | null) => setDate(date)} // Update date on selection
-                         minDate={new Date()} // Disable past dates
-                         className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
-                       />
-                     </div>
+          <div className="space-y-2">
+               <Label className="flex items-center gap-2 text-primary/80">
+                 <CalendarDays className="w-5 h-5" />
+                 Select Delivery Date
+               </Label>
+               <DatePicker
+                 selected={date}
+                 onChange={(date: Date | null) => setDate(date)} // Update date on selection
+                 minDate={new Date()} // Disable past dates
+                 className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
+               />
+             </div>
 
         <div className="space-y-2">
           <Label>Delivery Time</Label>
@@ -185,30 +174,42 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
           <div className="relative w-48 h-48 mx-auto mb-6">
-            <Image
-              src={statusConfig[order.status].illustration}
-              alt="Status"
-              fill
-              className="object-contain drop-shadow-lg"
-              priority
-            />
+          {order?.status && (
+  <Image
+    src={statusConfig[order.status]?.illustration || "/fallback-image.png"}
+    alt="Status"
+    fill
+    className="object-contain drop-shadow-lg"
+    priority
+  />
+)}
           </div>
           
-          <Badge className={`${statusConfig[order.status].color} hover:${statusConfig[order.status].color} mb-4`}>
-            {statusConfig[order.status]?.icon}
-            <span className="ml-2 text-sm font-medium capitalize">
-              {order.status.replace('-', ' ')}
-            </span>
-          </Badge>
+          {order?.status && statusConfig[order.status] && (
+  <Badge className={`${statusConfig[order.status].color} hover:${statusConfig[order.status].color} mb-4`}>
+    {statusConfig[order.status]?.icon}
+    <span className="ml-2 text-sm font-medium capitalize">
+      {order.status.replace('-', ' ')}
+    </span>
+  </Badge>
+)}
 
-          <h1 className="text-3xl font-bold text-green-800 mb-2">
-            {statusConfig[order.status]?.title}
-          </h1>
-          <p className="text-green-600 max-w-md mx-auto">
-            {statusConfig[order.status]?.description}
-          </p>
 
-          {order.status === 'pending' && (
+{order?.status && statusConfig[order.status] ? (
+  <>
+    <h1 className="text-3xl font-bold text-green-800 mb-2">
+      {statusConfig[order.status].title}
+    </h1>
+    <p className="text-green-600 max-w-md mx-auto">
+      {statusConfig[order.status].description}
+    </p>
+  </>
+) : (
+  <p className="text-red-500 text-center">Order status not available</p>
+)}
+
+
+          {order?.status === 'pending' && (
             <Button 
               className="mt-6 bg-green-600 hover:bg-green-700"
               onClick={() => setIsEditModalOpen(true)}
@@ -220,30 +221,35 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
         </div>
 
         <div className="mb-12 px-8">
-          <div className="relative h-2 bg-green-100 rounded-full mb-8">
-            <div 
-              className={`absolute h-2 ${statusConfig[order.status].color} rounded-full transition-all duration-500`}
-              style={{
-                width: 
-                  order.status === 'pending' ? '33%' : 
-                  order.status === 'in-progress' ? '66%' : '100%'
-              }}
-            />
-          </div>
+        <div className="relative h-2 bg-green-100 rounded-full mb-8">
+    {order?.status && statusConfig[order.status] ? (
+      <div
+        className={`absolute h-2 ${statusConfig[order.status]?.color || "bg-gray-300"} rounded-full transition-all duration-500`}
+        style={{
+          width: 
+            order.status === "pending" ? "33%" : 
+            order.status === "in-progress" ? "66%" : "100%",
+        }}
+      />
+    ) : (
+      <p className="text-red-500 text-center">Loading order status...</p>
+    )}
+  </div>
           
-          <div className="grid grid-cols-4 gap-4 text-center">
-            {(Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
-              <div key={stage} className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center 
-                  ${order.status === stage ? statusConfig[stage].color : 'bg-green-100'}`}>
-                  {statusConfig[stage].icon}
-                </div>
-                <span className="mt-2 text-sm font-medium text-green-800 capitalize">
-                  {stage.replace('-', ' ')}
-                </span>
-              </div>
-            ))}
-          </div>
+  <div className="grid grid-cols-4 gap-4 text-center">
+  {(Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
+    <div key={stage} className="flex flex-col items-center">
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center 
+        ${order?.status === stage ? statusConfig[stage]?.color || 'bg-green-100' : 'bg-green-100'}`}>
+        {statusConfig[stage]?.icon || "?"}
+      </div>
+      <span className="mt-2 text-sm font-medium text-green-800 capitalize">
+        {stage.replace("-", " ")}
+      </span>
+    </div>
+  ))}
+</div>
+
         </div>
 
         <Tabs defaultValue="details" className="mb-12">
@@ -269,8 +275,8 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         Meal Details
                       </Label>
                       <div className="space-y-1">
-                        <p className="font-medium text-green-800">{order.mealName}</p>
-                        <p className="text-sm text-green-600">{order.portionSize} Portion</p>
+                        <p className="font-medium text-green-800">{order?.mealName}</p>
+                        <p className="text-sm text-green-600">{order?.portionSize} Portion</p>
                       </div>
                     </div>
 
@@ -280,8 +286,9 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         Delivery Schedule
                       </Label>
                       <div className="space-y-1">
-                        <p className="text-green-800">{format(order.deliveryDate, "PPP")}</p>
-                        <p className="text-sm text-green-600">{order.deliveryTime}</p>
+                        <p className="text-green-800">{dayjs(order?.deliveryDate).format("DD-MM-YYYY")}</p>
+                        
+                        <p className="text-sm text-green-600">{order?.deliveryTime}</p>
                       </div>
                     </div>
                   </div>
@@ -292,22 +299,22 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         <MapPin className="w-4 h-4" />
                         Delivery Address
                       </Label>
-                      <p className="whitespace-pre-line text-green-800">{order.deliveryAddress}</p>
+                      <p className="whitespace-pre-line text-green-800">{order?.deliveryAddress}</p>
                     </div>
 
-                    {order.specialInstructions && (
+                    {order?.specialInstructions && (
                       <div>
                         <Label className="flex items-center gap-2 text-green-600 mb-2">
                           <span>📝</span>
                           Special Instructions
                         </Label>
-                        <p className="text-green-800">{order.specialInstructions}</p>
+                        <p className="text-green-800">{order?.specialInstructions}</p>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {order.customizations.length > 0 && (
+                {order?.customizations.length > 0 && (
                   <div className="pt-4 border-t border-green-100">
                     <Label className="text-green-600">Customizations</Label>
                     <div className="flex flex-wrap gap-2 mt-2">
@@ -346,7 +353,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
           </TabsContent>
         </Tabs>
 
-        {order.status === 'delivered' && (
+        {order?.status === 'delivered' && (
           <Card className="border-0 shadow-lg">
             <CardContent className="pt-6">
               <div className="space-y-6">

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useInView } from 'react-intersection-observer';
 import { Leaf, CalendarCheck, Settings, Truck, ChartArea} from 'lucide-react';

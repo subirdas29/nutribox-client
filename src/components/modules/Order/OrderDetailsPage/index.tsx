@@ -1,12 +1,29 @@
 "use client"
 import { useUser } from "@/context/UserContext";
-import { IOrderDetails } from "../OrderDetails"
+
 import { CustomerOrderView } from "./CustomerOrderView"
 import { ProviderOrderView } from "./ProviderOrderView"
 
 import { Loader2 } from "lucide-react";
 
+export type OrderStatus = 'pending' | 'in-progress' | 'delivered' | 'cancelled'
+
+export interface IOrderDetails {
+  _id:string
+  status: OrderStatus
+  mealName:string
+  totalPrice: number
+  deliveryDate: Date
+  deliveryTime: string
+  deliveryAddress:string
+  portionSize:string
+  customizations: string[]
+  specialInstructions:string
+  editable: boolean
+}
+
 export const OrderRolePageDetails = ({ order }: { order: IOrderDetails }) => {
+  console.log(order,'sdkfjsfjlsk')
   const { user } = useUser();
 
 
