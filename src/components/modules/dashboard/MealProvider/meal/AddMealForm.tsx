@@ -32,7 +32,7 @@ export default function AddMealForm() {
     } = form;
 
     const onSubmit: SubmitHandler<TMealsForm> = async (data) => {
-        console.log(data, "senddata");
+     
 
         try {
             // Ensure ingredients and dietaryPreferences are strings before splitting

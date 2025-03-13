@@ -64,7 +64,6 @@ const OrderForm = ({
   onCancel: () => void 
 }) => {
   const [formData, setFormData] = useState<IOrderDetails>(initialValues)
-    const [date, setDate] = useState<Date | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -73,6 +72,7 @@ const OrderForm = ({
       if (res.success) {
         toast.success("Order updated successfully!")
         onSubmit(formData)
+        
       } else {
         toast.error(res.message)
       }
@@ -102,18 +102,21 @@ const OrderForm = ({
           </Select>
         </div>
 
-          <div className="space-y-2">
-               <Label className="flex items-center gap-2 text-primary/80">
-                 <CalendarDays className="w-5 h-5" />
-                 Select Delivery Date
-               </Label>
-               <DatePicker
-                 selected={date}
-                 onChange={(date: Date | null) => setDate(date)} // Update date on selection
-                 minDate={new Date()} // Disable past dates
-                 className="rounded-lg border shadow-sm p-2" // Apply your custom styles here
-               />
-             </div>
+       {/* Delivery Date */}
+       <div className="space-y-2">
+      <Label className="flex items-center gap-2 text-primary/80">
+        <CalendarDays className="w-5 h-5" />
+        Select Delivery Date
+      </Label>
+      <DatePicker
+        selected={formData.deliveryDate}
+        onChange={(date) =>
+          setFormData({ ...formData, deliveryDate: date || new Date() }) // Ensures non-null value
+        }
+        minDate={new Date()} // Disable past dates
+        className="rounded-lg border shadow-sm p-2"
+      />
+    </div>
 
         <div className="space-y-2">
           <Label>Delivery Time</Label>

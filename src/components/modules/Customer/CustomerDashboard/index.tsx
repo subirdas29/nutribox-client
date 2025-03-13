@@ -78,7 +78,7 @@ export default function CustomerDashboard() {
             </CardDescription>
           </div>
           <div className="flex gap-4 flex-wrap justify-center">
-            <Link href="/customer/myorder">
+            <Link href="/customer/mypending-orders">
               <Button className="bg-primary text-primary-foreground hover:bg-primary/80 gap-2 cursor-pointer">
                 <Utensils className="h-4 w-4" /> View Orders
               </Button>

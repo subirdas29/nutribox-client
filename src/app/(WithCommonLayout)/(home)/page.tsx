@@ -16,6 +16,7 @@ import FeaturesSectionProvider from "@/components/modules/home/ProviderSections/
 import HowItWorksProvider from "@/components/modules/home/ProviderSections/HowItWorksForProviders";
 import BenefitsForProvider from "@/components/modules/home/ProviderSections/BenefitsForProvider";
 import CTASection from "@/components/modules/home/ProviderSections/CTASection";
+import MeetOurCreators from "@/components/modules/home/OurCreators";
 
 const CommonLayout = () => {
   const { user } = useUser(); // Get user details
@@ -28,17 +29,20 @@ const CommonLayout = () => {
       {!user || user.role === "customer" ? (
         <>
           <HeroBanner />
+          
           <MenuCards />
           <CustomerTransform />
           <MealPicker />
           <BenefitsGrid />
           <HowItWorks />
+          <MeetOurCreators/>
         </>
       ) : (
         /* If user is a Meal Provider, show Provider Sections */
         <>
           <HeroBannerProvider />
           <MealProviderStats />
+          <MenuCards />
           <MealProviderBusinessTransform />
           <FeaturesSectionProvider />
           <HowItWorksProvider />

@@ -20,11 +20,12 @@ import { useUser } from "@/context/UserContext";
 import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/services/AuthService";
 import { protectedRoutes } from "@/constant";
+import { IUser } from "@/types/user";
 
 
-export function NavUser() {
+export function NavUser({userData}:{userData:IUser}) {
   const { isMobile } = useSidebar();
-  const { user, setIsLoading } = useUser();
+  const { setIsLoading } = useUser();
 
 
   const router = useRouter();
@@ -35,7 +36,7 @@ export function NavUser() {
     setIsLoading(true);
 
     if (protectedRoutes.some((route) => pathname.match(route))) {
-      router.push("/");
+      router.push("/login");
     }
   };
 
@@ -49,14 +50,14 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage alt={user?.name} src="https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp"/>
+                <AvatarImage alt={userData?.name} src={userData?.profileImage?.[0] || "https://github.com/shadcn.png"}/>
                 <AvatarFallback className="rounded-lg">
-                  {user?.role}
+                  {userData?.role}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user?.name}</span>
-                <span className="truncate text-xs">{user?.email}</span>
+                <span className="truncate font-semibold">{userData?.name}</span>
+                <span className="truncate text-xs">{userData?.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -70,14 +71,14 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage alt={user?.name} src="https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp"/>
+                  <AvatarImage alt={userData?.name} src={userData?.profileImage?.[0] || "https://github.com/shadcn.png"}/>
                   <AvatarFallback className="rounded-lg">
-                    {user?.role}
+                    {userData?.role}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user?.name}</span>
-                  <span className="truncate text-xs">{user?.email}</span>
+                  <span className="truncate font-semibold">{userData?.name}</span>
+                  <span className="truncate text-xs">{userData?.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

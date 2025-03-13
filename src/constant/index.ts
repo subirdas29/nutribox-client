@@ -3,5 +3,9 @@ export const protectedRoutes = [
         "/mealprovider",
         "/mealprovider/:page",
         "/customer",
-        "/customer/:page"
+        "/customer/:page",
+        "/orderdetails",
+        "/orderdetails/:page",
+        "/ordermeal",
+        "/ordermeal/:page"
 ]

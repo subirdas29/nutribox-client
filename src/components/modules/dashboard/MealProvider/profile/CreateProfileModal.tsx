@@ -64,21 +64,21 @@ const CreateProfileModal = ({provider}:{provider:TProviderProfile}) => {
   } = form || {};
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data)
+
 
     try {
       const modifiedData = {
         ...provider.userId, 
         ...data, 
         profileImage: [...imagePreview],
-      } as IUser; // 🚀 Explicitly cast to IUser
-        console.log(modifiedData)
+      } as IUser; 
+    
 
 
 
       const res = await updateUser(modifiedData)
 
-      console.log(res.message)
+
       if (res.success) {
         toast.success(res.message);
         setOpen(false);

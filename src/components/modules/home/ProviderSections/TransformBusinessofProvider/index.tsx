@@ -4,10 +4,10 @@ import { ShoppingCart, Users, Utensils, Monitor, Clock, BookOpen, Camera, Truck,
 import Image, { StaticImageData } from 'next/image';
 
 // Import different images for each tab
-import foodBrandsImage from '../../../../../assets/menu/img1.jpg';
-import retailersImage from '../../../../../assets/menu/img2.jpg';
-import kitchenAppliancesImage from '../../../../../assets/menu/img3.jpg';
-import foodMediaImage from '../../../../../assets/menu/img4.jpg';
+import foodBrandsImage from '../../../../../assets/transformimg/providers/Food Brands.jpg';
+import retailersImage from '../../../../../assets/transformimg/providers/Retailers.jpg';
+import kitchenAppliancesImage from '../../../../../assets/transformimg/providers/Kitchen Appliances.jpg';
+import foodMediaImage from '../../../../../assets/transformimg/providers/Food Media.jpg';
 
 const MealProviderBusinessTransform = () => {
   const [activeTab, setActiveTab] = useState('Food Brands');
@@ -188,7 +188,7 @@ const MealProviderBusinessTransform = () => {
                     height={400}
                     src={tabImages[tab]}
                     alt={tab}
-                    className="rounded-lg shadow-md w-full md:w-[600px] md:h-[300px] object-cover"
+                    className="rounded-lg shadow-md w-full md:w-[600px] h-[300px] object-cover"
                   />
                 </div>
               </div>

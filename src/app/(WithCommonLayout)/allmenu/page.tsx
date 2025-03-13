@@ -4,7 +4,8 @@ import React from 'react'
 
 const AllMenuPage = async() => {
   const {data} = await getAllMeals()
-  console.log("Fetched Meals:", data);
+
+
 
   return (
     <div>

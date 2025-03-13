@@ -8,7 +8,7 @@ const UpdateMealPage = async({params}:{params:Promise<{mealId:string}>}) => {
 
     const {mealId} = await params
 
-    console.log(mealId,"update")
+   
 
     const {data:meal} = await getSingleMeal(mealId)
    

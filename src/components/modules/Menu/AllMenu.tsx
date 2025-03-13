@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Star } from 'lucide-react';
 import { currencyFormatter } from '@/lib/currencyFormatter';
 import Link from 'next/link';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 
 interface Meal {
   _id: string;
@@ -32,14 +33,12 @@ interface Meal {
 
 export default function AllMenu({menu}:{menu:Meal[]}) {
   
-  console.log("AllMenu Component Props:", menu); // Check if menu is received
-  
- 
-
+  console.log(menu,'menu')
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     name:[] as string[],
+    providerName:[] as string[],
     category: '',
     minPrice: 0,
     maxPrice: 1000,
@@ -48,13 +47,17 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
     availableOnly: false,
     ingredients:[] as string[],
     cuisine: [] as string[],
-    rating: null as number | null 
+    rating: null as number | null ,
+
   });
 
   const ingredients = [...new Set(menu?.flatMap((ingre)=>ingre.ingredients))]
   const dietary = [...new Set(menu?.flatMap((diet)=>diet.dietaryPreferences))]
+  
   const cuisine = [...new Set(menu?.flatMap(cuis =>cuis.mealProvider.cuisineSpecialties))]
   const name = menu?.map(meal=>meal?.name)
+
+  const providerName = [...new Set(menu?.flatMap((name)=>name.mealProvider.userId.name))]
 
   const handleRatingFilter = (rating:number) =>{
     setFilters({...filters,rating})
@@ -68,6 +71,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
     
     const matchesCategory = !filters?.category || meal?.category === filters?.category;
     const matchesMealName = filters?.name.length === 0 || filters?.name.some(pref => meal?.name.includes(pref))
+    const matchesProviderName = filters?.providerName.length === 0 || filters?.providerName.some(pref => meal?.mealProvider?.userId?.name.includes(pref))
     const matchesPrice = meal?.price >= filters?.minPrice && meal?.price <= filters?.maxPrice;
     const matchesPortion = !filters?.portionSize || meal?.portionSize === filters?.portionSize;
     const matchesDietary = filters?.dietaryPreferences.length === 0 || 
@@ -79,7 +83,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
     const matchesRating = filters?.rating === null || Math.floor(meal?.rating as number) === filters?.rating
 
     return matchesSearch && matchesCategory && matchesPrice && 
-           matchesPortion && matchesDietary && matchesAvailability && matchesIngredients && matchesCuisine && matchesRating && matchesMealName ;
+           matchesPortion && matchesDietary && matchesAvailability && matchesIngredients && matchesCuisine && matchesRating && matchesMealName && matchesProviderName ;
   };
 
   const filteredMeals = menu?.filter(applyFilters);
@@ -127,6 +131,36 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                               setFilters({
                                 ...filters,
                                 name: filters.name.filter(p => p !== pref),
+                              });
+                            }
+                          }}
+                        />
+                        <label htmlFor={pref} className="text-sm">
+                          {pref}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* ProviderName */}
+                 <div>
+                  <label className="block text-lg font-semibold mb-2 ">Meal Provider Name</label>
+                  <div className="space-y-2">
+                    {providerName?.map((pref) => (
+                      <div key={pref} className="flex items-center gap-2">
+                        <Checkbox
+                          id={pref}
+                          checked={filters.providerName.includes(pref)}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setFilters({
+                                ...filters,
+                                providerName: [...filters.providerName, pref],
+                              });
+                            } else {
+                              setFilters({
+                                ...filters,
+                                providerName: filters.providerName.filter(p => p !== pref),
                               });
                             }
                           }}
@@ -331,6 +365,7 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                   className="w-full cursor-pointer hover:bg-gray-200"
                   onClick={() => setFilters({
                     name: [] as string[],
+                    providerName: [] as string[],
                     category: '',
                     minPrice: 0,
                     maxPrice: 1000,
@@ -339,7 +374,8 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                     availableOnly: false,
                     ingredients:[] as string[],
                     cuisine:[] as string[],
-                    rating: null as number | null 
+                    rating: null as number | null ,
+                 
                   })}
                 >
                   Reset Filters
@@ -369,16 +405,28 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                   <CardContent>
                     <div className="relative h-48 mb-4">
                       <Image
-                        src={meal.imageUrls[0]}
+                        src={meal?.imageUrls[0]}
                         width={400}
                         height={400}
-                        alt={meal.name}
+                        alt={meal?.name}
                         className="w-full h-full object-cover rounded-lg"
                       />
                     </div>
-                    <p className="text-gray-600 mb-2">{meal.description.slice(0,20)}...</p>
+                    <div className='flex items-center gap-2 my-2'>
+                    <Avatar className="h-8 w-8 border-2 border-green-500">
+                <AvatarImage 
+                 src={
+                  Array.isArray(meal?.mealProvider?.userId?.profileImage)
+                    ? meal?.mealProvider?.userId?.profileImage[0] 
+                    : meal?.mealProvider?.userId?.profileImage || "https://github.com/shadcn.png"
+                }/>
+                
+                </Avatar>
+                <span>{meal?.mealProvider?.userId?.name}</span>
+                    </div>
+                    <p className="text-gray-600 mb-2">{meal?.description.slice(0,20)}...</p>
                   <div className='flex justify-between'>
-                  <p className="font-bold">{currencyFormatter(Number(meal.price))}</p>
+                  <p className="font-bold">{currencyFormatter(Number(meal?.price))}</p>
                   <div className='flex items-center gap-2'>
                   <Star
                     size={18}

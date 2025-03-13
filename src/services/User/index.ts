@@ -46,6 +46,7 @@ export const getMe = async () => {
       }
     );
     const data = await res.json();
+    
     return data;
   } catch (error: any) {
     return Error(error.message);

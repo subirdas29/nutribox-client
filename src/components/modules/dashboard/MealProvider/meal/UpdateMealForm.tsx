@@ -67,8 +67,8 @@ const ingredients = Array.isArray(meal?.ingredients)
       dietaryPreferences: data.dietaryPreferences.split(",").map((item:string) => item.trim()),
     };
 
-    console.log(modifiedData,'amoajfo')
-    console.log(meal?._id,meal?.name)
+
+
    
 
     try {

@@ -32,7 +32,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
-  console.log(ordermeal,'checkorder')
+
   const router = useRouter();
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState("");
@@ -123,10 +123,10 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
     };
 
     try {
-        console.log(orderData,"orderData")
+     
 
         const res = await createOrder(orderData);
-            console.log(res.data._id,'new orderData')
+          
 
             if (res.success) {
                 toast.success(res.message);

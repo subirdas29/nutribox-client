@@ -41,7 +41,7 @@ const MealProviderProfile = ({
 }: {
   mealProviderDetails: TProviderProfile[];
 }) => {
-  console.log(mealProviderDetails)
+ 
   const provider = mealProviderDetails?.[0]; 
 
   if (!provider) return <p className="text-center text-gray-500">No provider data available</p>;

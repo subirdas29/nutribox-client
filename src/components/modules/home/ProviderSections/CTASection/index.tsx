@@ -37,7 +37,7 @@ const CTASection = () => {
               asChild 
               className="bg-white text-green-900 hover:bg-green-100 hover:scale-105 transition-transform duration-300 animate-fade-in-up delay-400"
             >
-              <Link href="/signup">Become a Meal Provider</Link>
+              <Link href="/register">Become a Meal Provider</Link>
             </Button>
           </>
         ) : user.role === "customer" ? (
@@ -53,7 +53,7 @@ const CTASection = () => {
               asChild 
               className="bg-white text-green-900 hover:bg-green-100 hover:scale-105 transition-transform duration-300 animate-fade-in-up delay-400"
             >
-              <Link href="/signup">Become a Meal Provider</Link>
+              <Link href="/register">Become a Meal Provider</Link>
             </Button>
           </>
         ) : (

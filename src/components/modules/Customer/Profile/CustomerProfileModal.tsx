@@ -61,7 +61,7 @@ const CustomerProfileModal = ({ customer }: { customer: IUser }) => {
     } = form;
   
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-      console.log(data);
+    
   
       try {
         const modifiedData = {
@@ -70,7 +70,6 @@ const CustomerProfileModal = ({ customer }: { customer: IUser }) => {
           profileImage: [...imagePreview],
         };
   
-        console.log(modifiedData);
   
         const res = await updateUser(modifiedData);
   

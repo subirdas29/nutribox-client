@@ -3,11 +3,11 @@ import { getCurrentUser } from "./services/AuthService"
 
 type Role = keyof typeof roleBasedPrivateRoutes
 
-const authRoutes = ["/login","/register"] //egula private route na
+const authRoutes = ["/login","/register"] 
 
 const roleBasedPrivateRoutes = {
-    customer:[/^\/customer/],
-    mealprovider:[/^\/mealprovider/]
+    customer:[/^\/customer/,/^\/orderdetails/,/^\/ordermeal/],
+    mealprovider:[/^\/mealprovider/,/^\/orderdetails/,/^\/ordermeal/]
 }
 
 export const middleware = async(request:NextRequest)=>{
@@ -38,6 +38,10 @@ export const config = {
         "/mealprovider",
         "/mealprovider/:page",
         "/customer",
-        "/customer/:page"
-    ] // jei route e ae middleware ta tigger krbe ta diya hyse. egula private route
+        "/customer/:page",
+        "/orderdetails",
+        "/orderdetails/:page",
+        "/ordermeal",
+        "/ordermeal/:page"
+    ] 
 }

@@ -20,5 +20,6 @@ export interface IOrder {
   deliveryAddress: string; // 
   status?: 'pending' | 'in-progress' | 'delivered' | 'cancelled'
   customizations?: string[];
-  specialInstructions?:string
+  specialInstructions?:string;
+  updatedAt?:string
 }

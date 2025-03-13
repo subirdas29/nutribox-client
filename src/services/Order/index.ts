@@ -19,8 +19,10 @@ export const createOrder = async (order: IOrder) => {
       body: JSON.stringify(order),
     });
     revalidateTag("Order");
+    console.log(res)
     return await res.json();
   } catch (error: any) {
+    console.log(error,"error")
     return Error(error);
   }
 };
@@ -29,7 +31,7 @@ export const createOrder = async (order: IOrder) => {
 
 // get single product
 export const getSingleOrder = async (orderId: string) => {
-  console.log(orderId,'serverorder')
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_API}/orders/${orderId}`,
@@ -44,6 +46,7 @@ export const getSingleOrder = async (orderId: string) => {
         }
       );
       const data = await res.json();
+   
       return data;
     } catch (error: any) {
       return Error(error.message);

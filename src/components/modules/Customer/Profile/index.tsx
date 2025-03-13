@@ -15,7 +15,7 @@ const CustomerProfile = ({
 }: {
     customerDetails: IUser;
 }) => {
-  console.log(customerDetails)
+
   const customer = customerDetails; 
 
   if (!customer) return <p className="text-center text-gray-500">No customer data available</p>;

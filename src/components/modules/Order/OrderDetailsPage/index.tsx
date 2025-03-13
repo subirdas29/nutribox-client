@@ -23,7 +23,7 @@ export interface IOrderDetails {
 }
 
 export const OrderRolePageDetails = ({ order }: { order: IOrderDetails }) => {
-  console.log(order,'sdkfjsfjlsk')
+
   const { user } = useUser();
 
 

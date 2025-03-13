@@ -7,11 +7,7 @@ import { getSingleMeal } from "@/services/Meals"
 
 
 const OrderMealPage= async({params}:{params:Promise<{ordermealId:string}>}) => {
-    
-
     const {ordermealId} = await params
-
-   
     const {data:ordermeal} = await getSingleMeal(ordermealId)
 
    

@@ -1,33 +1,36 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
-import { Heart, Truck, Clock, Star, Utensils, Salad, Gift, Shield } from 'lucide-react';
-import Image from 'next/image';
+import {  Utensils, Clock,  Truck, Heart, Salad, Star, Shield, Gift } from 'lucide-react';
+import Image, { StaticImageData } from 'next/image';
 
-// Import images for each tab
-import healthyMealsImg from '../../../../assets/menu/img1.jpg';
-import quickDeliveryImg from '../../../../assets/menu/img2.jpg';
-import topChefsImg from '../../../../assets/menu/img3.jpg';
-import specialOffersImg from '../../../../assets/menu/img4.jpg';
+// Import different images for each tab
+import healthyMealsImg from '../../../../assets/transformimg/customers/healthy-meals.jpg';
+import quickDeliveryImg from '../../../../assets/transformimg/customers/Quick Delivery.jpg';
+import topChefsImg from '../../../../assets/transformimg/customers/Top Chefs.jpg';
+import specialOffersImg from '../../../../assets/transformimg/customers/Special Offers.jpg';
 
 const CustomerTransform = () => {
   const [activeTab, setActiveTab] = useState('Healthy Meals');
   const tabs = useMemo(() => ['Healthy Meals', 'Quick Delivery', 'Top Chefs', 'Special Offers'], []);
 
-  const bgColors: Record<typeof tabs[number], string> = {
-    'Healthy Meals': 'bg-[#D4F0FC]',
+  // Different background colors for each tab
+  const bgColors: Record<string, string> = {
+   'Healthy Meals': 'bg-[#D4F0FC]',
     'Quick Delivery': 'bg-[#FFEEDB]',
     'Top Chefs': 'bg-[#E0FBE2]',
     'Special Offers': 'bg-[#FBE3E3]',
   };
 
-  const tabImages: Record<typeof tabs[number], any> = {
-    'Healthy Meals': healthyMealsImg,
-    'Quick Delivery': quickDeliveryImg,
-    'Top Chefs': topChefsImg,
-    'Special Offers': specialOffersImg,
-  };
+  // Different images for each tab
+  const tabImages: Record<string, StaticImageData> = {
+        'Healthy Meals': healthyMealsImg,
+        'Quick Delivery': quickDeliveryImg,
+        'Top Chefs': topChefsImg,
+        'Special Offers': specialOffersImg,
+      };
 
+  // Auto-rotate feature
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveTab((prevTab) => {
@@ -36,14 +39,15 @@ const CustomerTransform = () => {
         return tabs[nextIndex];
       });
     }, 5000);
+
     return () => clearInterval(interval);
   }, [tabs]);
 
   return (
-    <section className="py-20 bg-gradient-to-r from-blue-50 to-white mb-12 lg:mb-20">
-      <div className="mx-4 md:mx-12 lg:mx-32 px-4  text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-green-900 mb-12">
-          Discover Delicious Meals
+    <section className="py-20 bg-gradient-to-r from-green-50 to-white">
+      <div className="mx-4 md:mx-12 lg:mx-32 px-4 text-center">
+        <h1 className="text-3xl md:text-4xl  font-bold text-green-900 mb-12">
+        Discover Delicious Meals
         </h1>
 
         {/* Buttons */}
@@ -69,37 +73,37 @@ const CustomerTransform = () => {
             <div
               key={tab}
               className={`absolute inset-0 p-8 rounded-lg shadow-lg transition-all duration-500 ${
-                activeTab === tab ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
+                activeTab === tab ? 'opacity-100 scale-100 relative' : 'opacity-0 scale-95 absolute pointer-events-none'
               } ${bgColors[tab]}`}
             >
               <div className="flex flex-col md:grid md:grid-cols-2 gap-8 items-center">
                 {/* Content */}
                 <div className="space-y-4 order-2 md:order-1 text-left">
                   <h2 className="text-2xl font-bold text-green-900 mb-4">{tab}</h2>
-                  <ul className="text-left text-gray-600 space-y-2">
+                  <ul className="text-gray-600 space-y-2">
                     {tab === 'Healthy Meals' && (
                       <>
-                        <li className="flex items-center gap-2">
-                          <Heart className="w-5 h-5 text-green-600" />
-                          Fresh, Nutritious Ingredients
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Salad className="w-5 h-5 text-green-600" />
-                          Chef-Crafted Recipes
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Star className="w-5 h-5 text-green-600" />
-                          Customizable Meal Plans
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Shield className="w-5 h-5 text-green-600" />
-                          100% Organic and Safe
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <Utensils className="w-5 h-5 text-green-600" />
-                          Perfect for All Diets
-                        </li>
-                      </>
+                      <li className="flex items-center gap-2">
+                        <Heart className="w-5 h-5 text-green-600" />
+                        Fresh, Nutritious Ingredients
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Salad className="w-5 h-5 text-green-600" />
+                        Chef-Crafted Recipes
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Star className="w-5 h-5 text-green-600" />
+                        Customizable Meal Plans
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Shield className="w-5 h-5 text-green-600" />
+                        100% Organic and Safe
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Utensils className="w-5 h-5 text-green-600" />
+                        Perfect for All Diets
+                      </li>
+                    </>
                     )}
                     {tab === 'Quick Delivery' && (
                       <>
@@ -125,7 +129,7 @@ const CustomerTransform = () => {
                         </li>
                       </>
                     )}
-                    {tab === 'Top Chefs' && (
+                      {tab === 'Top Chefs' && (
                       <>
                         <li className="flex items-center gap-2">
                           <Star className="w-5 h-5 text-green-600" />
@@ -149,7 +153,7 @@ const CustomerTransform = () => {
                         </li>
                       </>
                     )}
-                    {tab === 'Special Offers' && (
+                   {tab === 'Special Offers' && (
                       <>
                         <li className="flex items-center gap-2">
                           <Gift className="w-5 h-5 text-green-600" />
@@ -177,13 +181,13 @@ const CustomerTransform = () => {
                 </div>
 
                 {/* Image */}
-                <div className="order-1 md:order-2 w-full md:w-auto flex justify-center">
+                <div className="order-1 md:order-2 w-full">
                   <Image
                     width={400}
                     height={400}
                     src={tabImages[tab]}
                     alt={tab}
-                    className="rounded-lg shadow-md w-full max-w-[300px] md:max-w-[400px]"
+                    className="rounded-lg shadow-md w-full md:w-[600px] h-[300px] object-cover"
                   />
                 </div>
               </div>

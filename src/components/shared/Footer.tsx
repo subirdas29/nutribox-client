@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="space-y-4">
               <h3 className="font-semibold uppercase text-sm tracking-wider">Shop</h3>
               <ul className="space-y-2 text-gray-300">
-                <li><Link href="/products" className="hover:text-white transition">All Products</Link></li>
+                <li><Link href="/allmenu" className="hover:text-white transition">All Products</Link></li>
                 <li><Link href="/categories" className="hover:text-white transition">Categories</Link></li>
                 <li><Link href="/deals" className="hover:text-white transition">Special Deals</Link></li>
                 <li><Link href="/cart" className="hover:text-white transition">My Cart</Link></li>
@@ -68,7 +68,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5 flex-shrink-0" />
-                <span>1-800-Nutri-Bite</span>
+                <span>1-800-Nutri-Box</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-5 h-5 flex-shrink-0" />
@@ -101,7 +101,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-8 text-center text-gray-400 text-sm">
           <p>
-            © {new Date().getFullYear()} Nutri Bite. All rights reserved. 
+            © {new Date().getFullYear()} Nutri Box. All rights reserved. 
             <span className="mx-2">|</span>
             <a href="#" className="hover:text-white transition">Privacy Policy</a>
             <span className="mx-2">•</span>
