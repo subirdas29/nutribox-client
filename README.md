@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NutriBox Client
 
-## Getting Started
+NutriBox is a meal planning and delivery web application that enables users to customize meal plans, schedule deliveries, and manage orders seamlessly.
 
-First, run the development server:
+## 🌍 Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Client Site: [Visit NutriBox](https://nutribox-client.vercel.app/)
+# Server Site: [Visit NutriBox Api](https://nutribox-server.vercel.app/)
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+### Secure User Authentication:
+- Custom login system for customers and meal providers using email or phone number and password.
+- Secure authentication powered by JWT (JSON Web Tokens) for safe user sessions.
+- Strong password encryption for enhanced security.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Personalized Dashboards:
+- **Customer Dashboard**: Manage meal, track orders, and update dietary preferences.
+- **Meal Provider Dashboard**: Oversee meal menus, handle customer orders, and coordinate deliveries efficiently.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Meal Customization & Preferences:
+- Customers can personalize meal plans and filter meals based on dietary needs (vegan, keto, gluten-free, etc.).
+- Meal providers can create and manage meal listings, detailing ingredients, portion sizes, and pricing.
 
-## Learn More
+### Smart Search & Matching:
+- Customers can discover meals using filters like cuisine, dietary preference, customer ratings, and availability.
+- Meal providers can analyze customer preferences to optimize meal offerings and streamline order fulfillment.
 
-To learn more about Next.js, take a look at the following resources:
+### Role-Based Access Control:
+- Tailored access for customers and meal providers, ensuring secure and relevant feature visibility.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Dynamic CRUD Operations:
+- Customers can create, modify, and manage meal plans and preferences effortlessly.
+- Meal providers can track and fulfill customer meal requests with real-time updates.
 
-## Deploy on Vercel
+## Technologies Used
+- **Next.js 15** - React-based framework
+- **React 19** - Frontend library
+- **TailwindCSS 4** - Utility-first CSS framework
+- **Radix UI** - Accessible UI components
+- **Lucide-react** - Icon library
+- **React Hook Form** - Form handling
+- **Zod** - Schema validation
+- **Recharts** - Data visualization
+- **Embla-carousel-react** - Smooth carousels
+- **React Google Recaptcha** - Security enhancement
+- **Sonner** - Toast notifications
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Branding
+**Primary Color:** `oklch(0.45 0.3 150);`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Installation & Setup
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/subirdas29/nutribox-client
+   cd nutribox-client
+   ```
+2. Install dependencies:
+   ```sh
+   npm install
+   ```
+3. Run the development server:
+   ```sh
+   npm run dev
+   ```
+
+
+## Contribution
+Contributions are welcome! Feel free to open an issue or submit a pull request.
+
+## License
+This project is licensed under the ISC License.
+
