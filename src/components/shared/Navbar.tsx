@@ -88,7 +88,8 @@ export function Navbar({userData}:{userData:IUser}) {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-6">
-          {routes.map((route) => (
+          {routes.filter((route)=>user || route.label!== "Dashboard")
+          .map((route) => (
             <Link
               key={route.href}
               href={route.href}

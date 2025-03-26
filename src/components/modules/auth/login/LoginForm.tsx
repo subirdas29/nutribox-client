@@ -17,7 +17,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { loginUser, reCaptchaTokenVerification } from "@/services/AuthService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { loginSchema } from "./loginValidation";
 import { Loader2 } from "lucide-react";
@@ -27,9 +27,27 @@ import Image from "next/image";
 import login from "../../../../assets/login/login.png";
 
 export default function LoginForm() {
+
+  const [credentials,setCredentials] = useState({email:"",password:""})
+
+  const defaultLoginUser = {
+    email:"kanakdas209@gmail.com",
+    password:"12345678"
+  }
+  const defaultLoginMealProvider={
+    email:"subirdas1045@gmail.com",
+    password:"12345678"
+  }
   const form = useForm({
     resolver: zodResolver(loginSchema),
+    defaultValues: credentials
   });
+
+  useEffect(() => {
+    if (credentials) {
+      form.reset(credentials);
+    }
+  }, [credentials, form])
 
   const {
     formState: { isSubmitting },
@@ -91,6 +109,14 @@ export default function LoginForm() {
         <div className="text-center mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">Login</h1>
           <p className="text-sm text-gray-600">Welcome Back!</p>
+        </div>
+        <div className="flex justify-center my-6 px-4 gap-2">
+          <Button onClick={()=>setCredentials(defaultLoginUser)}>
+            User Credentials
+          </Button>
+          <Button onClick={()=>setCredentials(defaultLoginMealProvider)}>
+            Meal-Provider Credentials
+          </Button>
         </div>
 
         <Form {...form}>
