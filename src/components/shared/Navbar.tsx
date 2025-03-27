@@ -57,6 +57,8 @@ export function Navbar({userData}:{userData:IUser}) {
     },
     { href: "/allmenu", label: "Our Menu", active: pathname === "/allmenu", icon: <Box className="h-5 w-5" /> },
     { href: "/contact", label: "Contact", active: pathname === "/contact", icon: <Phone className="h-5 w-5" /> },
+    // { href: "/cart", label: "Cart", active: pathname === "/cart", icon: <ShoppingCart className="h-5 w-5" /> },
+
   ];
 
   if (loading) {

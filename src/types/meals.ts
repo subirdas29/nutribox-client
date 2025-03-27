@@ -3,7 +3,7 @@ export type TMealsForm = {
   name: string;
   category: string;
   price: number;
-
+  offerPrice:number;
   portionSize: string;
   available: boolean;
   description: string;

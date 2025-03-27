@@ -8,13 +8,15 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import Image from 'next/image';
-import { TMealProvider } from '@/types/meals';
+import { TMealProvider,} from '@/types/meals';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Star } from 'lucide-react';
+import { ShoppingCart, Star } from 'lucide-react';
 import { currencyFormatter } from '@/lib/currencyFormatter';
 import Link from 'next/link';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+// import { useAppDispatch } from '@/redux/hook';
+// import { addMeal } from '@/redux/features/cartSlice';
 
 interface Meal {
   _id: string;
@@ -33,7 +35,7 @@ interface Meal {
 
 export default function AllMenu({menu}:{menu:Meal[]}) {
   
-  console.log(menu,'menu')
+//  const dispatch = useAppDispatch()
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -50,6 +52,10 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
     rating: null as number | null ,
 
   });
+
+  // const handleMealCart = (meal:TMealsForm) =>{
+  //   dispatch(addMeal(meal))
+  // }
 
   const ingredients = [...new Set(menu?.flatMap((ingre)=>ingre.ingredients))]
   const dietary = [...new Set(menu?.flatMap((diet)=>diet.dietaryPreferences))]
@@ -398,8 +404,11 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredMeals?.map((meal) => (
                 <Card key={meal._id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
+                  <CardHeader className='flex justify-between'>
                     <CardTitle>{meal.name}</CardTitle>
+                    <ShoppingCart
+                    //  onClick={()=>handleMealCart(meal)}
+                      />
                     {/* <p className="text-sm text-gray-500">{meal.mealProvider}</p> */}
                   </CardHeader>
                   <CardContent>
