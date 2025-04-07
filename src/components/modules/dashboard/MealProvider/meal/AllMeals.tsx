@@ -11,8 +11,10 @@ import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirma
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import { updateMeal } from "@/services/Meals";
+import { IMeta } from "@/types/meta";
+import TablePagination from "@/components/ui/core/NBTable/TablePagination";
 
-const AllMeals = ({ meals}:{meals:TMealsForm[]}) => {
+const AllMeals = ({ meals,meta}:{meals:TMealsForm[],meta:IMeta}) => {
  
   
   const [isModalOpen, setModalOpen] = useState(false);
@@ -162,7 +164,7 @@ const AllMeals = ({ meals}:{meals:TMealsForm[]}) => {
       <h1 className="text-xl font-bold mb-4">All Meals</h1>
       <div className="overflow-x-auto">
       <NBTable columns={columns} data={meals || []} />
-
+    <TablePagination totalPage={meta?.totalPage}/>
       </div>
       <DeleteConfirmationModal
         name={selectedName}

@@ -16,6 +16,8 @@ import { updateOrder } from "@/services/Order";
 import dayjs from "dayjs";
 import { IUser } from "@/types/user";
 import { TMealsForm } from "@/types/meals";
+import TablePagination from "@/components/ui/core/NBTable/TablePagination";
+import { IMeta } from "@/types/meta";
 
 export type TOrderAllData ={
   _id?:string;
@@ -36,10 +38,11 @@ export type TOrderAllData ={
   status?: 'pending' | 'in-progress' | 'delivered' | 'cancelled'
   customizations?: string[];
   specialInstructions?:string;
-  updatedAt?:string
+  updatedAt?:string;
+  createdAt?:string;
 }
 
-const CancelledOrdersOfCustomer = ({ myorders}:{myorders:TOrderAllData[]}) => {
+const CancelledOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta:IMeta}) => {
 
   
   const [isModalOpen, setModalOpen] = useState(false);
@@ -208,7 +211,7 @@ const CancelledOrdersOfCustomer = ({ myorders}:{myorders:TOrderAllData[]}) => {
       <h1 className="text-xl font-bold mb-4">All Order Meals</h1>
       <div className="overflow-x-auto">
       <NBTable columns={columns} data={Array.isArray(cancelledOrders) ? cancelledOrders : []} />
-
+      <TablePagination totalPage={meta?.totalPage } />
       </div>
       <DeleteConfirmationModal
         name={selectedItem}

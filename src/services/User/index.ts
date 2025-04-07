@@ -55,12 +55,12 @@ export const getMe = async () => {
 
 
 
-export const getMyOrder = async () => {
+export const getMyOrder = async (page?: string,limit?:string) => {
   try {
     const token = (await cookies()).get("accessToken")?.value || "";
     if (!token) return { data: [] };
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/orders/myorder/alldata`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/orders/myorder/alldata?limit=${limit}&page=${page}`, {
       headers: {
         Authorization: token,
         "Content-Type": "application/json",

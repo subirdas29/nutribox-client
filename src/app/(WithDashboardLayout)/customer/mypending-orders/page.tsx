@@ -3,14 +3,15 @@ import PendingOrdersOfCustomer from "@/components/modules/Customer/OrderMeal/Pen
 import { getMyOrder } from "@/services/User"
 
 
-const MyOrderPage = async() => {
-    const {data} = await getMyOrder()
+const MyOrderPage = async({searchParams}:{searchParams:Promise<{page:string}>}) => {
+  const {page} = await searchParams
+  const {data,meta} = await getMyOrder(page, '10')
 
   
    
   return (
     <div>
-      <PendingOrdersOfCustomer myorders = {data}/>
+      <PendingOrdersOfCustomer myorders = {data} meta={meta}/>
     </div>
   )
 }

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Utensils, Box, Phone, LayoutDashboard, Briefcase } from "lucide-react";
+import { Menu, Utensils, Box, Phone, LayoutDashboard, Briefcase, ShoppingCart } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -15,13 +15,20 @@ import logo from '../../assets/logo/logo.png';
 import Image from "next/image";
 import CookingLoader from "@/app/loading";
 import { IUser } from "@/types/user";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { allClearCart,  orderedMealSelector } from "@/redux/features/cartSlice";
 
 export function Navbar({userData}:{userData:IUser}) {
   const { user, setIsLoading } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [loading, setLoading] = useState(true);
+  
   const pathname = usePathname();
   const router = useRouter();
+  const totalCart = useAppSelector(orderedMealSelector)
+
+  const dispatch = useAppDispatch()
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -41,6 +48,7 @@ export function Navbar({userData}:{userData:IUser}) {
 
   const handleLogOut = () => {
     logout();
+    dispatch(allClearCart())
     setIsLoading(true);
     if (protectedRoutes.some((route) => pathname.match(route))) {
       router.push("/");
@@ -57,7 +65,7 @@ export function Navbar({userData}:{userData:IUser}) {
     },
     { href: "/allmenu", label: "Our Menu", active: pathname === "/allmenu", icon: <Box className="h-5 w-5" /> },
     { href: "/contact", label: "Contact", active: pathname === "/contact", icon: <Phone className="h-5 w-5" /> },
-    // { href: "/cart", label: "Cart", active: pathname === "/cart", icon: <ShoppingCart className="h-5 w-5" /> },
+
 
   ];
 
@@ -115,9 +123,21 @@ export function Navbar({userData}:{userData:IUser}) {
             </Link>
           ) : null}
 
+            <Link href="/cart">
+                <div className="relative">
+                <ShoppingCart />
+                {
+                  totalCart.length > 0 && (
+                    <div className="flex justify-center items-center w-5 h-5 absolute bg-primary rounded-full text-white text-xs bottom-3 left-3">{totalCart.length}</div>
+                  )
+                }
+                </div>
+                </Link>
+
           {/* Auth Buttons */}
           {user?.email ? (
             <>
+       
               <Link href={`/${user?.role}/profile`}>
                 <Avatar className="h-8 w-8 border-3 border-green-600">
                 <AvatarImage src={userData?.profileImage?.[0] || "https://github.com/shadcn.png"} />
@@ -172,9 +192,21 @@ export function Navbar({userData}:{userData:IUser}) {
                 </Link>
               ) : null}
 
+            <Link href="/cart">
+                <div className="relative">
+                <ShoppingCart />
+                {
+                  totalCart.length > 0 && (
+                    <div className="flex justify-center items-center w-5 h-5 absolute bg-primary rounded-full text-white text-xs bottom-3 left-3">{totalCart.length}</div>
+                  )
+                }
+                </div>
+                </Link>
+
               {/* Auth Buttons - Mobile */}
               {!user?.email ? (
                 <>
+             
                   <Link href="/login">
                     <Button size="sm" className="gap-1 text-[14px] w-full cursor-pointer">Login</Button>
                   </Link>
@@ -184,6 +216,7 @@ export function Navbar({userData}:{userData:IUser}) {
                 </>
               ) : (
                 <>
+             
                   <Link href={`/${user?.role}/profile`} className="flex justify-center">
                     <Avatar className="h-8 w-8 border-3 border-green-600">
                       <AvatarImage src={userData?.profileImage?.[0] || "https://github.com/shadcn.png"} />

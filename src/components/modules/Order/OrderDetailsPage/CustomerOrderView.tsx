@@ -18,12 +18,37 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DatePicker from 'react-datepicker'
-import { IOrderDetails, OrderStatus } from '.'
+import { BankStatus, IOrderDetails, OrderStatus } from '.'
 import dayjs from 'dayjs'
 
 
 
+const bankStatusConfig = {
+  initiated: {
+    color: 'bg-gray-500',
+    icon: <Clock className="w-5 h-5" />,
+    illustration: 'https://cdn-icons-png.flaticon.com/512/5957/5957161.png',
+    title: 'Order Initiated',
+    description: 'Your order has been created and is awaiting further steps'
+  },
+  Success: {
+    color: 'bg-green-600',
+    icon: <CheckCircle className="w-5 h-5" />,
+    illustration: 'https://cdn-icons-png.flaticon.com/512/5610/5610944.png',
+    title: 'Order Successful!',
+    description: 'Order processed and confirmed successfully'
+  },
+  Failed: {
+    color: 'bg-red-600',
+    icon: <XCircle className="w-5 h-5" />,
+    illustration: 'https://cdn-icons-png.flaticon.com/512/8941/8941851.png',
+    title: 'Order Failed!',
+    description: 'Something went wrong during the order process'
+  },
+}
+
 const statusConfig = {
+  
   pending: {
     color: 'bg-amber-500',
     icon: <Clock className="w-5 h-5" />,
@@ -39,7 +64,7 @@ const statusConfig = {
     description: 'Meal is being prepared'
   },
   delivered: {
-    color: 'bg-green-500', 
+    color: 'bg-green-500',
     icon: <CheckCircle className="w-5 h-5" />,
     illustration: 'https://cdn-icons-png.flaticon.com/512/751/751463.png',
     title: 'Order Delivered!',
@@ -53,6 +78,8 @@ const statusConfig = {
     description: 'This order has been cancelled'
   }
 }
+
+
 
 const OrderForm = ({ 
   initialValues, 
@@ -160,6 +187,8 @@ const OrderForm = ({
 export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [review, setReview] = useState({ rating: 0, comment: '' })
+
+  console.log(order,'gdfsdfjsfskdjf')
   
 
   const handleEditSubmit = (updatedData: IOrderDetails) => {
@@ -172,14 +201,21 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
     setReview({ rating: 0, comment: '' })
   }
 
+  console.log(order.transaction.bank_status)
+  if(!order){
+    
+      <p className="text-red-500 text-center">Order status not available</p>
+    
+  }
+
   return (
-    <div className="min-h-screen bg-green-50 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
           <div className="relative w-48 h-48 mx-auto mb-6">
           {order?.status && (
   <Image
-    src={statusConfig[order.status]?.illustration || "/fallback-image.png"}
+    src={statusConfig[order.status]?.illustration|| bankStatusConfig[order.transaction.bank_status]?.illustration || "/fallback-image.png"}
     alt="Status"
     fill
     className="object-contain drop-shadow-lg"
@@ -198,7 +234,9 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 )}
 
 
-{order?.status && statusConfig[order.status] ? (
+
+
+{order?.transaction.bank_status === "Success" && order?.status && statusConfig[order.status] ? (
   <>
     <h1 className="text-3xl font-bold text-green-800 mb-2">
       {statusConfig[order.status].title}
@@ -208,11 +246,19 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
     </p>
   </>
 ) : (
-  <p className="text-red-500 text-center">Order status not available</p>
+ <>  
+
+  <h1 className="text-3xl font-bold text-green-800 mb-2">
+    {bankStatusConfig[order?.transaction?.bank_status === "Failed" ]?.title}
+  </h1>
+  <p className="text-green-600 max-w-md mx-auto">
+    {statusConfig[order?.transaction?.bank_status === "Failed"]?.description}
+  </p>
+</>
 )}
 
 
-          {order?.status === 'pending' && (
+          {order?.transaction.bank_status === "Success" && order?.status === 'pending' && (
             <Button 
               className="mt-6 bg-green-600 hover:bg-green-700"
               onClick={() => setIsEditModalOpen(true)}
@@ -225,7 +271,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 
         <div className="mb-12 px-8">
         <div className="relative h-2 bg-green-100 rounded-full mb-8">
-    {order?.status && statusConfig[order.status] ? (
+    {order?.transaction.bank_status === "Success" && order?.status && statusConfig[order.status] ? (
       <div
         className={`absolute h-2 ${statusConfig[order.status]?.color || "bg-gray-300"} rounded-full transition-all duration-500`}
         style={{
@@ -235,12 +281,24 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
         }}
       />
     ) : (
-      <p className="text-red-500 text-center">Loading order status...</p>
+      <>  
+
+<div className='text-center'>
+<h1 className="text-3xl font-bold text-green-800 mb-2">
+  {bankStatusConfig[order?.transaction?.bank_status]?.title ?? "Unknown Status"}
+  </h1>
+  <p className="text-green-600 max-w-md mx-auto">
+  {bankStatusConfig[order?.transaction?.bank_status]?.description ?? "Unknown Status"}
+  </p>
+</div>
+</>
     )}
   </div>
           
   <div className="grid grid-cols-4 gap-4 text-center">
-  {(Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
+  {
+  order?.transaction.bank_status === "Success" ?
+  (Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
     <div key={stage} className="flex flex-col items-center">
       <div className={`w-8 h-8 rounded-full flex items-center justify-center 
         ${order?.status === stage ? statusConfig[stage]?.color || 'bg-green-100' : 'bg-green-100'}`}>
@@ -250,7 +308,22 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
         {stage.replace("-", " ")}
       </span>
     </div>
-  ))}
+  )) : 
+
+    (Object.keys(bankStatusConfig) as BankStatus[]).map((status) => (
+    <div key={status} className="flex flex-col items-center">
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center 
+        ${order?.status === status? bankStatusConfig[status]?.color || 'bg-green-100' : 'bg-green-100'}`}>
+        {bankStatusConfig[status]?.icon || "?"}
+      </div>
+      <span className="mt-2 text-sm font-medium text-green-800 capitalize">
+        {status.replace("-", " ")}
+      </span>
+    </div>
+  ))
+
+
+}
 </div>
 
         </div>
@@ -304,6 +377,23 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                       </Label>
                       <p className="whitespace-pre-line text-green-800">{order?.deliveryAddress}</p>
                     </div>
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-green-600 mb-2">
+                        <MapPin className="w-4 h-4" />
+                        Order Quantity
+                      </Label>
+                      <p className="whitespace-pre-line text-green-800">{order?.orderQuantity}</p>
+                    </div>
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-green-600 mb-2">
+                        <MapPin className="w-4 h-4" />
+                        Bank_Status
+                      </Label>
+                      <p className="whitespace-pre-line text-green-800">{order?.transaction.bank_status}</p>
+                    </div>
+
 
                     {order?.specialInstructions && (
                       <div>

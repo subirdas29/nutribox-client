@@ -76,6 +76,31 @@ export const getSingleOrder = async (orderId: string) => {
   };
 
 
+
+
+  export const verifyOrder = async (orderId:string) => {
+    try {
+     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/orders/verify?order_id=${orderId}`, 
+        {
+          headers: {
+            Authorization: (await cookies()).get("accessToken")!.value,
+            "Content-Type": "application/json",
+          },
+          next: {
+            tags: ["Order"],
+          },
+        }
+      );
+      const data = await res.json();
+      return data;
+    } catch (error: any) {
+      return Error(error.message);
+    }
+  };
+
+
+
+
   // update order
   export const updateOrder = async (
     orderData:Partial<IOrderDetails>,
@@ -100,3 +125,5 @@ export const getSingleOrder = async (orderId: string) => {
       return Error(error);
     }
   };
+
+

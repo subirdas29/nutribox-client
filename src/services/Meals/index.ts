@@ -94,10 +94,10 @@ export const getAllProviderMeals = async (page?: string,limit?:string) => {
 
 
 //all meals for everyone
-export const getAllMeals = async () => {
+export const getAllMeals = async (page?: string,limit?:string) => {
   try {
     
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/providers/meals`,
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/providers/meals?limit=${limit}&page=${page}`,
       {
         next: { tags: ["Meals"] },
       }

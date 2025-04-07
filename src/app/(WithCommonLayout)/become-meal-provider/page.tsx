@@ -11,6 +11,7 @@ import FeaturesSectionProvider from "@/components/modules/home/ProviderSections/
 import HowItWorksProvider from "@/components/modules/home/ProviderSections/HowItWorksForProviders";
 import BenefitsForProvider from "@/components/modules/home/ProviderSections/BenefitsForProvider";
 import CTASection from "@/components/modules/home/ProviderSections/CTASection";
+import AnimatedSection from "@/components/ui/core/Animation/animation";
 
 export default function BecomeMealProvider() {
   const { user } = useUser();
@@ -25,13 +26,13 @@ export default function BecomeMealProvider() {
 
   return (
    <div>
-     <HeroBannerProvider />
-    <MealProviderStats />
-    <MealProviderBusinessTransform />
-    <FeaturesSectionProvider />
-    <HowItWorksProvider />
-    <BenefitsForProvider />
-    <CTASection />
+      <AnimatedSection delay={0.1}><HeroBannerProvider /></AnimatedSection>
+      <AnimatedSection delay={0.2}><MealProviderStats /></AnimatedSection>
+      <AnimatedSection delay={0.3}><MealProviderBusinessTransform /></AnimatedSection>
+      <AnimatedSection delay={0.4}><FeaturesSectionProvider /></AnimatedSection>
+      <AnimatedSection delay={0.5}><HowItWorksProvider /></AnimatedSection>
+      <AnimatedSection delay={0.6}><BenefitsForProvider /></AnimatedSection>
+      <AnimatedSection delay={0.7}><CTASection /></AnimatedSection>
    </div>
   );
 }

@@ -14,8 +14,10 @@ import { currencyFormatter } from "@/lib/currencyFormatter";
 import { updateOrder } from "@/services/Order";
 import dayjs from "dayjs";
 import { TOrderAllData } from "./CancelledOrdersCustomer";
+import TablePagination from "@/components/ui/core/NBTable/TablePagination";
+import { IMeta } from "@/types/meta";
 
-const PendingOrdersOfCustomer = ({ myorders}:{myorders:TOrderAllData[]}) => {
+const PendingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta:IMeta}) => {
 
 
   
@@ -185,7 +187,7 @@ const PendingOrdersOfCustomer = ({ myorders}:{myorders:TOrderAllData[]}) => {
       <h1 className="text-xl font-bold mb-4">All Order Meals</h1>
       <div className="overflow-x-auto">
       <NBTable columns={columns} data={Array.isArray(pendingOrders) ? pendingOrders : []} />
-
+      <TablePagination totalPage={meta?.totalPage } />
       </div>
       <DeleteConfirmationModal
         name={selectedItem}

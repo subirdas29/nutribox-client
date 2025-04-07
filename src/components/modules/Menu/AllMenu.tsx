@@ -8,13 +8,19 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { Checkbox } from '@/components/ui/checkbox';
 import { Slider } from '@/components/ui/slider';
 import Image from 'next/image';
-import { TMealProvider,} from '@/types/meals';
+import { TMealProvider, TMealsForm,} from '@/types/meals';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { ShoppingCart, Star } from 'lucide-react';
 import { currencyFormatter } from '@/lib/currencyFormatter';
 import Link from 'next/link';
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
+import { addMeal} from '@/redux/features/cartSlice';
+import { useAppDispatch} from '@/redux/hook';
+
+import { toast } from 'sonner';
+import TablePagination from '@/components/ui/core/NBTable/TablePagination';
+import { IMeta } from '@/types/meta';
 // import { useAppDispatch } from '@/redux/hook';
 // import { addMeal } from '@/redux/features/cartSlice';
 
@@ -31,11 +37,17 @@ interface Meal {
   dietaryPreferences: string[];
   mealProvider: TMealProvider;
   rating:number;
+  offerPrice: number;
 }
 
-export default function AllMenu({menu}:{menu:Meal[]}) {
+export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
   
-//  const dispatch = useAppDispatch()
+ const dispatch = useAppDispatch()
+
+//  const mealProviderId = useAppSelector(mealProvider)
+//  const [selectedMeal, setSelectedMeal] = useState<TMealsForm | null>(null);
+//  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -53,9 +65,19 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
 
   });
 
-  // const handleMealCart = (meal:TMealsForm) =>{
-  //   dispatch(addMeal(meal))
-  // }
+  const handleAddMeal = (meal:TMealsForm) =>{
+
+    // if(mealProviderId && mealProviderId !== meal.mealProvider._id){
+    //   setSelectedMeal(meal);
+    //   setIsModalOpen(true)
+    // }
+    // else{
+      dispatch(addMeal(meal))
+      toast.success("Meal added to cart!");
+    // }
+
+     
+  }
 
   const ingredients = [...new Set(menu?.flatMap((ingre)=>ingre.ingredients))]
   const dietary = [...new Set(menu?.flatMap((diet)=>diet.dietaryPreferences))]
@@ -407,8 +429,14 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
                   <CardHeader className='flex justify-between'>
                     <CardTitle>{meal.name}</CardTitle>
                     <ShoppingCart
-                    //  onClick={()=>handleMealCart(meal)}
+                     onClick={()=>handleAddMeal(meal)}
                       />
+{/* 
+                      {
+                        isModalOpen && selectedMeal && (
+                          <CartModal meal= {selectedMeal} onClose = {()=>setIsModalOpen(false)}/>
+                        )
+                      } */}
                     {/* <p className="text-sm text-gray-500">{meal.mealProvider}</p> */}
                   </CardHeader>
                   <CardContent>
@@ -469,8 +497,13 @@ export default function AllMenu({menu}:{menu:Meal[]}) {
               ))}
             </div>
           </div>
+       
         </div>
+       <div className='flex justify-end'>
+       <TablePagination totalPage={meta?.totalPage } />
+       </div>
       </main>
+      
     </div>
   );
 }

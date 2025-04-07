@@ -6,14 +6,15 @@ import DeliveredOrdersOfCustomer from "@/components/modules/Customer/OrderMeal/D
 import { getMyOrder } from "@/services/User"
 
 
-const MyOrderPage = async() => {
-    const {data} = await getMyOrder()
+const MyOrderPage = async({searchParams}:{searchParams:Promise<{page:string}>}) => {
+  const {page} = await searchParams
+  const {data,meta} = await getMyOrder(page, '10')
 
 
    
   return (
     <div>
-      <DeliveredOrdersOfCustomer myorders = {data}/>
+      <DeliveredOrdersOfCustomer myorders = {data} meta={meta}/>
     </div>
   )
 }

@@ -1,9 +1,12 @@
 import CustomerDashboard from "@/components/modules/Customer/CustomerDashboard";
+import { getMyOrder } from "@/services/User";
 
-export default function CustomerDashboardPage() {
+export default async function CustomerDashboardPage() {
+  
+      const {data} = await getMyOrder()
     return (
       <div>
-       <CustomerDashboard/>
+       <CustomerDashboard myorders = {data}/>
       </div>
     );
   }

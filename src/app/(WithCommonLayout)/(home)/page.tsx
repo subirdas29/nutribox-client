@@ -17,6 +17,7 @@ import HowItWorksProvider from "@/components/modules/home/ProviderSections/HowIt
 import BenefitsForProvider from "@/components/modules/home/ProviderSections/BenefitsForProvider";
 import CTASection from "@/components/modules/home/ProviderSections/CTASection";
 import MeetOurCreators from "@/components/modules/home/OurCreators";
+import AnimatedSection from "@/components/ui/core/Animation/animation";
 
 const CommonLayout = () => {
   const { user } = useUser(); // Get user details
@@ -25,33 +26,29 @@ const CommonLayout = () => {
     <>
      
       
-      {/* If user is NOT logged in or is a customer, show Customer Sections */}
-      {!user || user.role === "customer" ? (
-        <>
-          <HeroBanner />
-          
-          <MenuCards />
-          <CustomerTransform />
-          <MealPicker />
-          <BenefitsGrid />
-          <HowItWorks />
-          <MeetOurCreators/>
-        </>
-      ) : (
-        /* If user is a Meal Provider, show Provider Sections */
-        <>
-          <HeroBannerProvider />
-          <MealProviderStats />
-          <MenuCards />
-          <MealProviderBusinessTransform />
-          <FeaturesSectionProvider />
-          <HowItWorksProvider />
-          <BenefitsForProvider />
-        </>
-      )}
+     {!user || user.role === "customer" ? (
+  <>
+    <AnimatedSection><HeroBanner /></AnimatedSection>
+    <AnimatedSection delay={0.1}><MenuCards /></AnimatedSection>
+    <AnimatedSection delay={0.2}><CustomerTransform /></AnimatedSection>
+    <AnimatedSection delay={0.3}><MealPicker /></AnimatedSection>
+    <AnimatedSection delay={0.4}><BenefitsGrid /></AnimatedSection>
+    <AnimatedSection delay={0.5}><HowItWorks /></AnimatedSection>
+    <AnimatedSection delay={0.6}><MeetOurCreators /></AnimatedSection>
+  </>
+) : (
+  <>
+    <AnimatedSection><HeroBannerProvider /></AnimatedSection>
+    <AnimatedSection delay={0.1}><MealProviderStats /></AnimatedSection>
+    <AnimatedSection delay={0.2}><MenuCards /></AnimatedSection>
+    <AnimatedSection delay={0.3}><MealProviderBusinessTransform /></AnimatedSection>
+    <AnimatedSection delay={0.4}><FeaturesSectionProvider /></AnimatedSection>
+    <AnimatedSection delay={0.5}><HowItWorksProvider /></AnimatedSection>
+    <AnimatedSection delay={0.6}><BenefitsForProvider /></AnimatedSection>
+  </>
+)}
 
-      {/* Show CTASection for everyone */}
-      <CTASection />
+<AnimatedSection delay={0.7}><CTASection /></AnimatedSection>
     </>
   );
 };

@@ -1,235 +1,389 @@
-// "use client"
-// import { ShoppingCart, Leaf, Recycle, Sun, Sprout, Utensils, Clock, Flame, Heart, ChevronRight, Delete, Trash } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-// import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
-// import { Badge } from '@/components/ui/badge';
-// import Image from 'next/image';
-// import { motion, AnimatePresence } from 'framer-motion';
-// // import { TMealsForm } from '@/types/meals';
-// import { useAppDispatch, useAppSelector } from '@/redux/hook';
-// import { decrementOrderQuantity, grandTotalSelector, incrementOrderQuantity, orderedMealSelector, removeMeal } from '@/redux/features/cartSlice';
-// import { currencyFormatter } from '@/lib/currencyFormatter';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
+import { Trash, Edit,  Recycle, Bike, CalendarDays, Clock, Salad, Leaf, House, IdCard } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { useAppDispatch, useAppSelector } from '@/redux/hook';
+import { CartMeal, citySelector, decrementOrderQuantity, deselectMeal, grandTotalSelector, incrementOrderQuantity, orderedMealSelector, portionCostSelector,  removeMeal, orderSelectedMealSelector , selectMeal, shippingAddressSelector, shippingCostSelector,  subTotalSelectSelector, toggleSelectAllMeals, updateCity, updateShippingAddress, clearCart, orderedSelector } from '@/redux/features/cartSlice';
+import emptycart from '../../../assets/empty-cart/Empty-Cart.png';
+import { currencyFormatter } from '@/lib/currencyFormatter';
+import { useState, } from 'react';
 
-// export default function CartMealsCard() {
-//   const dispatch = useAppDispatch()
-//     const meals = useAppSelector(orderedMealSelector)
-//     const subTotal = useAppSelector(grandTotalSelector)
-//     console.log(meals)
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cities } from '@/constant/cities';
+import CartModal from './CartModal';
+import { toast } from 'sonner';
+import { useUser } from '@/context/UserContext';
+import { useRouter } from 'next/navigation';
+import { createOrder } from '@/services/Order';
+import { IOrder } from '@/types/order';
 
-//     const handleMealRemove = (meal:string) =>{
-//       dispatch(removeMeal(meal))
-//     }
 
-//     const handleIncrementMeal = (meal:string)=>{
-//       dispatch(incrementOrderQuantity(meal))
-//     }
-//     const handleDecrementMeal = (meal:string)=>{
-//       dispatch(decrementOrderQuantity(meal))
-//     }
+
+
+
+
+export default function CartMealsCard() {
+
+  const dispatch = useAppDispatch();
+
+  const meals = useAppSelector(orderedMealSelector);
+  const portionTotal = useAppSelector(portionCostSelector);
+
+  const subTotal = useAppSelector(grandTotalSelector);
+  const selectedCity = useAppSelector(citySelector);
+  const shippingAddress = useAppSelector(shippingAddressSelector);
+  const shippingCost = useAppSelector(shippingCostSelector);
+  
+  const selectedMeals = useAppSelector(orderSelectedMealSelector);
+  const subSelectorTotal = useAppSelector(subTotalSelectSelector)
+  const orderSelector = useAppSelector(orderedSelector)
+
+
+  
+
+  const [showModal, setShowModal] = useState(false);  
+  const [selectedModalMeals, setSelectedModalMeals] = useState<CartMeal | null>(null);
+
+  const [date, setDate] = useState<Date | null>(null);
+  const [time, setTime] = useState("");
+  const user = useUser();
+
+  const router = useRouter();
+  
+
+  const handleOrder = async () => {
+    const orderLoading = toast.loading("Order is being placed");
+
+    try {
+        if (!user) {
+            router.push("/login");
+            throw new Error("Please login first.");
+        }
+
+        if (!selectedCity) throw new Error("City is missing");
+        if (!shippingAddress) throw new Error("Shipping address is missing");
+        if (selectedMeals.length === 0) throw new Error("Cart is empty, what are you trying to order ??");
+
+        const orderPromises = orderSelector.selectedMeals.map((orderItem: IOrder) => createOrder(orderItem));
+        
+        const res = await Promise.all(orderPromises);
+
+        const allSuccessful = res.every((res) => res.success);
+
+        if (allSuccessful) {
+            toast.success("All orders placed successfully!", { id: orderLoading });
+            dispatch(clearCart());
+            // router.push(responses[0].data.paymentUrl);
+            router.push(`/orderdetails/${res[0].data._id}`);
+        } else {
  
+            res.forEach((res, index) => {
+                if (!res.success) {
+                    console.error(`Order ${index + 1} failed:`, res);
+                }
+            });
+            toast.error("Some orders failed. Please check.", { id: orderLoading });
+        }
+    } catch (error: any) {
+        const errorMessage = error.response?.data?.message || error.message;
+        toast.error(errorMessage, { id: orderLoading });
+    }
+};
+  
 
 
+  const handleCustomizationMeal = (meal:CartMeal)=>{
+    setSelectedModalMeals(meal)
+    setShowModal(true)
+  }
+  
+  const handleCity = (city:string) =>{
+    dispatch(updateCity(city))
+  }
+  const handleShippingAddress = (address:string) =>{
+    console.log(address)
+    dispatch(updateShippingAddress(address))
+  }
 
-//   return (
-//     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12 px-4 sm:px-6 lg:px-8">
-//       <div className="max-w-4xl mx-auto">
-//         {/* Animated Header */}
-//         <motion.div 
-//           initial={{ y: -20, opacity: 0 }}
-//           animate={{ y: 0, opacity: 1 }}
-//           transition={{ duration: 0.5 }}
-//           className="flex items-center justify-center mb-10"
-//         >
-//           <div className="relative">
-//             <Leaf className="h-10 w-10 text-emerald-600 mr-3" />
-//             <Utensils className="h-5 w-5 text-emerald-600 absolute -right-1 -bottom-1" />
-//           </div>
-//           <h1 className="text-4xl font-bold text-emerald-800 font-serif">GreenMeal Box</h1>
-//         </motion.div>
+  const isAllSelected = selectedMeals.length === meals.length
 
-//         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-//           {/* Left Column - Cart Items */}
-//           <div className="lg:col-span-2 space-y-6">
-//             <motion.div
-//               initial={{ x: -20, opacity: 0 }}
-//               animate={{ x: 0, opacity: 1 }}
-//               transition={{ duration: 0.5, delay: 0.2 }}
-//             >
-//               <Card className="border-emerald-200 bg-white/80 backdrop-blur-sm shadow-lg">
-//                 <CardHeader className="pb-4">
-//                   <div className="flex items-center">
-//                     <ShoppingCart className="h-6 w-6 text-emerald-600 mr-2" />
-//                     <CardTitle className="text-2xl text-emerald-800">Your Eco-Meals</CardTitle>
-//                   </div>
-//                 </CardHeader>
-//                 <CardContent className="space-y-6">
-//                   {meals?.map((item) => (
-//                     <motion.div
-//                       key={item._id}
-//                       whileHover={{ scale: 1.01 }}
-//                       className="flex flex-col sm:flex-row gap-4 p-4 rounded-lg border border-emerald-100 bg-white shadow-sm"
-//                     >
-//                       <div className="relative h-32 w-32 flex-shrink-0 overflow-hidden rounded-lg border-2 border-emerald-200 group">
-//                         <Image
-//                           width={500}
-//                           height={500}
-//                           src={item.imageUrls[0]}
-//                           alt={item.name}
-//                           className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
-//                         />
-//                         {/* <div className="absolute top-2 right-2 flex gap-1">
-//                           {item.badges.includes('organic') && (
-//                             <Badge variant="eco" className="bg-emerald-100 text-emerald-800">
-//                               <Sprout className="h-3 w-3 mr-1" /> Organic
-//                             </Badge>
-//                           )}
-//                           {item.badges.includes('sustainable') && (
-//                             <Badge variant="eco" className="bg-amber-100 text-amber-800">
-//                               <Recycle className="h-3 w-3 mr-1" /> Sustainable
-//                             </Badge>
-//                           )}
-//                         </div> */}
-//                         {/* {item.favorite && (
-//                           <div className="absolute top-2 left-2">
-//                             <Heart className="h-5 w-5 fill-emerald-500 text-emerald-500" />
-//                           </div>
-//                         )} */}
-//                       </div>
-                      
-//                       <div className="flex-1">
-//                         <h3 className="text-lg font-medium text-emerald-900">{item.name}</h3>
-//                         <div className="flex items-center gap-4 mt-1 text-sm text-emerald-700">
-//                           <span className="flex items-center">
-//                             <Clock className="h-4 w-4 mr-1" />
-//                             {/* {item.prepTime} */}
-//                           </span>
-//                           <span className="flex items-center">
-//                             <Flame className="h-4 w-4 mr-1" />
-//                             {/* {item.calories} kcal */}
-//                           </span>
-//                         </div>
-//                         <p className="mt-2 text-emerald-700">{currencyFormatter(Number(item.price.toFixed(2)))}</p>
-                        
-//                         <div className="mt-4 flex items-center">
-//                           <div className="flex items-center border border-emerald-200 rounded-full bg-emerald-50">
-//                             <button className="h-8 w-8 flex items-center justify-center text-emerald-600 hover:bg-emerald-100 rounded-l-full transition-colors" onClick={()=>handleDecrementMeal(item._id)}>
-//                               -
-//                             </button>
-//                             <span className="h-8 w-8 flex items-center justify-center text-emerald-900 font-medium">
-//                               {item.orderQuantity}
-//                             </span>
-//                             <button className="h-8 w-8 flex items-center justify-center text-emerald-600 hover:bg-emerald-100 rounded-r-full transition-colors" onClick={()=>handleIncrementMeal(item._id)}>
-//                               +
-//                             </button>
-//                           </div>
-//                           <button onClick={()=>handleMealRemove(item._id)} className="ml-4 text-sm text-emerald-600 hover:text-emerald-800 transition-colors flex items-center">
-//                            <Trash/> Remove
-//                           </button>
-//                         </div>
-//                       </div>
-//                     </motion.div>
-//                   ))}
-//                 </CardContent>
-//               </Card>
-//             </motion.div>
-//           </div>
+   const handleSelectAll = () => {
+          dispatch(toggleSelectAllMeals(!isAllSelected));
+      };
+  
 
-//           {/* Right Column - Summary */}
-//           <div className="space-y-6">
-//             <motion.div
-//               initial={{ x: 20, opacity: 0 }}
-//               animate={{ x: 0, opacity: 1 }}
-//               transition={{ duration: 0.5, delay: 0.4 }}
-//               className="space-y-6"
-//             >
-//               <Card className="border-emerald-200 bg-white/80 backdrop-blur-sm shadow-lg">
-//                 <CardHeader>
-//                   <CardTitle className="text-xl text-emerald-800">Order Summary</CardTitle>
-//                 </CardHeader>
-//                 <CardContent className="space-y-4">
-//                   <div className="flex justify-between">
-//                     <span className="text-emerald-700">Subtotal</span>
-//                     <span className="font-medium text-emerald-900">
-//                         {currencyFormatter(Number(subTotal.toFixed(2)))}
-//                     </span>
-//                   </div>
-//                   <div className="flex justify-between">
-//                     <span className="text-emerald-700">Delivery</span>
-//                     <span className="font-medium text-emerald-900">Carbon Neutral</span>
-//                   </div>
-//                   <div className="flex justify-between">
-//                     <span className="text-emerald-700">Eco Savings</span>
-//                     <span className="font-medium text-emerald-600">{currencyFormatter(Number(-10.99))}</span>
-//                   </div>
-//                   <div className="border-t border-emerald-100 pt-4 flex justify-between">
-//                     <span className="text-lg font-medium text-emerald-800">Total</span>
-//                     <span className="text-lg font-bold text-emerald-900">
-                      
-//                            {currencyFormatter(Number((subTotal-10.99).toFixed(2)))}
-//                     </span>
-//                   </div>
-//                 </CardContent>
-//                 <CardFooter className="flex flex-col gap-3">
-//                   <Button className="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white py-6 text-lg shadow-lg shadow-emerald-200/50 hover:shadow-emerald-300/50 transition-all">
-//                     Checkout Securely <ChevronRight className="ml-2 h-5 w-5" />
-//                   </Button>
-//                   <div className="flex items-center justify-center text-sm text-emerald-600">
-//                     <Recycle className="h-4 w-4 mr-2" />
-//                     <span>100% compostable packaging</span>
-//                   </div>
-//                 </CardFooter>
-//               </Card>
+    const isMealSelected = (mealId:string) =>
+      selectedMeals.some((selected) => selected._id === mealId)
+    ;
+    
+  const handleSelectMealRedux = (meal: CartMeal) => {
+    if (selectedMeals.some((selected) => selected._id === meal._id)) {
+      dispatch(deselectMeal({ _id: meal._id })); 
+    } else {
+      dispatch(selectMeal(meal)); 
+    }
+  };
+  
+  const handleIncrement = (meal:{_id:string,basePrice:number, orderQuantity:number}) => {
+    
+    dispatch(incrementOrderQuantity({ 
+      _id: meal._id, 
+      basePrice: meal.basePrice, 
+      orderQuantity: meal.orderQuantity,
+      portionTotal
+  }));
+   
+  };
 
-//               {/* Environmental Impact */}
-//               <Card className="border-emerald-200 bg-white/80 backdrop-blur-sm shadow-lg">
-//                 <CardHeader>
-//                   <div className="flex items-center">
-//                     <Leaf className="h-5 w-5 text-emerald-600 mr-2" />
-//                     <CardTitle className="text-xl text-emerald-800">Your Green Impact</CardTitle>
-//                   </div>
-//                 </CardHeader>
-//                 <CardContent className="space-y-4">
-//                   <div className="flex items-center p-3 rounded-lg bg-emerald-50/70">
-//                     <div className="bg-emerald-100 p-3 rounded-full mr-4">
-//                       <Recycle className="h-6 w-6 text-emerald-600" />
-//                     </div>
-//                     <div>
-//                       <p className="font-medium text-emerald-900">3 plastic items saved</p>
-//                       <p className="text-sm text-emerald-600">By choosing our packaging</p>
-//                     </div>
-//                   </div>
-//                   <div className="flex items-center p-3 rounded-lg bg-amber-50/70">
-//                     <div className="bg-amber-100 p-3 rounded-full mr-4">
-//                       <Sun className="h-6 w-6 text-amber-600" />
-//                     </div>
-//                     <div>
-//                       <p className="font-medium text-amber-900">1.8 kg CO₂ saved</p>
-//                       <p className="text-sm text-amber-600">Local ingredient sourcing</p>
-//                     </div>
-//                   </div>
-//                 </CardContent>
-//                 <CardFooter>
-//                   <Button variant="outline" className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-800 transition-colors">
-//                     Share Your Impact
-//                   </Button>
-//                 </CardFooter>
-//               </Card>
-//             </motion.div>
-//           </div>
-//         </div>
-//       </div>
+  const handleDecrement = (meal:{_id:string,basePrice:number, orderQuantity:number}) => {
+    
+    dispatch(decrementOrderQuantity({ 
+      _id: meal._id, 
+      basePrice: meal.basePrice, 
+      orderQuantity: meal.orderQuantity,
+      portionTotal
+  }));
+   
+  };
 
-//       {/* Floating Eco Tip */}
-//       <AnimatePresence>
-//         <motion.div
-//           initial={{ y: 50, opacity: 0 }}
-//           animate={{ y: 0, opacity: 1 }}
-//           transition={{ delay: 0.8 }}
-//           className="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-white border border-emerald-200 shadow-lg rounded-full px-4 py-2 flex items-center"
-//         >
-//           <span className="text-emerald-700 text-sm font-medium">🌱 Your order saves 3 plastic items this week!</span>
-//         </motion.div>
-//       </AnimatePresence>
-//     </div>
-//   );
-// }
+  
+  const groupedMeals: Record<string, CartMeal[]> = meals.reduce((acc, meal) => {
+    const providerName = meal.mealProvider?.userId?.name || "Unknown Provider";
+    
+    if (!acc[providerName]) {
+      acc[providerName] = [];
+    }
+    
+    acc[providerName].push(meal);
+    return acc;
+  }, {} as Record<string, CartMeal[]>);
+  
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        <motion.div 
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-center mb-10"
+        >
+          <h1 className="text-4xl font-bold text-emerald-800 font-serif">NutriBox Cart</h1>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            {Object.keys(groupedMeals).length === 0 ? (
+              <CardContent className="text-center">
+                <p>Your Cart is Empty</p>
+                <Image src={emptycart} alt='empty-cart' width={500} height={500} />
+              </CardContent>
+            ) : (
+              <>
+                <div className="flex justify-between items-center mb-4 border bg-white/80 shadow-lg border-emerald-200 rounded-lg py-2 px-4">
+                  <div className="flex items-center">
+                    <input 
+                       type="checkbox"
+                       checked={isAllSelected}
+                       onChange={handleSelectAll}
+                      className="mr-2 accent-green-500"
+                    />
+                    <span className="text-emerald-800 font-medium">Select All</span>
+                  </div>
+                </div>
+
+
+                {Object.entries(groupedMeals).map(([provider, providerMeals]) => (
+                  <Card key={provider} className="border-emerald-200 bg-white/80 shadow-lg">
+                    <CardHeader>
+                      <CardTitle className="text-xl text-emerald-800">{provider}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      {providerMeals.map((item) => (
+                        <motion.div
+                          key={item._id}
+                          whileHover={{ scale: 1.01 }}
+                          className="flex flex-row gap-4 p-4 rounded-lg border border-emerald-100 bg-white shadow-sm"
+                        >
+                          <input 
+                            type="checkbox" 
+                            checked={isMealSelected(item._id)}
+                            onChange={() => handleSelectMealRedux(item)}
+                            className="mr-2 accent-green-500"
+                          />
+                          <Image width={100} height={100} src={item.imageUrls[0]} alt={item.name} className="h-32 w-32 rounded-lg object-cover" />
+                          <div className="flex-1">
+                            <h3 className="text-lg font-medium text-emerald-900">{item.name}</h3>
+                            <p className="text-emerald-700">Base Price: {currencyFormatter(Number(item.basePrice))}</p>
+                            <p className="text-emerald-700">Total Price: {currencyFormatter(Number(item.price))}</p>
+                            <p className="text-emerald-700">{item.portionSize}</p>
+                            <div className="mt-4 flex items-center">
+                              <button className="px-3 py-1 border" onClick={() => handleDecrement(item)}>-</button>
+                              <span className="px-4">{item.orderQuantity}</span>
+                              <button className="px-3 py-1 border" onClick={() => handleIncrement(item)}>+</button>
+                              <button onClick={() => dispatch(removeMeal(item._id))} className="ml-4 text-sm text-red-600"> <Trash /> Remove </button>
+                              <button onClick={() => handleCustomizationMeal(item)} className="ml-4 text-sm text-blue-600"> <Edit /> Edit </button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </CardContent>
+                  
+                  </Card>
+                ))}
+              </>
+            )}
+          </div>
+
+
+          <div className="space-y-6">
+             {/* Delivery Section */}
+        <Card className="mb-6 border-primary/20">
+          <CardHeader className="bg-primary/5">
+            <div className="flex items-center gap-3">
+              <Bike className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-semibold">Delivery Details</h2>
+            </div>
+          </CardHeader>
+          <CardContent className="pt-6 space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+              <Label className='flex items-center gap-2 text-primary/80'><House/>Delivery Area</Label>
+                <div className="flex gap-2 flex-wrap" >
+                <Select  onValueChange={(city) => handleCity(city)}>
+            <SelectTrigger className="mb-5 w-full">
+              <SelectValue placeholder="Select a city" />
+            </SelectTrigger>
+            <SelectContent>
+              {cities.map((city) => 
+              {
+                const formattedCity = city.split(' (')[0].toLowerCase().replace(/\s+/g, '-');
+           {
+           
+            return(
+              <SelectItem key={city} value={formattedCity}>
+                {city}
+              </SelectItem>
+            )
+           }
+             
+              }
+              )}
+            </SelectContent>
+          </Select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className='flex items-center gap-2 text-primary/80'><IdCard/>Delivery Address</Label>
+                <Textarea
+                value={shippingAddress}
+                  onChange={(e) => handleShippingAddress(e.target.value)}
+                  placeholder="Enter full delivery address"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+      <Label className="flex items-center gap-2 text-primary/80">
+        <CalendarDays className="w-5 h-5" />
+        Select Delivery Date
+      </Label>
+      <DatePicker
+        selected={date}
+        onChange={(date: Date | null) => setDate(date)} 
+        minDate={new Date()} // Disable past dates
+        className="rounded-lg border shadow-sm p-2" 
+      />
+    </div>
+
+            <div className="space-y-2">
+  <Label className="flex items-center gap-2 text-primary/80">
+    <Clock className="w-5 h-5" />
+    Preferred Time (optional)
+  </Label>
+  <Input 
+    type="time"
+    value={time}
+    onChange={(e) => setTime(e.target.value)}
+    className="[&::-webkit-calendar-picker-indicator]:bg-green-500 [&::-webkit-calendar-picker-indicator]:p-1 [&::-webkit-calendar-picker-indicator]:text-primary [&::-webkit-calendar-picker-indicator]:rounded-md"
+    required
+  />
+</div>
+          </CardContent>
+        </Card>
+            <Card className="border-emerald-200 bg-white/80 shadow-lg">
+            <CardHeader className="bg-primary/5">
+            <div className="flex items-center gap-3">
+              <Leaf className="w-6 h-6 text-primary" />
+              <h2 className="text-xl font-semibold">Order Summary</h2>
+            </div>
+          </CardHeader>
+              <CardContent className="space-y-4">
+             
+                <div className="flex justify-between">
+                  <span className="text-emerald-700">Selected Total</span>
+                  <span className="font-medium text-emerald-900">{currencyFormatter(Number(subSelectorTotal))}</span>
+                </div>
+                 <div className="flex justify-between items-center">
+                              <div className="flex items-center gap-2">
+                                <Bike className="w-5 h-5 text-primary" />
+                                <span>Delivery Fee ({selectedCity})</span>
+                              </div>
+                              <div className="flex items-center font-medium">
+                               
+                                {currencyFormatter(shippingCost)}
+                              </div>
+                            </div>
+                              <div className="pt-4 border-t">
+                                          <div className="flex justify-between items-center">
+                                            <div className="flex items-center gap-2">
+                                              <Salad className="w-6 h-6 text-primary" />
+                                              <span className="font-bold text-lg">Total Amount</span>
+                                            </div>
+                                            <div className="flex items-center text-primary font-bold text-lg">
+                                         
+                                              <span className="animate-pulse">
+                                                {currencyFormatter(subTotal)}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+              </CardContent>
+              <CardFooter className="flex flex-col gap-3">
+     {
+       <Button 
+       className={`w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white py-6 text-md md:text-lg shadow-lg shadow-emerald-200/50 hover:shadow-emerald-300/50 transition-all 
+         ${subSelectorTotal === 0 || !selectedCity || !shippingAddress || !date ? 'opacity-50 cursor-not-allowed' : ''}`} 
+       disabled={subSelectorTotal === 0 || !selectedCity || !shippingAddress || !date} onClick={handleOrder}
+     >
+       Confirm Order
+     </Button>
+     }
+        <div className="flex items-center justify-center text-sm text-emerald-600">
+          <Recycle className="h-4 w-4 mr-2" />
+          <span>100% compostable packaging</span>
+        </div>
+      </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </div>
+      {selectedModalMeals && showModal && (
+  <CartModal 
+    meal={selectedModalMeals}
+    onClose={() => setShowModal(false)}  
+  />
+)}
+    </div>
+  );
+}

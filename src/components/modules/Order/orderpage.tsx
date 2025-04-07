@@ -44,7 +44,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
   const [instruction, setInstruction] = useState("");
 
   // Price calculations
-  const basePrice = ordermeal.price;
+  const basePrice = ordermeal?.price;
   const [mealPrice, setMealPrice] = useState(basePrice);
   const [deliveryCharge, setDeliveryCharge] = useState(60);
   const [totalPrice, setTotalPrice] = useState(basePrice + 60);
@@ -105,21 +105,25 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
     setIsSubmitting(true);
 
     const orderData:IOrder = {
-      mealId: ordermeal._id,
-      mealName: ordermeal.name,
-      category: ordermeal.category,
-      basePrice: ordermeal.price,
+      mealId: ordermeal?._id,
+      mealName: ordermeal?.name,
+      category: ordermeal?.category,
+      basePrice: ordermeal?.price,
       portionSize: selectedPortion,
-      portionPrice: mealPrice,
-      status:"pending",
+
+      status: "pending",
       deliveryArea,
-      deliveryCharge,
+      orderQuantity:1,
       totalPrice,
       deliveryDate: date ? new Date(date) : new Date(),
       deliveryTime: time,
       deliveryAddress: address,
       customizations,
-      specialInstructions: instruction
+      specialInstructions: instruction,
+      mealProviderId: "",
+      quantity: 0,
+      shippingAddress: "",
+      paymentMethod: ""
     };
 
     try {
@@ -127,12 +131,20 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
         const res = await createOrder(orderData);
           
+        console.log(res)
 
             if (res.success) {
                 toast.success(res.message);
-                router.push(`/orderdetails/${res.data._id}`);
+                console.log(res.data,'order')
+                // router.push(`/orderdetails/${res.data._id}`);
+                if(res.data){
+                  setTimeout(()=>{
+                    window.location.href = res.data
+                  },1000)
+                }
             } else {
                 toast.error(res.message);
+               console.log(res);
             }
 
   

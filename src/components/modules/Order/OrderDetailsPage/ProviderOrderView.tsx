@@ -116,7 +116,7 @@ export const ProviderOrderView = ({ order }: { order: IOrderDetails }) => {
   }
 
   return (
-    <div className="min-h-screen bg-green-50 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
           <div className="relative w-48 h-48 mx-auto mb-6">

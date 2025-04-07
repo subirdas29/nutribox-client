@@ -16,7 +16,7 @@ const MealDetailPage= async({params}:{params:Promise<{orderdetailsId:string}>}) 
  
    
   return (
-    <div className="flex justify-center items-center">
+    <div>
       <OrderRolePageDetails order={data}/>
     </div>
   )

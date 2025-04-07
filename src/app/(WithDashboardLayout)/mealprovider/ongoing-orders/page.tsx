@@ -6,13 +6,14 @@ import OnGoingOrdersOfMealProvider from "@/components/modules/dashboard/MealProv
 import { getAllMealProviderOrder } from "@/services/Order"
 
 
-const AllOrdersPage = async() => {
+const AllOrdersPage = async({searchParams}:{searchParams:Promise<{page:string}>}) => {
 
-    const {data} = await getAllMealProviderOrder()
+  const {page} = await searchParams
+  const {data,meta} = await getAllMealProviderOrder(page, '10')
  
   return (
     <div>
-      <OnGoingOrdersOfMealProvider orders={data}/>
+      <OnGoingOrdersOfMealProvider orders={data} meta={meta}/>
     </div>
   )
 }

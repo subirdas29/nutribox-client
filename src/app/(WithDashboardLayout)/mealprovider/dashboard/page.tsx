@@ -1,10 +1,12 @@
 import MealProviderDashboard from "@/components/modules/dashboard/MealProvider/mealproviderdashboard";
+import { getAllMealProviderOrder } from "@/services/Order";
 
-export default function UserDashboard() {
+export default async function UserDashboard() {
+    const {data} = await getAllMealProviderOrder()
     return (
       <div>
      
-        <MealProviderDashboard/>
+        <MealProviderDashboard allOrders = {data}/>
       
       </div>
     );

@@ -15,8 +15,10 @@ import { currencyFormatter } from "@/lib/currencyFormatter";
 import { updateOrder } from "@/services/Order";
 import dayjs from "dayjs";
 import { TOrderAllData } from "./CancelledOrdersCustomer";
+import { IMeta } from "@/types/meta";
+import TablePagination from "@/components/ui/core/NBTable/TablePagination";
 
-const OngoingOrdersOfCustomer = ({ myorders}:{myorders:TOrderAllData[]}) => {
+const OngoingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta:IMeta}) => {
 
   
   const [isModalOpen, setModalOpen] = useState(false);
@@ -185,7 +187,7 @@ const OngoingOrdersOfCustomer = ({ myorders}:{myorders:TOrderAllData[]}) => {
       <h1 className="text-xl font-bold mb-4">All Order Meals</h1>
       <div className="overflow-x-auto">
       <NBTable columns={columns} data={Array.isArray(ongoingOrders) ? ongoingOrders : []} />
-
+    <TablePagination totalPage={meta?.totalPage } />
       </div>
       <DeleteConfirmationModal
         name={selectedItem}
