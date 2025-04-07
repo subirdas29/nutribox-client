@@ -37,6 +37,8 @@ NutriBox is a meal planning and delivery web application that enables users to c
 ## Technologies Used
 - **Next.js 15** - React-based framework
 - **React 19** - Frontend library
+- **Redux** - Cart handaling
+- **ShurjoPay** - Payment Intregation
 - **TailwindCSS 4** - Utility-first CSS framework
 - **Radix UI** - Accessible UI components
 - **Lucide-react** - Icon library
