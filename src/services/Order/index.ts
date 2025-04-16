@@ -4,11 +4,12 @@
 
 
 import { IOrderDetails } from "@/components/modules/Order/OrderDetailsPage";
-import { IOrder } from "@/types/order";
+import { IOrderCartMeal } from "@/types/cart";
+
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-export const createOrder = async (order: IOrder) => {
+export const createOrder = async (order: IOrderCartMeal) => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/orders`, {
       method: "POST",

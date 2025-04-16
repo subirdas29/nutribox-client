@@ -23,10 +23,6 @@ import { toast } from 'sonner';
 import { useUser } from '@/context/UserContext';
 import { useRouter } from 'next/navigation';
 import { createOrder } from '@/services/Order';
-import { IOrder } from '@/types/order';
-
-
-
 
 
 
@@ -44,8 +40,7 @@ export default function CartMealsCard() {
   
   const selectedMeals = useAppSelector(orderSelectedMealSelector);
   const subSelectorTotal = useAppSelector(subTotalSelectSelector)
-  const orderSelector = useAppSelector(orderedSelector)
-
+  const order = useAppSelector(orderedSelector)
 
   
 
@@ -57,7 +52,7 @@ export default function CartMealsCard() {
   const user = useUser();
 
   const router = useRouter();
-  
+
 
   const handleOrder = async () => {
     const orderLoading = toast.loading("Order is being placed");
@@ -72,30 +67,33 @@ export default function CartMealsCard() {
         if (!shippingAddress) throw new Error("Shipping address is missing");
         if (selectedMeals.length === 0) throw new Error("Cart is empty, what are you trying to order ??");
 
-        const orderPromises = orderSelector.selectedMeals.map((orderItem: IOrder) => createOrder(orderItem));
-        
-        const res = await Promise.all(orderPromises);
-
-        const allSuccessful = res.every((res) => res.success);
-
-        if (allSuccessful) {
-            toast.success("All orders placed successfully!", { id: orderLoading });
-            dispatch(clearCart());
-            // router.push(responses[0].data.paymentUrl);
-            router.push(`/orderdetails/${res[0].data._id}`);
-        } else {
- 
-            res.forEach((res, index) => {
-                if (!res.success) {
-                    console.error(`Order ${index + 1} failed:`, res);
-                }
-            });
-            toast.error("Some orders failed. Please check.", { id: orderLoading });
+        const finalOrder = {
+          ...order,
+           deliveryCharge:shippingCost
         }
+
+   
+           const res = await createOrder(finalOrder);
+          console.log(res)
+
+      if (res.success) {
+        toast.success(res.message);
+                console.log(res.data,'order')
+                // router.push(`/orderdetails/${res.data._id}`);
+                if(res.data){
+                  setTimeout(()=>{
+                    window.location.href = res.data
+                  },1000)
+                }
+            } 
+
+      else{
+        toast.error(res.message, { id: orderLoading });
+      }
     } catch (error: any) {
-        const errorMessage = error.response?.data?.message || error.message;
-        toast.error(errorMessage, { id: orderLoading });
+      toast.error(error.message, { id: orderLoading });
     }
+      
 };
   
 

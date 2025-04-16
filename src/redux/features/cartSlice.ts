@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { TMealsForm } from "@/types/meals";
 
@@ -12,21 +12,23 @@ export interface CartMeal extends TMealsForm {
 
 interface InitialState {
     meals: CartMeal[];
-    city: string;
-    shippingAddress: string;
+    selectedMeals: CartMeal[]
     deliveryDate: string; 
     deliveryTime: string;
-    selectedMeals: CartMeal[]
+    totalPrice: number,
+    deliveryArea: string,
+    deliveryAddress: string,
+   
 }
 
 const initialState: InitialState = {
     meals: [],
-    city: "",
-    shippingAddress: "",
     selectedMeals: [],
     deliveryDate: new Date().toISOString(),
-    deliveryTime: ""
-   
+    deliveryTime: "",
+    deliveryAddress:"",
+    deliveryArea:"",
+    totalPrice:0, 
 };
 
 const cartSlice = createSlice({
@@ -156,29 +158,35 @@ decrementOrderQuantity: (state, action) => {
         },
 
         
-        
-        
         updateCity: (state, action) => {
-            state.city = action.payload;
+            state.deliveryArea = action.payload;
         },
 
         updateShippingAddress: (state, action) => {
-            state.shippingAddress = action.payload;
+            state.deliveryAddress = action.payload;
         },
 
         clearCart: (state) => {
             const selectedMealIds = state.selectedMeals.map(meal => meal._id)
             state.meals = state.meals.filter(meal => !selectedMealIds.includes(meal._id));
             state.selectedMeals = [];
-            state.city = "";
-            state.shippingAddress = "";
+            state.deliveryDate= new Date().toISOString();
+            state.deliveryTime= "";
+            state.deliveryAddress="";
+            state.deliveryArea="";
+            state.totalPrice=0;
+           
         },
 
         allClearCart: (state) => {
             state.meals = [];
             state.selectedMeals = [];
-            state.city = "";
-            state.shippingAddress = "";
+            state.deliveryDate= new Date().toISOString();
+            state.deliveryTime= "";
+            state.deliveryAddress="";
+            state.deliveryArea="";
+            state.totalPrice=0;
+          
         },
     },
 });
@@ -186,40 +194,44 @@ decrementOrderQuantity: (state, action) => {
 export const orderedMealSelector = (state: RootState) => state.cart.meals;
 export const orderSelectedMealSelector = (state: RootState) => state.cart.selectedMeals;
 
-export const orderedSelector = (state: RootState) => ({
-    selectedMeals: state.cart.selectedMeals.map((meal) => ({
+export const orderedSelector = createSelector(
+    [(state: RootState) => state.cart],
+    (cart) => {
+      const selectedMeals = cart.selectedMeals.map((meal) => ({
         mealId: meal._id,
-        mealProviderId:meal.mealProvider._id,
-        mealName:meal.name,
-        category:meal.category,
+        mealProviderId: meal.mealProvider._id,
+        mealName: meal.name,
+        category: meal.category,
         quantity: meal.orderQuantity,
         basePrice: meal.basePrice,
-        totalPrice:meal.price,
+        orderPrice:meal.price,
         portionSize: meal.portionSize,
         customizations: meal.customizations || [],
         specialInstructions: meal.instruction || "",
-        shippingAddress: `${state.cart.shippingAddress} - ${state.cart.city}`,
-        deliveryArea: state.cart.city,
-        deliveryAddress: state.cart.shippingAddress,
-        deliveryDate: state.cart.deliveryDate ? new Date(state.cart.deliveryDate) : new Date(), 
-        deliveryTime: state.cart.deliveryTime,
-        status:"pending" as const,
-        paymentMethod: "Online",
-        
-    })),
+        status: "Pending" as const,
+      }));
   
-});
+      return {
+        selectedMeals,
+        deliveryArea: cart.deliveryArea,
+        deliveryAddress: cart.deliveryAddress,
+        deliveryDate: cart.deliveryDate ? new Date(cart.deliveryDate) : new Date(),
+        deliveryTime: cart.deliveryTime,
+        paymentMethod: "Online",
+      };
+    }
+  );
 
 
 
 
 export const shippingCostSelector = (state: RootState) => {
     
-    if (state.cart.city && state.cart.city === "dhaka" && state.cart.meals.length >= 1) {
+    if (state.cart.deliveryArea && state.cart.deliveryArea === "dhaka" && state.cart.meals.length >= 1) {
         return 60;
-    } else if (state.cart.city && state.cart.city === "outside-dhaka" && state.cart.meals.length >= 1) {
+    } else if (state.cart.deliveryArea && state.cart.deliveryArea === "outside-dhaka" && state.cart.meals.length >= 1) {
         return 120;
-    } else if (state.cart.city && state.cart.city === "international" && state.cart.meals.length >= 1) {
+    } else if (state.cart.deliveryArea && state.cart.deliveryArea === "international" && state.cart.meals.length >= 1) {
         return 250;
     } 
     else{
@@ -257,9 +269,9 @@ export const portionCostSelector = (state: RootState) => {
 export const grandTotalSelector = (state: RootState) => subTotalSelectSelector(state) + shippingCostSelector(state);
 
 
-export const citySelector = (state: RootState) => state.cart.city;
+export const citySelector = (state: RootState) => state.cart.deliveryArea;
 
-export const shippingAddressSelector = (state: RootState) => state.cart.shippingAddress;
+export const shippingAddressSelector = (state: RootState) => state.cart.deliveryAddress;
 
 export const { addMeal,updateMealState,  incrementOrderQuantity, decrementOrderQuantity, removeMeal, updateCity, updateShippingAddress, clearCart,selectMeal,deselectMeal,toggleSelectAllMeals,allClearCart} =
     cartSlice.actions;

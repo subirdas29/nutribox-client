@@ -33,7 +33,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
 
-  const router = useRouter();
+  // const router = useRouter();
   const [date, setDate] = useState<Date | null>(null);
   const [time, setTime] = useState("");
   const [customizations, setCustomizations] = useState<string[]>([]);
@@ -111,9 +111,9 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
       basePrice: ordermeal?.price,
       portionSize: selectedPortion,
 
-      status: "pending",
+      status: "Pending",
       deliveryArea,
-      orderQuantity:1,
+   
       totalPrice,
       deliveryDate: date ? new Date(date) : new Date(),
       deliveryTime: time,
@@ -121,7 +121,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
       customizations,
       specialInstructions: instruction,
       mealProviderId: "",
-      quantity: 0,
+      quantity: 1,
       shippingAddress: "",
       paymentMethod: ""
     };

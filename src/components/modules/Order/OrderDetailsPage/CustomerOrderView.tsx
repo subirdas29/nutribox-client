@@ -18,59 +18,46 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import DatePicker from 'react-datepicker'
-import { BankStatus, IOrderDetails, OrderStatus } from '.'
+import {  IOrderDetails, OrderStatus } from '.'
 import dayjs from 'dayjs'
 
 
 
 const bankStatusConfig = {
-  initiated: {
-    color: 'bg-gray-500',
-    icon: <Clock className="w-5 h-5" />,
-    illustration: 'https://cdn-icons-png.flaticon.com/512/5957/5957161.png',
-    title: 'Order Initiated',
-    description: 'Your order has been created and is awaiting further steps'
-  },
-  Success: {
-    color: 'bg-green-600',
-    icon: <CheckCircle className="w-5 h-5" />,
-    illustration: 'https://cdn-icons-png.flaticon.com/512/5610/5610944.png',
-    title: 'Order Successful!',
-    description: 'Order processed and confirmed successfully'
-  },
+
   Failed: {
     color: 'bg-red-600',
     icon: <XCircle className="w-5 h-5" />,
-    illustration: 'https://cdn-icons-png.flaticon.com/512/8941/8941851.png',
-    title: 'Order Failed!',
-    description: 'Something went wrong during the order process'
+    illustration: 'https://res.cloudinary.com/dsgnwjmlv/image/upload/v1744663952/payment-failed_kobid2.png',
+    title: 'Payment Failed!',
+    description: 'We couldn’t process your payment. Please try again or use a different method.'
   },
 }
 
 const statusConfig = {
   
-  pending: {
+  Pending: {
     color: 'bg-amber-500',
     icon: <Clock className="w-5 h-5" />,
     illustration: 'https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741285770/istockphoto-1384432216-612x612-removebg-preview_b9e7xo.png',
-    title: 'Order Pending!',
-    description: 'Waiting for chef confirmation'
+    title: 'Awaiting Chef Approval',
+    description: 'We’ve got your payment. Waiting for the chef to confirm your order'
   },
-  'in-progress': {
+  'In-Progress': {
     color: 'bg-blue-500',
     icon: <CookingPot className="w-5 h-5" />,
     illustration: 'https://cdn-icons-png.flaticon.com/512/3079/3079165.png',
     title: 'Preparation in Progress',
     description: 'Meal is being prepared'
   },
-  delivered: {
+  Delivered: {
     color: 'bg-green-500',
     icon: <CheckCircle className="w-5 h-5" />,
     illustration: 'https://cdn-icons-png.flaticon.com/512/751/751463.png',
     title: 'Order Delivered!',
     description: 'Meal successfully delivered'
   },
-  cancelled: {
+  Cancelled: {
     color: 'bg-red-500',
     icon: <XCircle className="w-5 h-5" />,
     illustration: 'https://cdn-icons-png.flaticon.com/512/753/753345.png',
@@ -212,10 +199,10 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-green-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
-          <div className="relative w-48 h-48 mx-auto mb-6">
+          <div className="relative w-48 h-48 mx-auto ">
           {order?.status && (
   <Image
-    src={statusConfig[order.status]?.illustration|| bankStatusConfig[order.transaction.bank_status]?.illustration || "/fallback-image.png"}
+    src={statusConfig[order.status]?.illustration|| bankStatusConfig['Failed']?.illustration || "/fallback-image.png"}
     alt="Status"
     fill
     className="object-contain drop-shadow-lg"
@@ -236,7 +223,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 
 
 
-{order?.transaction.bank_status === "Success" && order?.status && statusConfig[order.status] ? (
+{order?.transaction?.bank_status === "Success" && order?.status && statusConfig[order.status] ? (
   <>
     <h1 className="text-3xl font-bold text-green-800 mb-2">
       {statusConfig[order.status].title}
@@ -248,17 +235,17 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 ) : (
  <>  
 
-  <h1 className="text-3xl font-bold text-green-800 mb-2">
-    {bankStatusConfig[order?.transaction?.bank_status === "Failed" ]?.title}
+<h1 className="text-3xl font-bold text-green-800 mb-2">
+  {bankStatusConfig['Failed']?.title ?? "Unknown Status"}
   </h1>
   <p className="text-green-600 max-w-md mx-auto">
-    {statusConfig[order?.transaction?.bank_status === "Failed"]?.description}
+  {bankStatusConfig['Failed']?.description ?? "Unknown Status"}
   </p>
 </>
 )}
 
 
-          {order?.transaction.bank_status === "Success" && order?.status === 'pending' && (
+          {order?.transaction.bank_status === "Success" && order?.status === 'Pending' && (
             <Button 
               className="mt-6 bg-green-600 hover:bg-green-700"
               onClick={() => setIsEditModalOpen(true)}
@@ -270,35 +257,26 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
         </div>
 
         <div className="mb-12 px-8">
-        <div className="relative h-2 bg-green-100 rounded-full mb-8">
-    {order?.transaction.bank_status === "Success" && order?.status && statusConfig[order.status] ? (
+        <div className={`${order.transaction.bank_status === 'Failed' ?'hidden' : 'relative h-2 bg-green-100 rounded-full mb-8' } `}>
+    {order?.transaction.bank_status === "Success" && order?.status && statusConfig[order.status] && (
       <div
         className={`absolute h-2 ${statusConfig[order.status]?.color || "bg-gray-300"} rounded-full transition-all duration-500`}
         style={{
           width: 
-            order.status === "pending" ? "33%" : 
-            order.status === "in-progress" ? "66%" : "100%",
+            order.status === "Pending" ? "33%" : 
+            order.status === "In-Progress" ? "66%" : "100%",
         }}
       />
-    ) : (
-      <>  
-
-<div className='text-center'>
-<h1 className="text-3xl font-bold text-green-800 mb-2">
-  {bankStatusConfig[order?.transaction?.bank_status]?.title ?? "Unknown Status"}
-  </h1>
-  <p className="text-green-600 max-w-md mx-auto">
-  {bankStatusConfig[order?.transaction?.bank_status]?.description ?? "Unknown Status"}
-  </p>
-</div>
-</>
-    )}
+    )
+    }
   </div>
           
-  <div className="grid grid-cols-4 gap-4 text-center">
+  <div className={`grid ${order.transaction.bank_status==="Success"? 'grid-cols-4' : 'grid-cols-1'}  gap-4 text-center`}>
   {
   order?.transaction.bank_status === "Success" ?
-  (Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
+  (
+
+      Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
     <div key={stage} className="flex flex-col items-center">
       <div className={`w-8 h-8 rounded-full flex items-center justify-center 
         ${order?.status === stage ? statusConfig[stage]?.color || 'bg-green-100' : 'bg-green-100'}`}>
@@ -308,20 +286,26 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
         {stage.replace("-", " ")}
       </span>
     </div>
-  )) : 
+  )
+  
+) : 
 
-    (Object.keys(bankStatusConfig) as BankStatus[]).map((status) => (
-    <div key={status} className="flex flex-col items-center">
+    (
+      // Object.keys(bankStatusConfig) as BankStatus[]).map((status) => (
+
+<div key={'Failed'} className="flex flex-col justify-center items-center ">
       <div className={`w-8 h-8 rounded-full flex items-center justify-center 
-        ${order?.status === status? bankStatusConfig[status]?.color || 'bg-green-100' : 'bg-green-100'}`}>
-        {bankStatusConfig[status]?.icon || "?"}
+        ${ bankStatusConfig['Failed']?.color || 'bg-green-100'}`}>
+        {bankStatusConfig['Failed']?.icon || "?"}
       </div>
       <span className="mt-2 text-sm font-medium text-green-800 capitalize">
-        {status.replace("-", " ")}
+        {/* {status.replace("-", " ")} */}
+        Failed
       </span>
     </div>
-  ))
 
+  // )
+)
 
 }
 </div>
@@ -383,13 +367,13 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         <MapPin className="w-4 h-4" />
                         Order Quantity
                       </Label>
-                      <p className="whitespace-pre-line text-green-800">{order?.orderQuantity}</p>
+                      <p className="whitespace-pre-line text-green-800">{order?.quantity}</p>
                     </div>
 
                     <div>
                       <Label className="flex items-center gap-2 text-green-600 mb-2">
                         <MapPin className="w-4 h-4" />
-                        Bank_Status
+                        Payment
                       </Label>
                       <p className="whitespace-pre-line text-green-800">{order?.transaction.bank_status}</p>
                     </div>
@@ -446,7 +430,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
           </TabsContent>
         </Tabs>
 
-        {order?.status === 'delivered' && (
+        {order?.status === 'Delivered' && (
           <Card className="border-0 shadow-lg">
             <CardContent className="pt-6">
               <div className="space-y-6">

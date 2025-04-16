@@ -6,8 +6,8 @@ import { ProviderOrderView } from "./ProviderOrderView"
 
 import { Loader2 } from "lucide-react";
 
-export type OrderStatus =  'pending' | 'in-progress' | 'delivered' | 'cancelled'
-export type BankStatus =  'Failed' | 'Success' |'Initiate'
+export type OrderStatus =  "Pending" | "In-Progress" | "Delivered" | "Cancelled";
+export type BankStatus =  'Failed' | 'Success' 
 
 export interface IOrderDetails {
   _id:string
@@ -17,7 +17,7 @@ export interface IOrderDetails {
   deliveryDate: Date
   deliveryTime: string
   deliveryAddress:string
-  orderQuantity:1;
+  quantity:number;
   portionSize:string
   customizations: string[]
   specialInstructions:string
@@ -25,7 +25,7 @@ export interface IOrderDetails {
   transaction: {
     id: string,
     transactionStatus: string,
-    bank_status: 'Failed' | 'Success' |'Initiate' ,
+    bank_status: BankStatus ,
     sp_code: string,
     sp_message: string,
     method: string,
