@@ -24,7 +24,7 @@ interface InitialState {
 const initialState: InitialState = {
     meals: [],
     selectedMeals: [],
-    deliveryDate: new Date().toISOString(),
+    deliveryDate: "",
     deliveryTime: "",
     deliveryAddress:"",
     deliveryArea:"",
@@ -161,16 +161,24 @@ decrementOrderQuantity: (state, action) => {
         updateCity: (state, action) => {
             state.deliveryArea = action.payload;
         },
+       
 
         updateShippingAddress: (state, action) => {
             state.deliveryAddress = action.payload;
+        },
+
+        updateDate: (state, action) => {
+            state.deliveryDate = action.payload;
+        },
+        updateTime: (state, action) => {
+            state.deliveryTime = action.payload;
         },
 
         clearCart: (state) => {
             const selectedMealIds = state.selectedMeals.map(meal => meal._id)
             state.meals = state.meals.filter(meal => !selectedMealIds.includes(meal._id));
             state.selectedMeals = [];
-            state.deliveryDate= new Date().toISOString();
+            state.deliveryDate= "";
             state.deliveryTime= "";
             state.deliveryAddress="";
             state.deliveryArea="";
@@ -181,7 +189,7 @@ decrementOrderQuantity: (state, action) => {
         allClearCart: (state) => {
             state.meals = [];
             state.selectedMeals = [];
-            state.deliveryDate= new Date().toISOString();
+            state.deliveryDate= "";
             state.deliveryTime= "";
             state.deliveryAddress="";
             state.deliveryArea="";
@@ -208,14 +216,13 @@ export const orderedSelector = createSelector(
         portionSize: meal.portionSize,
         customizations: meal.customizations || [],
         specialInstructions: meal.instruction || "",
-        status: "Pending" as const,
       }));
   
       return {
         selectedMeals,
         deliveryArea: cart.deliveryArea,
         deliveryAddress: cart.deliveryAddress,
-        deliveryDate: cart.deliveryDate ? new Date(cart.deliveryDate) : new Date(),
+        deliveryDate: cart.deliveryDate,
         deliveryTime: cart.deliveryTime,
         paymentMethod: "Online",
       };
@@ -272,8 +279,10 @@ export const grandTotalSelector = (state: RootState) => subTotalSelectSelector(s
 export const citySelector = (state: RootState) => state.cart.deliveryArea;
 
 export const shippingAddressSelector = (state: RootState) => state.cart.deliveryAddress;
+export const deliveryDateSelector = (state: RootState) => state.cart.deliveryDate;
+export const deliveryTimeSelector = (state: RootState) => state.cart.deliveryTime;
 
-export const { addMeal,updateMealState,  incrementOrderQuantity, decrementOrderQuantity, removeMeal, updateCity, updateShippingAddress, clearCart,selectMeal,deselectMeal,toggleSelectAllMeals,allClearCart} =
+export const { addMeal,updateMealState,  incrementOrderQuantity, decrementOrderQuantity, removeMeal,updateDate,updateTime, updateCity, updateShippingAddress, clearCart,selectMeal,deselectMeal,toggleSelectAllMeals,allClearCart} =
     cartSlice.actions;
 
 export default cartSlice.reducer;

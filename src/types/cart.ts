@@ -16,7 +16,7 @@ export interface IOrderCartMeal{
     deliveryCharge:number,
     deliveryArea: string
     deliveryAddress: string
-    deliveryDate: Date
+    deliveryDate: string
     deliveryTime: string,
     transaction?: ITransaction;
     paymentMethod: string,

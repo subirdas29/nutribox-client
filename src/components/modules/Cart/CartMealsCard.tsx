@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client"
 import { Trash, Edit,  Recycle, Bike, CalendarDays, Clock, Salad, Leaf, House, IdCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '@/redux/hook';
-import { CartMeal, citySelector, decrementOrderQuantity, deselectMeal, grandTotalSelector, incrementOrderQuantity, orderedMealSelector, portionCostSelector,  removeMeal, orderSelectedMealSelector , selectMeal, shippingAddressSelector, shippingCostSelector,  subTotalSelectSelector, toggleSelectAllMeals, updateCity, updateShippingAddress, clearCart, orderedSelector } from '@/redux/features/cartSlice';
+import { CartMeal, citySelector, decrementOrderQuantity, deselectMeal, grandTotalSelector, incrementOrderQuantity, orderedMealSelector, portionCostSelector,  removeMeal, orderSelectedMealSelector , selectMeal, shippingAddressSelector, shippingCostSelector,  subTotalSelectSelector, toggleSelectAllMeals, updateCity, updateShippingAddress,  orderedSelector, updateDate, updateTime, deliveryDateSelector, deliveryTimeSelector } from '@/redux/features/cartSlice';
 import emptycart from '../../../assets/empty-cart/Empty-Cart.png';
 import { currencyFormatter } from '@/lib/currencyFormatter';
 import { useState, } from 'react';
@@ -42,13 +43,14 @@ export default function CartMealsCard() {
   const subSelectorTotal = useAppSelector(subTotalSelectSelector)
   const order = useAppSelector(orderedSelector)
 
+  const date = useAppSelector(deliveryDateSelector)
+  const time = useAppSelector(deliveryTimeSelector)
   
 
   const [showModal, setShowModal] = useState(false);  
   const [selectedModalMeals, setSelectedModalMeals] = useState<CartMeal | null>(null);
 
-  const [date, setDate] = useState<Date | null>(null);
-  const [time, setTime] = useState("");
+
   const user = useUser();
 
   const router = useRouter();
@@ -106,9 +108,21 @@ export default function CartMealsCard() {
   const handleCity = (city:string) =>{
     dispatch(updateCity(city))
   }
+ 
   const handleShippingAddress = (address:string) =>{
-    console.log(address)
+
     dispatch(updateShippingAddress(address))
+  }
+
+  const handleDate = (date: Date | null) => {
+    if (date) {
+      const formattedDate = date.toISOString().split("T")[0]
+      dispatch(updateDate(formattedDate)); 
+    }
+  };
+  
+  const handleTime = (time:string) =>{
+    dispatch(updateTime(time))
   }
 
   const isAllSelected = selectedMeals.length === meals.length
@@ -297,8 +311,8 @@ export default function CartMealsCard() {
         Select Delivery Date
       </Label>
       <DatePicker
-        selected={date}
-        onChange={(date: Date | null) => setDate(date)} 
+          selected={date ? new Date(date) : null}
+        onChange={(date: Date | null) => handleDate(date)} 
         minDate={new Date()} // Disable past dates
         className="rounded-lg border shadow-sm p-2" 
       />
@@ -312,7 +326,7 @@ export default function CartMealsCard() {
   <Input 
     type="time"
     value={time}
-    onChange={(e) => setTime(e.target.value)}
+    onChange={(e) => handleTime(e.target.value)}
     className="[&::-webkit-calendar-picker-indicator]:bg-green-500 [&::-webkit-calendar-picker-indicator]:p-1 [&::-webkit-calendar-picker-indicator]:text-primary [&::-webkit-calendar-picker-indicator]:rounded-md"
     required
   />

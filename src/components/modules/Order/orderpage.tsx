@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { 
   CheckIcon, 
@@ -22,10 +22,11 @@ import { TMealsForm } from "@/types/meals";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import { toast } from "sonner";
 import { createOrder } from "@/services/Order";
-import { IOrder } from "@/types/order";
+
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { IOrderCartMeal } from "@/types/cart";
 // const currencyFormatter = (value: number) => {
 //   return new Intl.NumberFormat('en-IN').format(value);
 // };
@@ -104,27 +105,29 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
     setIsSubmitting(true);
 
-    const orderData:IOrder = {
-      mealId: ordermeal?._id,
-      mealName: ordermeal?.name,
-      category: ordermeal?.category,
-      basePrice: ordermeal?.price,
-      portionSize: selectedPortion,
-
-      status: "Pending",
-      deliveryArea,
-   
-      totalPrice,
-      deliveryDate: date ? new Date(date) : new Date(),
+    const orderData: IOrderCartMeal = {
+      selectedMeals: [
+        {
+          mealId: ordermeal?._id,
+          mealProviderId: ordermeal.mealProvider._id,
+          mealName: ordermeal?.name,
+          quantity: 1,
+          category: ordermeal?.category,
+          basePrice,
+          orderPrice: mealPrice,
+          portionSize: selectedPortion,
+          customizations,
+          specialInstructions: instruction,
+        }
+      ],
+      deliveryDate: date.toISOString().split("T")[0],
       deliveryTime: time,
       deliveryAddress: address,
-      customizations,
-      specialInstructions: instruction,
-      mealProviderId: "",
-      quantity: 1,
-      shippingAddress: "",
-      paymentMethod: ""
+      deliveryArea,
+      deliveryCharge,
+      paymentMethod: "Online"
     };
+    
 
     try {
      

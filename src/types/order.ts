@@ -23,7 +23,7 @@ export interface IMealOrder {
   deliveryAddress: string;
   deliveryDate: Date;
   deliveryTime: string;
-  status?: "Pending" | "In-Progress" | "Delivered" | "Cancelled"; 
+  status?: "Pending" | "In-Progress" | "Delivered" | "Cancelled"|"Failed"; 
   paymentMethod: string;
   updatedAt?:string;
   createdAt?:string
@@ -43,7 +43,7 @@ export interface IOrder {
   portionSize: string;
   customizations: string[];
   specialInstructions: string;
-  status?: "Pending" | "In-Progress" | "Delivered" | "Cancelled"; // Optional with strict values
+  status?: "Pending" | "In-Progress" | "Delivered" | "Cancelled" |"Failed"; // Optional with strict values
   updatedAt?:string;
   createdAt?:string
 }
