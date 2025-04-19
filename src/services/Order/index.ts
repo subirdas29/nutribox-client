@@ -3,7 +3,6 @@
 
 
 
-import { IOrderDetails } from "@/components/modules/Order/OrderDetailsPage";
 import { IOrderCartMeal } from "@/types/cart";
 
 import { revalidateTag } from "next/cache";
@@ -53,6 +52,31 @@ export const getSingleOrder = async (orderId: string) => {
       return Error(error.message);
     }
   };
+
+//get single Meal with Common delivery Data
+  export const getSingleMealOrder = async (orderId: string,mealId:string) => {
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_API}/orders/${orderId}/meal/${mealId}`,
+        {
+          headers: {
+            Authorization: (await cookies()).get("accessToken")!.value,
+            "Content-Type": "application/json",
+          },
+          next: {
+            tags: ["Order"],
+          },
+        }
+      );
+      const data = await res.json();
+   
+      return data;
+    } catch (error: any) {
+      return Error(error.message);
+    }
+  };
+
 
 
   export const getAllMealProviderOrder = async (page?: string,limit?:string) => {

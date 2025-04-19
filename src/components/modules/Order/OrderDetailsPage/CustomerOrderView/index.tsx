@@ -1,25 +1,26 @@
 'use client'
 import { useState } from 'react'
 
-import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils, Star, MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
+import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils,  MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
 import Image from 'next/image'
 
 
-import { updateOrder } from '@/services/Order'
-import { toast } from 'sonner'
+
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import DatePicker from 'react-datepicker'
-import {  IOrderDetails, OrderStatus } from '.'
+
+import {   OrderStatus } from '..'
 import dayjs from 'dayjs'
+import {  IOrderCartMealView, ITransaction } from '@/types/cart'
+import { OrderForm } from './CustomerModal'
+import {  IOrder } from '@/types/order'
 
 
 
@@ -68,127 +69,32 @@ const statusConfig = {
 
 
 
-const OrderForm = ({ 
-  initialValues, 
-  onSubmit, 
-  onCancel 
-}: { 
-  initialValues: IOrderDetails
-  onSubmit: (data: IOrderDetails) => void
-  onCancel: () => void 
-}) => {
-  const [formData, setFormData] = useState<IOrderDetails>(initialValues)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      const res = await updateOrder(formData, formData._id)
-      if (res.success) {
-        toast.success("Order updated successfully!")
-        onSubmit(formData)
-        
-      } else {
-        toast.error(res.message)
-      }
-    } catch (error) {
-      console.error(error)
-      toast.error("Failed to update order")
-    }
-  }
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label>Portion Size</Label>
-          <Select 
-            value={formData.portionSize}
-            onValueChange={value => setFormData({...formData, portionSize: value})}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select portion size" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Small">Small</SelectItem>
-              <SelectItem value="Medium">Medium</SelectItem>
-              <SelectItem value="Large">Large</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-       {/* Delivery Date */}
-       <div className="space-y-2">
-      <Label className="flex items-center gap-2 text-primary/80">
-        <CalendarDays className="w-5 h-5" />
-        Select Delivery Date
-      </Label>
-      <DatePicker
-        selected={formData.deliveryDate}
-        onChange={(date) =>
-          setFormData({ ...formData, deliveryDate: date || new Date() }) // Ensures non-null value
-        }
-        minDate={new Date()} // Disable past dates
-        className="rounded-lg border shadow-sm p-2"
-      />
-    </div>
-
-        <div className="space-y-2">
-          <Label>Delivery Time</Label>
-          <Input
-            type="time"
-            value={formData.deliveryTime}
-            onChange={e => setFormData({...formData, deliveryTime: e.target.value})}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Delivery Address</Label>
-          <Textarea
-            value={formData.deliveryAddress}
-            onChange={e => setFormData({...formData, deliveryAddress: e.target.value})}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Special Instructions</Label>
-          <Textarea
-            value={formData.specialInstructions}
-            onChange={e => setFormData({...formData, specialInstructions: e.target.value})}
-            placeholder="Any special requests..."
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-end gap-4">
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit" className="bg-green-600 hover:bg-green-700">
-          Save Changes
-        </Button>
-      </div>
-    </form>
-  )
-}
-
-export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
+export const CustomerOrderView = ({ order }: { order: IOrderCartMealView}) => {
+  console.log(order,'joy')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [review, setReview] = useState({ rating: 0, comment: '' })
+  // const [review, setReview] = useState({ rating: 0, comment: '' })
 
-  console.log(order,'gdfsdfjsfskdjf')
+
+
+  if(Array.isArray(order.selectedMeals))
+    return null
+
+  const singleOrder = order.selectedMeals as IOrder
+  const transaction = order.transaction as ITransaction
   
 
-  const handleEditSubmit = (updatedData: IOrderDetails) => {
+
+  const handleEditSubmit = (updatedData: IOrderCartMealView) => {
     console.log(updatedData,'customer')
     setIsEditModalOpen(false)
   }
 
-  const handleReviewSubmit = () => {
-    alert('Review submitted successfully!')
-    setReview({ rating: 0, comment: '' })
-  }
+  // const handleReviewSubmit = () => {
+  //   alert('Review submitted successfully!')
+  //   setReview({ rating: 0, comment: '' })
+  // }
 
-  console.log(order.transaction.bank_status)
   if(!order){
     
       <p className="text-red-500 text-center">Order status not available</p>
@@ -200,9 +106,9 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center mb-12 animate-fade-in">
           <div className="relative w-48 h-48 mx-auto ">
-          {order?.status && (
+          {singleOrder.status && (
   <Image
-    src={statusConfig[order.status]?.illustration|| bankStatusConfig['Failed']?.illustration || "/fallback-image.png"}
+    src={statusConfig[singleOrder.status] ?.illustration|| bankStatusConfig['Failed']?.illustration || "/fallback-image.png"}
     alt="Status"
     fill
     className="object-contain drop-shadow-lg"
@@ -211,11 +117,11 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 )}
           </div>
           
-          {order?.status && statusConfig[order.status] && (
-  <Badge className={`${statusConfig[order.status].color} hover:${statusConfig[order.status].color} mb-4`}>
-    {statusConfig[order.status]?.icon}
+          {singleOrder?.status && statusConfig[singleOrder.status] && (
+  <Badge className={`${statusConfig[singleOrder.status].color} hover:${statusConfig[singleOrder.status].color} mb-4`}>
+    {statusConfig[singleOrder.status]?.icon}
     <span className="ml-2 text-sm font-medium capitalize">
-      {order.status.replace('-', ' ')}
+      {singleOrder.status.replace('-', ' ')}
     </span>
   </Badge>
 )}
@@ -223,13 +129,13 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 
 
 
-{order?.transaction?.bank_status === "Success" && order?.status && statusConfig[order.status] ? (
+{transaction?.bank_status === "Success" && singleOrder?.status && statusConfig[singleOrder.status] ? (
   <>
     <h1 className="text-3xl font-bold text-green-800 mb-2">
-      {statusConfig[order.status].title}
+      {statusConfig[singleOrder.status].title}
     </h1>
     <p className="text-green-600 max-w-md mx-auto">
-      {statusConfig[order.status].description}
+      {statusConfig[singleOrder.status].description}
     </p>
   </>
 ) : (
@@ -245,7 +151,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
 )}
 
 
-          {order?.transaction.bank_status === "Success" && order?.status === 'Pending' && (
+          {transaction.bank_status === "Success" && singleOrder?.status === 'Pending' && (
             <Button 
               className="mt-6 bg-green-600 hover:bg-green-700"
               onClick={() => setIsEditModalOpen(true)}
@@ -257,29 +163,29 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
         </div>
 
         <div className="mb-12 px-8">
-        <div className={`${order.transaction.bank_status === 'Failed' ?'hidden' : 'relative h-2 bg-green-100 rounded-full mb-8' } `}>
-    {order?.transaction.bank_status === "Success" && order?.status && statusConfig[order.status] && (
+        <div className={`${transaction.bank_status === 'Failed' ?'hidden' : 'relative h-2 bg-green-100 rounded-full mb-8' } `}>
+    {transaction.bank_status === "Success" && singleOrder?.status && statusConfig[singleOrder?.status] && (
       <div
-        className={`absolute h-2 ${statusConfig[order.status]?.color || "bg-gray-300"} rounded-full transition-all duration-500`}
+        className={`absolute h-2 ${statusConfig[singleOrder.status]?.color || "bg-gray-300"} rounded-full transition-all duration-500`}
         style={{
           width: 
-            order.status === "Pending" ? "33%" : 
-            order.status === "In-Progress" ? "66%" : "100%",
+            singleOrder.status === "Pending" ? "33%" : 
+            singleOrder.status === "In-Progress" ? "66%" : "100%",
         }}
       />
     )
     }
   </div>
           
-  <div className={`grid ${order.transaction.bank_status==="Success"? 'grid-cols-4' : 'grid-cols-1'}  gap-4 text-center`}>
+  <div className={`grid ${transaction.bank_status==="Success"? 'grid-cols-4' : 'grid-cols-1'}  gap-4 text-center`}>
   {
-  order?.transaction.bank_status === "Success" ?
+  transaction.bank_status === "Success" ?
   (
 
       Object.keys(statusConfig) as OrderStatus[]).map((stage) => (
     <div key={stage} className="flex flex-col items-center">
       <div className={`w-8 h-8 rounded-full flex items-center justify-center 
-        ${order?.status === stage ? statusConfig[stage]?.color || 'bg-green-100' : 'bg-green-100'}`}>
+        ${singleOrder?.status === stage ? statusConfig[stage]?.color || 'bg-green-100' : 'bg-green-100'}`}>
         {statusConfig[stage]?.icon || "?"}
       </div>
       <span className="mt-2 text-sm font-medium text-green-800 capitalize">
@@ -335,8 +241,8 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         Meal Details
                       </Label>
                       <div className="space-y-1">
-                        <p className="font-medium text-green-800">{order?.mealName}</p>
-                        <p className="text-sm text-green-600">{order?.portionSize} Portion</p>
+                        <p className="font-medium text-green-800">{singleOrder?.mealName}</p>
+                        <p className="text-sm text-green-600">{singleOrder?.portionSize} Portion</p>
                       </div>
                     </div>
 
@@ -367,7 +273,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         <MapPin className="w-4 h-4" />
                         Order Quantity
                       </Label>
-                      <p className="whitespace-pre-line text-green-800">{order?.quantity}</p>
+                      <p className="whitespace-pre-line text-green-800">{singleOrder?.quantity}</p>
                     </div>
 
                     <div>
@@ -375,27 +281,27 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
                         <MapPin className="w-4 h-4" />
                         Payment
                       </Label>
-                      <p className="whitespace-pre-line text-green-800">{order?.transaction.bank_status}</p>
+                      <p className="whitespace-pre-line text-green-800">{transaction.bank_status}</p>
                     </div>
 
 
-                    {order?.specialInstructions && (
+                    {singleOrder?.specialInstructions && (
                       <div>
                         <Label className="flex items-center gap-2 text-green-600 mb-2">
                           <span>📝</span>
                           Special Instructions
                         </Label>
-                        <p className="text-green-800">{order?.specialInstructions}</p>
+                        <p className="text-green-800">{singleOrder?.specialInstructions}</p>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {order?.customizations.length > 0 && (
+                {singleOrder?.customizations.length > 0 && (
                   <div className="pt-4 border-t border-green-100">
                     <Label className="text-green-600">Customizations</Label>
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {order.customizations.map((item, index) => (
+                      {singleOrder?.customizations.map((item, index) => (
                         <Badge 
                           key={index}
                           variant="outline" 
@@ -429,7 +335,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
             </Card>
           </TabsContent>
         </Tabs>
-
+{/* 
         {order?.status === 'Delivered' && (
           <Card className="border-0 shadow-lg">
             <CardContent className="pt-6">
@@ -474,7 +380,7 @@ export const CustomerOrderView = ({ order }: { order: IOrderDetails }) => {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
 
         <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
           <DialogContent className="max-w-2xl">

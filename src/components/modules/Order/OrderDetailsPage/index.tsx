@@ -1,39 +1,19 @@
 "use client"
 import { useUser } from "@/context/UserContext";
 
-import { CustomerOrderView } from "./CustomerOrderView"
-import { ProviderOrderView } from "./ProviderOrderView"
+
 
 import { Loader2 } from "lucide-react";
+import { IOrderCartMeal } from "@/types/cart";
+import { CustomerOrderView } from "./CustomerOrderView";
+import { ProviderOrderView } from "./MealProviderOrderView";
+
 
 export type OrderStatus =  "Pending" | "In-Progress" | "Delivered" | "Cancelled";
 export type BankStatus =  'Failed' | 'Success' 
 
-export interface IOrderDetails {
-  _id:string
-  status: OrderStatus
-  mealName:string
-  totalPrice: number
-  deliveryDate: Date
-  deliveryTime: string
-  deliveryAddress:string
-  quantity:number;
-  portionSize:string
-  customizations: string[]
-  specialInstructions:string
-  editable: boolean
-  transaction: {
-    id: string,
-    transactionStatus: string,
-    bank_status: BankStatus ,
-    sp_code: string,
-    sp_message: string,
-    method: string,
-    date_time: string,
-  },
-}
 
-export const OrderRolePageDetails = ({ order }: { order: IOrderDetails }) => {
+export const OrderRolePageDetails = ({ orders }: { orders: IOrderCartMeal }) => {
 
   const { user } = useUser();
 
@@ -45,9 +25,9 @@ export const OrderRolePageDetails = ({ order }: { order: IOrderDetails }) => {
   return (
     <div >
       {user?.role === 'customer' ? (
-        <CustomerOrderView order={order} />
+        <CustomerOrderView order={orders} />
       ) : (
-        <ProviderOrderView order={order} />
+        <ProviderOrderView order={orders} />
       )}
     </div>
   )

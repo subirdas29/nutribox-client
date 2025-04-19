@@ -1,23 +1,12 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  Legend,
-} from "recharts";
-import { Wallet, Utensils,  ShoppingBag, Eye } from "lucide-react";
-import Link from "next/link";
-import { ReactNode } from "react";
 
-import { TOrderAllData } from "../OrderMeal/CancelledOrdersCustomer";
+import { Button } from "@/components/ui/button";
+
+import {  Eye } from "lucide-react";
+import Link from "next/link";
+
+
+
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { currencyFormatter } from "@/lib/currencyFormatter";
@@ -25,118 +14,43 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { IOrderCartMeal } from "@/types/cart";
 
-interface MetricCardProps {
-    title: string;
-    value: string | number; 
-    icon: ReactNode; 
-    trend: string; 
-  }
-
-  interface ChartCardProps {
-    title: string;
-    children: ReactNode; 
-  }
+import StatisticsCustomer from "./statistics";
+import { IFlatOrder } from "@/types/order";
 
 
 
+export default function CustomerDashboard({myorders}:{myorders:IOrderCartMeal[]}) {
 
-const CHART_COLORS = [
-  "oklch(0.45 0.3 150)",
-  "oklch(0.55 0.3 150)",
-  "oklch(0.65 0.3 150)",
-  "oklch(0.75 0.3 150)",
-  "oklch(0.85 0.3 150)",
-];
 
-const months = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-];
+const allOrderMeals = myorders.flatMap((order)=>
+  order.selectedMeals.map((meal)=>({
+    ...meal,
+    orderId: order._id,
+    deliveryDate: order.deliveryDate,
+    deliveryAddress: order.deliveryAddress,
+    totalPrice: meal.orderPrice,
+    transaction: order.transaction,
+    createdAt:order.createdAt
+  }))
+)
 
-export default function CustomerDashboard({myorders}:{myorders:TOrderAllData[]}) {
-
+console.log(allOrderMeals)
 
   const router = useRouter();
-  const totalOrders = myorders.length
-
-  const total = myorders.reduce((sum, item) => sum + item.totalPrice, 0);
-
-
-  const categoryCounts = myorders.reduce((acc: Record<string, number>, order) => {
-    const category = order?.category || "Unknown";
-    acc[category] = (acc[category] || 0) + 1;
-    return acc;
-  }, {}); 
-  
-  const CATEGORY_DATA = Object.entries(categoryCounts).map(([name, value]) => ({
-    name,
-    value,
-  }));
-
-  const monthlySpendingMap: Record<string, number> = {};
-  months.forEach(month => {
-    monthlySpendingMap[month] = 0;
-  });
-  
-  // Step 2: Populate with actual data
-  myorders.forEach(order => {
-    if (!order.createdAt) return;
-    const monthIndex = new Date(order.createdAt).getMonth(); // 0-11
-    const month = months[monthIndex];
-    monthlySpendingMap[month] += order.totalPrice;
-  });
-  
-  // Step 3: Convert to chart data
-  const PAYMENT_HISTORY = months.map(month => ({
-    name: month,
-    amount: monthlySpendingMap[month]
-  }));
-  
-
-    const MetricCard = ({ title, value, icon, trend }: MetricCardProps) => (
-        <Card className="hover:shadow-lg transition-shadow bg-card text-card-foreground border border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">{title}</CardTitle>
-            {icon}
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{value}</div>
-            <p className="text-xs text-muted-foreground mt-2">{trend}</p>
-          </CardContent>
-        </Card>
-      );
-      
-      const ChartCard = ({ title, children }: ChartCardProps) => (
-        <Card className="h-full bg-card text-card-foreground">
-          <CardHeader>
-            <CardTitle>{title}</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[350px]">{children}</CardContent>
-        </Card>
-      );
-
-  
-const uniqueMealsSet = new Set<string>();
-
-myorders.forEach(order => {
-  if (order.mealId && order.mealId._id) {
-    uniqueMealsSet.add(order.mealId._id); 
-  }
-});
-
-
-const uniqueMealsCount = uniqueMealsSet.size;
 
 
 
-      const columns: ColumnDef<TOrderAllData>[] = [
+
+      const columns: ColumnDef<IFlatOrder>[] = [
         {
        accessorKey: "imageUrls",
        header: "Image",
        cell: ({ row }) => {
-         const profileImage = row.original?.mealId?.imageUrls?.[0] 
-           || "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
+        const meal = row.original?.mealId
+         const profileImage = typeof meal ==="object" && meal?.imageUrls?.[0]?
+         meal?.imageUrls[0]: "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
      
          return (
            <Image
@@ -164,6 +78,12 @@ const uniqueMealsCount = uniqueMealsSet.size;
            <span>{row.original.category}</span>,
          },
          {
+           accessorKey: "quantity",
+           header: "Order Quantity",
+           cell: ({ row }) => 
+           <span>{row.original.quantity}</span>,
+         },
+         {
               accessorKey: "deliveryDate", // Ensure the key matches your data
               header: "Delivery Date",
               cell: ({ row }) => (
@@ -184,16 +104,16 @@ const uniqueMealsCount = uniqueMealsSet.size;
              
              const getStatusColor = (status: string) => {
                switch (status) {
-                 case "pending":
+                 case "Pending":
                    return "bg-amber-500 p-2 text-gray-100 rounded-md";  
-                 case "in-progress":
+                 case "In-Progress":
                    return "bg-blue-500 p-2 text-gray-100 rounded-md";  
-                 case "delivered":
+                 case "Delivered":
                    return "bg-green-500 p-2 text-gray-100 rounded-md";  
-                   case "cancelled":
+                   case "Cancelled":
                    return "bg-red-500 p-2 text-gray-100 rounded-md";
                  default:
-                   return "bg-gray-500 p-2 text-gray-100 rounded-md";  
+                   return "bg-red-600 p-2 text-gray-100 rounded-md";  
                }
              };
          
@@ -214,133 +134,36 @@ const uniqueMealsCount = uniqueMealsSet.size;
          {
            accessorKey: "actions",
            header: "Actions",
-           cell: ({ row }) => (
-             
-             <div className="flex space-x-3 ">
-               <button className="text-green-500 cursor-pointer" title="View Details"
-               onClick={() =>
-                 router.push(
-                   `/orderdetails/${row.original._id}`
-                 )
-               }
-               >
-                 <Eye className="w-5 h-5" />
-               </button>
-
-             </div>
-           ),
+           cell: ({ row }) => 
+          {
+           
+            const orderId = row.original.orderId
+            const mealId = typeof row.original.mealId=== 'string' ? row.original.mealId : row.original.mealId._id 
+             return (
+              <div className="flex space-x-3 ">
+                <button className="text-green-500 cursor-pointer" title="View Details"
+                onClick={() =>
+                 
+                  router.push(
+                    `/orderdetails/${orderId}/meal/${mealId}`)
+                }
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+ 
+              </div>
+            )
+          }
          },
        ];
 
 
   return (
   <div>
-      <div className="p-6 grid gap-6 md:grid-cols-3 bg-background text-foreground">
-      {/* Quick Actions */}
-      <Card className="md:col-span-3 bg-secondary text-secondary-foreground shadow-lg">
-        <CardContent className="flex flex-col md:flex-row justify-between items-center p-6">
-          <div>
-            <CardTitle className="text-2xl">Welcome Back!</CardTitle>
-            <CardDescription className="text-muted-foreground">
-              Manage your meals and payments easily
-            </CardDescription>
-          </div>
-          <div className="flex gap-4 flex-wrap justify-center">
-            <Link href="/customer/mypending-orders">
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/80 gap-2 cursor-pointer">
-                <Utensils className="h-4 w-4" /> View Orders
-              </Button>
-            </Link>
-            {/* <Link href="/customer/payment-history">
-              <Button variant="secondary" className="gap-2 border-2 text-secondary-foreground hover:bg-secondary/80 cursor-pointer">
-                <CreditCard className="h-4 w-4" /> Payment History
-              </Button>
-            </Link> */}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Key Metrics */}
-      <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <MetricCard 
-          title="Total Spent" 
-          value={`৳${total}`} 
-          icon={<Wallet className="h-6 w-6 text-primary" />} 
-          trend="+5% from last month"
-        />
-        <MetricCard 
-  title="Favourite Meals" 
-  value={`${uniqueMealsCount} Favourite Meals`} 
-  icon={<Utensils className="h-6 w-6 text-primary" />} 
-  trend="Everybody orders that meals"
-/>
-
-        <MetricCard 
-          title="Total Orders" 
-          value={totalOrders} 
-          icon={<ShoppingBag className="h-6 w-6 text-primary" />} 
-          trend="+8% this month"
-        />
-      </div>
-
-      {/* Data Visualization */}
-      <div className="md:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Meal Preference Pie Chart */}
-        <ChartCard title="Order by Meal Category">
-  {CATEGORY_DATA.length > 0 ? (
-    <ResponsiveContainer width="100%" height={300}>
-      <PieChart>
-        <Pie
-          data={CATEGORY_DATA}
-          dataKey="value"
-          nameKey="name"
-          outerRadius={100}
-          label={({ name, value }) => `${name}: ${value}`}
-          labelLine={false}
-        >
-          {CATEGORY_DATA.map((_, index) => (
-            <Cell
-              key={`cell-${index}`}
-              fill={CHART_COLORS[index % CHART_COLORS.length]}
-            />
-          ))}
-        </Pie>
-        <Tooltip />
-        <Legend />
-      </PieChart>
-    </ResponsiveContainer>
-  ) : (
-    <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
-      No data available to display
-    </div>
-  )}
-</ChartCard>
-
-
-
-        {/* Payment History Bar Chart */}
-        <ChartCard title="Monthly Spending">
-  <ResponsiveContainer width="100%" height={300}>
-    <BarChart data={PAYMENT_HISTORY}>
-      <XAxis dataKey="name" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Bar 
-        dataKey="amount" 
-        name="Amount Spent" 
-        fill="var(--primary)" 
-        radius={[4, 4, 0, 0]}
-      />
-    </BarChart>
-  </ResponsiveContainer>
-</ChartCard>
-
-      </div>
-    </div>
+     <StatisticsCustomer myOrders={allOrderMeals}/>
     <div className="overflow-x-auto p-6">
       <h1 className="text-center text-2xl font-bold mt-10 mb-4">All Orders</h1>
-      <NBTable columns={columns} data={Array.isArray(myorders) ? myorders.slice(0, 6) : []} />
+      <NBTable columns={columns} data={Array.isArray(allOrderMeals) ? allOrderMeals.slice(0, 6) : []} />
         <div className="flex justify-center mt-4">
         <Link href="/customer/mypending-orders">
         <Button>All Orders</Button>

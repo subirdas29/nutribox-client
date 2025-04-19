@@ -114,7 +114,7 @@ const ChartCard = ({ title, children }: {
   }));
 
   const activeOrderCount = allOrders.filter(
-    (order) => order.status === "pending" || order.status === "in-progress"
+    (order) => order.status === "Pending" || order.status === "In-Progress"
   ).length;
   
   const columns: ColumnDef<IMealOrder>[] = [

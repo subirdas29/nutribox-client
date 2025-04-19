@@ -32,7 +32,7 @@ export interface IMealOrder {
 // interfaces/IOrder.ts
 export interface IOrder {
   _id?:string;
-  mealId: string;
+  mealId: string | TMealsForm;
   mealProviderId: string;
   category:string;
   customerId?:IUser;
@@ -43,8 +43,14 @@ export interface IOrder {
   portionSize: string;
   customizations: string[];
   specialInstructions: string;
-  status?: "Pending" | "In-Progress" | "Delivered" | "Cancelled" |"Failed"; // Optional with strict values
+  status?: "Pending" | "In-Progress" | "Delivered" | "Cancelled"  // Optional with strict values
   updatedAt?:string;
   createdAt?:string
 }
 
+export interface IFlatOrder extends IOrder{ 
+    deliveryDate: string; 
+    deliveryAddress: string; 
+    totalPrice: number; 
+    orderId?: string; 
+  }
