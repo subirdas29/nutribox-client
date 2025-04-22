@@ -12,14 +12,13 @@ const MealDetailPage= async({params}:{params:Promise<{orderdetailsId:string,meal
 
    
     const {data} = await getSingleMealOrder(orderdetailsId,mealdetailsId)
-     
-
    
   return (
     <div>
       <OrderRolePageDetails orders={data}/>
     </div>
-  )
+  
+)
 }
 
 export default MealDetailPage

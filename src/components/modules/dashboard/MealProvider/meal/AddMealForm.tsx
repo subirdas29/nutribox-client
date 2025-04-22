@@ -37,11 +37,11 @@ export default function AddMealForm() {
         try {
             // Ensure ingredients and dietaryPreferences are strings before splitting
             const ingredientsArray = typeof data.ingredients === "string"
-            ? data.ingredients.split(",").map((ingredient: string) => ingredient.trim()) // ✅ Explicit type
+            ? data.ingredients.split(",").map((ingredient: string) => ingredient.trim()) // Explicit type
             : [];
         
         const dietaryPreferencesArray = typeof data.dietaryPreferences === "string"
-            ? data.dietaryPreferences.split(",").map((preference: string) => preference.trim()) // ✅ Explicit type
+            ? data.dietaryPreferences.split(",").map((preference: string) => preference.trim()) //  Explicit type
             : [];
         
             const uploadedImageUrls = imageFiles

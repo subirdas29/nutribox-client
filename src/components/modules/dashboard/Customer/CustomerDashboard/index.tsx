@@ -40,9 +40,6 @@ console.log(allOrderMeals)
 
   const router = useRouter();
 
-
-
-
       const columns: ColumnDef<IFlatOrder>[] = [
         {
        accessorKey: "imageUrls",

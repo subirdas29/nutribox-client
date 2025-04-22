@@ -1,4 +1,5 @@
-import CustomerDashboard from "@/components/modules/Customer/CustomerDashboard";
+
+import CustomerDashboard from "@/components/modules/dashboard/Customer/CustomerDashboard";
 import { getMyOrder } from "@/services/User";
 
 export default async function CustomerDashboardPage() {

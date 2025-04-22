@@ -1,16 +1,20 @@
 import React from 'react'
-import { CHART_COLORS, ChartCardProps, MetricCardProps, months } from './constant';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { Card, CardContent, CardDescription,  CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ShoppingBag, Utensils, Wallet } from 'lucide-react';
 import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { IFlatOrder } from '@/types/order';
+import { DynamicCard } from '@/components/ui/core/DynamicDashboard/DynamicCard';
+import { ChartCard } from '@/components/ui/core/DynamicDashboard/ChartCard';
+import { CHART_COLORS } from '@/constant/chartcolor';
+import { months } from '@/constant/month';
 
 
 const StatisticsCustomer = ({myOrders}:{myOrders:IFlatOrder[]}) => {
 
-      const totalOrders = myOrders.length
+      const totalOrders = myOrders.length.toString()
     
       const total = myOrders.reduce((sum, item) => sum + item.totalPrice, 0);
     
@@ -45,31 +49,7 @@ const StatisticsCustomer = ({myOrders}:{myOrders:IFlatOrder[]}) => {
         amount: monthlySpendingMap[month]
       }));
       
-    
-        const MetricCard = ({ title, value, icon, trend }: MetricCardProps) => 
-            (
-              <Card className="hover:shadow-lg transition-shadow bg-card text-card-foreground border border-border">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">{title}</CardTitle>
-                {icon}
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-                <p className="text-xs text-muted-foreground mt-2">{trend}</p>
-              </CardContent>
-            </Card>
-            )
-          ;
-          
-          const ChartCard = ({ title, children }: ChartCardProps) => (
-            <Card className="h-full bg-card text-card-foreground">
-              <CardHeader>
-                <CardTitle>{title}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[350px]">{children}</CardContent>
-            </Card>
-          );
-    
+
       
     const uniqueMealsSet = new Set<string>();
 
@@ -113,20 +93,20 @@ const StatisticsCustomer = ({myOrders}:{myOrders:IFlatOrder[]}) => {
 
       {/* Key Metrics */}
       <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <MetricCard 
+        <DynamicCard 
           title="Total Spent" 
           value={`৳${total}`} 
           icon={<Wallet className="h-6 w-6 text-primary" />} 
           trend="+5% from last month"
         />
-        <MetricCard 
+        <DynamicCard 
   title="Favourite Meals" 
   value={`${uniqueMealsCount} Favourite Meals`} 
   icon={<Utensils className="h-6 w-6 text-primary" />} 
   trend="Everybody orders that meals"
 />
 
-        <MetricCard 
+        <DynamicCard
           title="Total Orders" 
           value={totalOrders} 
           icon={<ShoppingBag className="h-6 w-6 text-primary" />} 
