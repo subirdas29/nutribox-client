@@ -8,8 +8,9 @@ import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Toolti
 import { IFlatOrder } from '@/types/order';
 import { DynamicCard } from '@/components/ui/core/DynamicDashboard/DynamicCard';
 import { ChartCard } from '@/components/ui/core/DynamicDashboard/ChartCard';
-import { CHART_COLORS } from '@/constant/chartcolor';
+
 import { months } from '@/constant/month';
+import { CHART_COLORS } from '@/constant/chartColor';
 
 
 const StatisticsCustomer = ({myOrders}:{myOrders:IFlatOrder[]}) => {

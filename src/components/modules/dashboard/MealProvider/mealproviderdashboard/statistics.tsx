@@ -2,9 +2,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { ChartCard } from '@/components/ui/core/DynamicDashboard/ChartCard';
 import { DynamicCard } from '@/components/ui/core/DynamicDashboard/DynamicCard';
-import { CHART_COLORS } from '@/constant/chartcolor';
+import { CHART_COLORS } from '@/constant/chartColor';
+
 import { months } from '@/constant/month';
-import { IFlatOrder } from '@/types/order';
+import { IOrderCartMealView } from '@/types/cart';
+
 import { Plus, ShoppingCart, Utensils, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react'
@@ -12,16 +14,16 @@ import { Bar, BarChart, Cell, Legend, Pie, PieChart, ResponsiveContainer, Toolti
 
 
 
-export const StatisticsProvider = ({allOrders}:{allOrders:IFlatOrder[]}) => {
+export const StatisticsProvider = ({allOrders}:{allOrders:IOrderCartMealView[]}) => {
 
 console.log(allOrders,'melalafj')
     
       const allOrder = allOrders?.length
     
-      const total = allOrders.reduce((sum, item) => sum + item.totalPrice, 0);
+      const total = allOrders.reduce((sum, item) => sum + item.selectedMeals.orderPrice, 0);
     
       const categoryCounts = allOrders.reduce((acc: Record<string, number>, order) => {
-        const category = order?.category || "Unknown";
+        const category = order?.selectedMeals.category || "Unknown";
         acc[category] = (acc[category] || 0) + 1;
         return acc;
       }, {}); 
@@ -43,7 +45,7 @@ console.log(allOrders,'melalafj')
         if (!order.createdAt) return;
         const monthIndex = new Date(order.createdAt).getMonth(); // 0-11
         const month = months[monthIndex];
-        monthlySpendingMap[month] += order.totalPrice;
+        monthlySpendingMap[month] += order.selectedMeals.orderPrice;
       });
     
       // Step 3: Convert to chart data
@@ -53,7 +55,7 @@ console.log(allOrders,'melalafj')
       }));
     
       const activeOrderCount = allOrders.filter(
-        (order) => order.status === "Pending" || order.status === "In-Progress"
+        (order) => order.selectedMeals.status === "Pending" || order.selectedMeals.status === "In-Progress"
       ).length;
 
   return (

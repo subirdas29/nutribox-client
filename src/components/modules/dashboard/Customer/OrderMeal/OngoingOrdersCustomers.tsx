@@ -5,69 +5,50 @@ import { NBTable } from "@/components/ui/core/NBTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { toast } from "sonner";
+
 import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
 
-import { updateOrder } from "@/services/Order";
 import dayjs from "dayjs";
-import { TOrderAllData } from "./CancelledOrdersCustomer";
+
 import { IMeta } from "@/types/meta";
 import TablePagination from "@/components/ui/core/NBTable/TablePagination";
+import { useOrderDelete } from "@/hooks/DeleteHandler";
+import { useStatusColor } from "@/hooks/StatusColor";
+import { IFlatOrder } from "@/types/order";
+import { useAllOrderMeals } from "../AllOrderMealsContext";
 
-const OngoingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta:IMeta}) => {
+const OngoingOrdersOfCustomer = ({meta}:{meta:IMeta}) => {
 
-  
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+    const myorders = useAllOrderMeals()
+
   const router = useRouter();
-  const ongoingOrders = myorders?.filter((ongoing)=>ongoing.status==="in-progress")
+  const ongoingOrders = myorders?.filter((ongoing)=>ongoing.status==="In-Progress")
  
 
-  const handleDelete = (order:TOrderAllData) => {
-    if (!order?._id) return; 
-  
-   
+  const {isModalOpen,
+    selectedItem,
+    setModalOpen,
+    handleDelete,handleDeleteConfirm} = useOrderDelete()
 
-    setSelectedId(order._id);
-    setSelectedItem("cancelled"); 
-    setModalOpen(true);
-  };
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
+  const {getStatusColor}= useStatusColor()
 
-        const res =await updateOrder({status: "cancelled" }, selectedId)
-        if (res.success) {
-          toast.success(" Order Cancelled successfully!");
-          setModalOpen(false);
-          
-        } else {
-          toast.error(res.message);
-        }
-          
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete meal.");
-    }
-  };
-
-  const columns: ColumnDef<TOrderAllData>[] = [
+  const columns: ColumnDef<IFlatOrder>[] = [
    {
   accessorKey: "imageUrls",
   header: "Image",
   cell: ({ row }) => {
-    const profileImage = row.original?.mealId?.imageUrls?.[0] 
-      || "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
+    const mealImages = row.original?.mealId
+
+    const mealImage = typeof mealImages === 'object' ? mealImages.imageUrls?.[0]
+      : "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
+
 
     return (
       <Image
-        src={profileImage}
+        src={mealImage}
         alt={row.original?.customerId?.name || "User"}
         width={50}
         height={50}
@@ -107,22 +88,6 @@ const OngoingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta
       cell: ({ row }) => {
         // Get the status value from the row
         const status = row.original.status ?? "unknown";
-    
-        
-        const getStatusColor = (status: string) => {
-          switch (status) {
-            case "pending":
-              return "bg-amber-500 p-2 text-gray-100 rounded-md";  
-            case "in-progress":
-              return "bg-blue-500 p-2 text-gray-100 rounded-md";  
-            case "delivered":
-              return "bg-green-500 p-2 text-gray-100 rounded-md";  
-              case "cancelled":
-              return "bg-red-500 p-2 text-gray-100 rounded-md";
-            default:
-              return "bg-gray-500 p-2 text-gray-100 rounded-md";  
-          }
-        };
     
         return (
           <span className={`font-bold ${getStatusColor(status)}`}>
@@ -168,11 +133,11 @@ const OngoingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta
 
          <button
   className={`text-red-500 cursor-pointer ${
-    row.original.status === "in-progress" ? "opacity-50 cursor-not-allowed" : ""
+    row.original.status === "In-Progress" ? "opacity-50 cursor-not-allowed" : ""
   }`}
   title="Delete"
   onClick={() => handleDelete(row.original)}
-  disabled={row.original.status === "cancelled"}
+  disabled={row.original.status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
 </button>

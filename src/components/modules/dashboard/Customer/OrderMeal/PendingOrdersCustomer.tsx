@@ -5,69 +5,53 @@ import { NBTable } from "@/components/ui/core/NBTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { toast } from "sonner";
+
 import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
-import { updateOrder } from "@/services/Order";
+
 import dayjs from "dayjs";
-import { TOrderAllData } from "./CancelledOrdersCustomer";
+
 import TablePagination from "@/components/ui/core/NBTable/TablePagination";
 import { IMeta } from "@/types/meta";
+import { useAllOrderMeals } from "../AllOrderMealsContext";
+import { IFlatOrder } from "@/types/order";
+import { useOrderDelete } from "@/hooks/DeleteHandler";
+import { useStatusColor } from "@/hooks/StatusColor";
 
-const PendingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta:IMeta}) => {
+const PendingOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
+
+  const myorders = useAllOrderMeals()
+
+  const {isModalOpen,
+    selectedItem,
+    setModalOpen,
+    handleDelete,handleDeleteConfirm} = useOrderDelete()
+
+  const {getStatusColor}= useStatusColor()
 
 
-  
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
+
   const router = useRouter();
-  const pendingOrders = myorders?.filter((ongoing)=>ongoing.status==="pending")
+  const pendingOrders = myorders?.filter((ongoing)=>ongoing.status==="Pending")
  
 
-  const handleDelete = (order: TOrderAllData) => {
-    if (!order?._id) return; // Ensure _id exists before proceeding
-  
-   
 
-    setSelectedId(order._id);
-    setSelectedItem("cancelled"); // Don't mutate state directly
-    setModalOpen(true);
-  };
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
 
-        const res =await updateOrder({status: "cancelled" }, selectedId)
-        if (res.success) {
-          toast.success(" Order Cancelled successfully!");
-          setModalOpen(false);
-          
-        } else {
-          toast.error(res.message);
-        }
-          
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete meal.");
-    }
-  };
-
-  const columns: ColumnDef<TOrderAllData>[] = [
+  const columns: ColumnDef<IFlatOrder>[] = [
    {
   accessorKey: "imageUrls",
   header: "Image",
   cell: ({ row }) => {
-    const profileImage = row.original?.mealId?.imageUrls?.[0] 
-      || "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
+    const mealImages = row.original?.mealId
+
+    const mealImage = typeof mealImages === 'object' ? mealImages.imageUrls?.[0]
+      : "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
 
     return (
       <Image
-        src={profileImage}
+        src={mealImage}
         alt={row.original?.customerId?.name || "User"}
         width={50}
         height={50}
@@ -107,23 +91,6 @@ const PendingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta
       cell: ({ row }) => {
         // Get the status value from the row
         const status = row.original.status ?? "unknown";
-    
-        
-        const getStatusColor = (status: string) => {
-          switch (status) {
-            case "pending":
-              return "bg-amber-500 p-2 text-gray-100 rounded-md";  
-            case "in-progress":
-              return "bg-blue-500 p-2 text-gray-100 rounded-md";  
-            case "delivered":
-              return "bg-green-500 p-2 text-gray-100 rounded-md";  
-              case "cancelled":
-              return "bg-red-500 p-2 text-gray-100 rounded-md";
-            default:
-              return "bg-gray-500 p-2 text-gray-100 rounded-md";  
-          }
-        };
-    
         return (
           <span className={`font-bold ${getStatusColor(status)}`}>
             {status}
@@ -168,11 +135,11 @@ const PendingOrdersOfCustomer = ({ myorders,meta}:{myorders:TOrderAllData[],meta
 
          <button
   className={`text-red-500 cursor-pointer ${
-    row.original.status === "cancelled" ? "opacity-50 cursor-not-allowed" : ""
+    row.original.status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
   }`}
   title="Delete"
   onClick={() => handleDelete(row.original)}
-  disabled={row.original.status === "cancelled"}
+  disabled={row.original.status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
 </button>

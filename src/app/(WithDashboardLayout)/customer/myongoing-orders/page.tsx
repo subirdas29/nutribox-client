@@ -1,5 +1,7 @@
 
-import OngoingOrdersOfCustomer from "@/components/modules/Customer/OrderMeal/OngoingOrdersCustomers"
+
+import { AllOrderMealsCustomer } from "@/components/modules/dashboard/Customer/AllOrderMealsContext"
+import OngoingOrdersOfCustomer from "@/components/modules/dashboard/Customer/OrderMeal/OngoingOrdersCustomers"
 
 import { getMyOrder } from "@/services/User"
 
@@ -12,7 +14,9 @@ const MyOrderPage = async({searchParams}:{searchParams:Promise<{page:string}>}) 
    
   return (
     <div>
-      <OngoingOrdersOfCustomer myorders = {data} meta={meta}/>
+      <AllOrderMealsCustomer myorders = {data}>
+      <OngoingOrdersOfCustomer meta={meta}/>
+      </AllOrderMealsCustomer>
     </div>
   )
 }

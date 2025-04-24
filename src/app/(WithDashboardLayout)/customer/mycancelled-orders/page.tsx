@@ -1,9 +1,9 @@
 
 
 
-import CancelledOrdersOfCustomer from "@/components/modules/Customer/OrderMeal/CancelledOrdersCustomer"
 
-
+import { AllOrderMealsCustomer } from "@/components/modules/dashboard/Customer/AllOrderMealsContext"
+import CancelledOrdersOfCustomer from "@/components/modules/dashboard/Customer/OrderMeal/CancelledOrdersCustomer"
 import { getMyOrder } from "@/services/User"
 
 
@@ -15,7 +15,9 @@ const MyOrderPage = async({searchParams}:{searchParams:Promise<{page:string}>}) 
    
   return (
     <div>
-      <CancelledOrdersOfCustomer myorders = {data} meta={meta}/>
+     <AllOrderMealsCustomer myorders = {data}>
+      <CancelledOrdersOfCustomer meta={meta}/>
+      </AllOrderMealsCustomer>
     </div>
   )
 }

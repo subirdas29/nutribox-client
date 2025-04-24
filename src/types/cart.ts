@@ -30,12 +30,12 @@ export interface IOrderCartMeal{
 
 export interface IOrderCartMealView {
   _id?:string,
+  customerId?:IUser,
   selectedMeals: {
     _id?:string;
     mealId: string | TMealsForm;
     mealProviderId: string;
     category:string;
-    customerId?:IUser;
     mealName:string;
     quantity: number;
     basePrice: number;

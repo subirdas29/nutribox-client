@@ -1,4 +1,5 @@
 
+import { AllOrderMealsCustomer } from "@/components/modules/dashboard/Customer/AllOrderMealsContext";
 import CustomerDashboard from "@/components/modules/dashboard/Customer/CustomerDashboard";
 import { getMyOrder } from "@/services/User";
 
@@ -8,8 +9,9 @@ export default async function CustomerDashboardPage() {
   
     return (
       <div>
-       <CustomerDashboard myorders = {data}/>
-
+        <AllOrderMealsCustomer myorders = {data}>
+          <CustomerDashboard/>
+        </AllOrderMealsCustomer>
       </div>
     );
   }

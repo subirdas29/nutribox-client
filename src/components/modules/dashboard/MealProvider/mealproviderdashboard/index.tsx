@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 import { Eye } from "lucide-react";
 import Link from "next/link";
-import { IFlatOrder} from "@/types/order";
+
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
@@ -13,31 +13,25 @@ import { useRouter } from "next/navigation";
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { StatisticsProvider } from "./statistics";
-import { IOrderCartMeal } from "@/types/cart";
+import {  IOrderCartMealView } from "@/types/cart";
+import { useStatusColor } from "@/hooks/StatusColor";
 
 
 
-export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartMeal[]}) {
-  console.log(allOrders,'off')
+
+export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartMealView[]}) {
+
     const router = useRouter();
-    const allOrderMeals = allOrders.flatMap((order)=>
-      order.selectedMeals.map((meal)=>({
-        ...meal,
-        orderId: order._id,
-        deliveryDate: order.deliveryDate,
-        deliveryAddress: order.deliveryAddress,
-        totalPrice: meal.orderPrice,
-        transaction: order.transaction,
-        createdAt:order.createdAt
-      }))
-    )
+
+    const {getStatusColor} = useStatusColor()
+
   
-  const columns: ColumnDef<IFlatOrder>[] = [
+  const columns: ColumnDef<IOrderCartMealView>[] = [
     {
    accessorKey: "imageUrls",
    header: "Image",
    cell: ({ row }) => {
-    const meal = row.original.mealId
+    const meal = row.original.selectedMeals.mealId
      const profileImage = typeof meal==='object' && meal?.imageUrls?.[0] ? meal?.imageUrls[0]:"https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
  
      return (
@@ -51,11 +45,18 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
      );
    },
  },
+ {
+  accessorKey: "orderId",
+  header: "Order Id",
+  cell: ({ row }) => 
+    <span className="font-medium">{row.original?.selectedMeals._id}</span>
+ 
+},
      {
        accessorKey: "mealname",
        header: "Meal Name",
        cell: ({ row }) => 
-         <span className="font-medium">{row.original?.mealName}</span>
+         <span className="font-medium">{row.original?.selectedMeals.mealName}</span>
       
      },
   
@@ -63,7 +64,13 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
        accessorKey: "category",
        header: "Category",
        cell: ({ row }) => 
-       <span>{row.original.category}</span>,
+       <span>{row.original.selectedMeals.category}</span>,
+     },
+     {
+       accessorKey: "quantity",
+       header: "Order Quantity",
+       cell: ({ row }) => 
+       <span>{row.original.selectedMeals.quantity}</span>,
      },
      {
           accessorKey: "deliveryDate", // Ensure the key matches your data
@@ -81,24 +88,10 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
        header: "Status",
        cell: ({ row }) => {
          // Get the status value from the row
-         const status = row.original.status ?? "unknown";
+         const status = row.original.selectedMeals.status ?? "unknown";
      
          
-         const getStatusColor = (status: string) => {
-           switch (status) {
-             case "pending":
-               return "bg-amber-500 p-2 text-gray-100 rounded-md";  
-             case "in-progress":
-               return "bg-blue-500 p-2 text-gray-100 rounded-md";  
-             case "delivered":
-               return "bg-green-500 p-2 text-gray-100 rounded-md";  
-               case "cancelled":
-               return "bg-red-500 p-2 text-gray-100 rounded-md";
-             default:
-               return "bg-gray-500 p-2 text-gray-100 rounded-md";  
-           }
-         };
-     
+    
          return (
            <span className={`font-bold ${getStatusColor(status)}`}>
              {status}
@@ -110,7 +103,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
      {
        accessorKey: "price",
        header: "Price (BDT)",
-       cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.totalPrice.toFixed(2)))}</span>,
+       cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.selectedMeals.orderPrice.toFixed(2)))}</span>,
      },
      
      {
@@ -121,9 +114,8 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
          <div className="flex space-x-3 ">
            <button className="text-green-500 cursor-pointer" title="View Details"
            onClick={() =>
-             router.push(
-               `/orderdetails/${row.original._id}`
-             )
+            router.push(
+              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals.mealId}`)
            }
            >
              <Eye className="w-5 h-5" />
@@ -139,13 +131,13 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
  <div>
 
       {/* Quick Actions Section */}
-   <StatisticsProvider allOrders={allOrderMeals} />
+   <StatisticsProvider allOrders={allOrders} />
    
    
 
     <div className="overflow-x-auto p-6">
 <h1 className="text-center text-2xl font-bold mt-10 mb-4">All Meals</h1>
-<NBTable columns={columns} data={Array.isArray(allOrderMeals) ? allOrderMeals.slice(0, 6) : []} />
+<NBTable columns={columns} data={Array.isArray(allOrders) ? allOrders.slice(0, 6) : []} />
   <div className="flex justify-center mt-4">
   <Link href="/mealprovider/meals/allmeals">
   <Button>All Meals</Button>

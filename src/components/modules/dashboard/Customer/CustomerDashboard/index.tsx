@@ -14,29 +14,23 @@ import dayjs from "dayjs";
 import Image from "next/image";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
-import { IOrderCartMeal } from "@/types/cart";
+
 
 import StatisticsCustomer from "./statistics";
 import { IFlatOrder } from "@/types/order";
 
+import { useAllOrderMeals } from "../AllOrderMealsContext";
+import { useStatusColor } from "@/hooks/StatusColor";
 
 
-export default function CustomerDashboard({myorders}:{myorders:IOrderCartMeal[]}) {
+
+export default function CustomerDashboard() {
 
 
-const allOrderMeals = myorders.flatMap((order)=>
-  order.selectedMeals.map((meal)=>({
-    ...meal,
-    orderId: order._id,
-    deliveryDate: order.deliveryDate,
-    deliveryAddress: order.deliveryAddress,
-    totalPrice: meal.orderPrice,
-    transaction: order.transaction,
-    createdAt:order.createdAt
-  }))
-)
+const allOrderMeals = useAllOrderMeals()
 
-console.log(allOrderMeals)
+const {getStatusColor} = useStatusColor()
+console.log(allOrderMeals,'context data')
 
   const router = useRouter();
 
@@ -99,20 +93,7 @@ console.log(allOrderMeals)
              const status = row.original.status ?? "unknown";
          
              
-             const getStatusColor = (status: string) => {
-               switch (status) {
-                 case "Pending":
-                   return "bg-amber-500 p-2 text-gray-100 rounded-md";  
-                 case "In-Progress":
-                   return "bg-blue-500 p-2 text-gray-100 rounded-md";  
-                 case "Delivered":
-                   return "bg-green-500 p-2 text-gray-100 rounded-md";  
-                   case "Cancelled":
-                   return "bg-red-500 p-2 text-gray-100 rounded-md";
-                 default:
-                   return "bg-red-600 p-2 text-gray-100 rounded-md";  
-               }
-             };
+    
          
              return (
                <span className={`font-bold ${getStatusColor(status)}`}>
