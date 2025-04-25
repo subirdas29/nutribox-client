@@ -54,6 +54,13 @@ console.log(allOrderMeals,'context data')
          );
        },
      },
+     {
+      accessorKey: "orderId",
+      header: "Order Id",
+      cell: ({ row }) => 
+        <span className="font-medium">{row.original?._id}</span>
+     
+    },
          {
            accessorKey: "mealname",
            header: "Meal Name",
@@ -62,12 +69,7 @@ console.log(allOrderMeals,'context data')
           
          },
       
-         {
-           accessorKey: "category",
-           header: "Category",
-           cell: ({ row }) => 
-           <span>{row.original.category}</span>,
-         },
+      
          {
            accessorKey: "quantity",
            header: "Order Quantity",
@@ -116,14 +118,14 @@ console.log(allOrderMeals,'context data')
           {
            
             const orderId = row.original.orderId
-            const mealId = typeof row.original.mealId=== 'string' ? row.original.mealId : row.original.mealId._id 
+            const orderMealId = row.original._id
              return (
               <div className="flex space-x-3 ">
                 <button className="text-green-500 cursor-pointer" title="View Details"
                 onClick={() =>
                  
                   router.push(
-                    `/orderdetails/${orderId}/meal/${mealId}`)
+                    `/orderdetails/${orderId}/meal/${orderMealId}`)
                 }
                 >
                   <Eye className="w-5 h-5" />

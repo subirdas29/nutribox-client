@@ -3,14 +3,8 @@ import { AllOrderMealsCustomer } from "@/components/modules/dashboard/Customer/A
 import PendingOrdersOfCustomer from "@/components/modules/dashboard/Customer/OrderMeal/PendingOrdersCustomer"
 import { getMyOrder } from "@/services/User"
 
-interface MyOrderPageProps {
-  searchParams: {
-    page?: string;
-  };
-}
-
-const MyOrderPage = async({searchParams}:MyOrderPageProps) => {
-  const {page} = searchParams
+const MyOrderPage = async({searchParams}:{searchParams:Promise<{page:string}>}) => {
+  const {page} = await searchParams
   const {data,meta} = await getMyOrder(page, '10')
 
   

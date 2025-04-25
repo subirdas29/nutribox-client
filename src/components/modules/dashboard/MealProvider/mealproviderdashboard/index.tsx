@@ -13,20 +13,21 @@ import { useRouter } from "next/navigation";
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { StatisticsProvider } from "./statistics";
-import {  IOrderCartMealView } from "@/types/cart";
+
 import { useStatusColor } from "@/hooks/StatusColor";
+import { IOrderCartMealViewForProvider } from "@/types/cart";
 
 
 
 
-export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartMealView[]}) {
+export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartMealViewForProvider[]}) {
 
     const router = useRouter();
 
     const {getStatusColor} = useStatusColor()
 
   
-  const columns: ColumnDef<IOrderCartMealView>[] = [
+  const columns: ColumnDef<IOrderCartMealViewForProvider>[] = [
     {
    accessorKey: "imageUrls",
    header: "Image",
@@ -60,12 +61,6 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
       
      },
   
-     {
-       accessorKey: "category",
-       header: "Category",
-       cell: ({ row }) => 
-       <span>{row.original.selectedMeals.category}</span>,
-     },
      {
        accessorKey: "quantity",
        header: "Order Quantity",
@@ -115,7 +110,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
            <button className="text-green-500 cursor-pointer" title="View Details"
            onClick={() =>
             router.push(
-              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals.mealId}`)
+              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals._id}`)
            }
            >
              <Eye className="w-5 h-5" />

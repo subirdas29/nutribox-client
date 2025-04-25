@@ -3,7 +3,8 @@
 
 
 
-import { IOrderCartMeal } from "@/types/cart";
+import { IOrderCartMeal, IOrderCartMealView } from "@/types/cart";
+import { IFlatOrder } from "@/types/order";
 
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
@@ -128,12 +129,13 @@ export const getSingleOrder = async (orderId: string) => {
 
   // update order
   export const updateOrder = async (
-    orderData:Partial<IOrderDetails>,
-    orderId: string
+    orderData:Partial<IOrderCartMeal>,
+    orderId: string,
+    orderMealId:string
   ): Promise<any> => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/orders/orderdetails/${orderId}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}/orders/orderdetails/${orderId}/meal/${orderMealId}`,
         {
           method: "PATCH",
         

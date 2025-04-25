@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { updateOrder } from '@/services/Order'
-import { IOrderCartMealView } from '@/types/cart'
+import { IOrderCartMeal} from '@/types/cart'
 import { Label } from '@radix-ui/react-label'
 import React, { useState } from 'react'
 import { toast } from 'sonner'
@@ -14,11 +14,11 @@ import { OrderStatus } from '..'
         onSubmit, 
         onCancel 
       }: {
-        initialValues: IOrderCartMealView
-        onSubmit: (data: IOrderCartMealView) => void
+        initialValues: IOrderCartMeal
+        onSubmit: (data: IOrderCartMeal) => void
         onCancel: () => void
       }) => {
-        const [formData, setFormData] = useState<IOrderCartMealView>(initialValues)
+        const [formData, setFormData] = useState<IOrderCartMeal>(initialValues)
       
         const handleSubmit = async (e: React.FormEvent) => {
           e.preventDefault()
@@ -27,7 +27,7 @@ import { OrderStatus } from '..'
                       toast.error("Order ID is missing");
                       return;
                     }
-            const res = await updateOrder(formData, formData._id)
+            const res = await updateOrder(formData, formData?._id, formData?.selectedMeals?.[0]?._id as string)
             if (res.success) {
               toast.success("Status updated successfully!")
               onSubmit(formData)
@@ -45,24 +45,30 @@ import { OrderStatus } from '..'
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Order Status</Label>
-                <Select
-                  value={formData.selectedMeals.status}
-                  onValueChange={value => setFormData({...formData, 
-                    selectedMeals:{
-                      ...formData.selectedMeals,
-                      status:value as OrderStatus
-                    }})}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="In-Progress">In Progress</SelectItem>
-                    <SelectItem value="Delivered">Delivered</SelectItem>
-                    <SelectItem value="Cancelled">Cancel Order</SelectItem>
-                  </SelectContent>
-                </Select>
+                 <Select
+                          value={formData.selectedMeals[0].status}
+                          onValueChange={value => {
+                            const updatedMeals = [...formData.selectedMeals];
+                            updatedMeals[0] = {
+                              ...updatedMeals[0],
+                              status: value as OrderStatus,
+                            };
+                            setFormData({
+                              ...formData,
+                              selectedMeals: updatedMeals,
+                            });
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select portion size" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="In-Progress">In-Progress</SelectItem>
+                            <SelectItem value="Delivered">Delivered</SelectItem>
+                            <SelectItem value="Cancelled">Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
               </div>
             </div>
       

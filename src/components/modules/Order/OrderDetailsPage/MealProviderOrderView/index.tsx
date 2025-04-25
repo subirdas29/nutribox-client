@@ -12,7 +12,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import {  OrderStatus } from '..'
 import { MealProviderModal } from './MealProviderModal'
-import { IOrderCartMealView,  } from '@/types/cart'
+import { IOrderCartMeal  } from '@/types/cart'
 
 
 
@@ -50,14 +50,14 @@ const statusConfig = {
 
 
 
-export const ProviderOrderView = ({ order }: { order: IOrderCartMealView }) => {
+export const ProviderOrderView = ({ order }: { order: IOrderCartMeal }) => {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false)
-  if(Array.isArray(order.selectedMeals))
-    return null
 
-  const status = order.selectedMeals.status as OrderStatus
+  console.log(order)
+
+  const status = order.selectedMeals[0].status as OrderStatus
   
-  const handleStatusUpdate = (updatedData: IOrderCartMealView ) => {
+  const handleStatusUpdate = (updatedData: IOrderCartMeal ) => {
     console.log(updatedData,'provider')
     setIsStatusModalOpen(false)
   }
@@ -110,8 +110,8 @@ export const ProviderOrderView = ({ order }: { order: IOrderCartMealView }) => {
                     Meal Details
                   </Label>
                   <div className="space-y-1">
-                    <p className="font-medium text-green-800">{order.selectedMeals.mealName}</p>
-                    <p className="text-sm text-green-600">{order.selectedMeals.portionSize} Portion</p>
+                    <p className="font-medium text-green-800">{order.selectedMeals[0].mealName}</p>
+                    <p className="text-sm text-green-600">{order.selectedMeals[0].portionSize} Portion</p>
                   </div>
                 </div>
 
@@ -136,22 +136,22 @@ export const ProviderOrderView = ({ order }: { order: IOrderCartMealView }) => {
                   <p className="whitespace-pre-line text-green-800">{order.deliveryAddress}</p>
                 </div>
 
-                {order.selectedMeals.specialInstructions && (
+                {order.selectedMeals[0].specialInstructions && (
                   <div>
                     <Label className="flex items-center gap-2 text-green-600 mb-2">
                       Special Instructions
                     </Label>
-                    <p className="text-green-800">{order.selectedMeals.specialInstructions}</p>
+                    <p className="text-green-800">{order.selectedMeals[0].specialInstructions}</p>
                   </div>
                 )}
               </div>
             </div>
 
-            {order.selectedMeals.customizations?.length > 0 && (
+            {order.selectedMeals[0].customizations?.length > 0 && (
               <div className="pt-4 border-t border-green-100">
                 <Label className="text-green-600">Customizations</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {order.selectedMeals.customizations.map((item, index) => (
+                  {order.selectedMeals[0].customizations.map((item, index) => (
                     <Badge 
                       key={index}
                       variant="outline" 

@@ -29,6 +29,8 @@ export const AllOrderMealsCustomer:React.FC<AllOrderMealsContextProps> =({
         );
       }, [myorders]);
 
+      console.log(allOrderMeals,'checking vai')
+
       return (
         <AllOrderMealsContext.Provider value={allOrderMeals}>{children}</AllOrderMealsContext.Provider>
       )

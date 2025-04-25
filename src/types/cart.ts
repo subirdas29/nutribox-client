@@ -24,11 +24,10 @@ export interface IOrderCartMeal{
     transaction?: ITransaction;
     paymentMethod: string,
     createdAt?:string
-    
 }
 
 
-export interface IOrderCartMealView {
+export interface IOrderCartMealViewForProvider {
   _id?:string,
   customerId?:IUser,
   selectedMeals: {

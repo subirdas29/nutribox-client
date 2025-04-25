@@ -16,16 +16,19 @@ export const useOrderDelete = ()=>{
       setSelectedId(order._id);
       setSelectedItem("Cancelled"); 
       setModalOpen(true);
+     
     };
+
+
     const handleDeleteConfirm = async () => {
       try {
         if (selectedId) {
   
-          const res =await updateOrder({status: "Cancelled" }, selectedId)
+          const res =await updateOrder({status:"Cancelled" }, selectedId)
           if (res.success) {
             toast.success(" Order Cancelled successfully!");
             setModalOpen(false);
-            
+            console.log(res)
           } else {
             toast.error(res.message);
           }

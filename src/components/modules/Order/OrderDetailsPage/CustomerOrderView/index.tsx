@@ -18,9 +18,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import {   OrderStatus } from '..'
 import dayjs from 'dayjs'
-import {  IOrderCartMealView, ITransaction } from '@/types/cart'
+import {  IOrderCartMeal, ITransaction } from '@/types/cart'
 import { OrderForm } from './CustomerModal'
-import {  IOrder } from '@/types/order'
+
 
 
 
@@ -70,22 +70,19 @@ const statusConfig = {
 
 
 
-export const CustomerOrderView = ({ order }: { order: IOrderCartMealView}) => {
+export const CustomerOrderView = ({ order }: { order: IOrderCartMeal}) => {
   console.log(order,'joy')
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   // const [review, setReview] = useState({ rating: 0, comment: '' })
 
 
 
-  if(Array.isArray(order.selectedMeals))
-    return null
-
-  const singleOrder = order.selectedMeals as IOrder
-  const transaction = order.transaction as ITransaction
-  
 
 
-  const handleEditSubmit = (updatedData: IOrderCartMealView) => {
+  const singleOrder = order?.selectedMeals[0]
+  const transaction = order?.transaction as ITransaction
+
+  const handleEditSubmit = (updatedData: IOrderCartMeal) => {
     console.log(updatedData,'customer')
     setIsEditModalOpen(false)
   }
@@ -125,8 +122,6 @@ export const CustomerOrderView = ({ order }: { order: IOrderCartMealView}) => {
     </span>
   </Badge>
 )}
-
-
 
 
 {transaction?.bank_status === "Success" && singleOrder?.status && statusConfig[singleOrder.status] ? (

@@ -12,6 +12,8 @@ const MealDetailPage= async({params}:{params:Promise<{orderdetailsId:string,meal
 
    
     const {data} = await getSingleMealOrder(orderdetailsId,mealdetailsId)
+
+    console.log(data,'check')
    
   return (
     <div>

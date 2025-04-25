@@ -5,69 +5,49 @@ import { NBTable } from "@/components/ui/core/NBTable";
 import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash, Eye } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { toast } from "sonner";
+
 import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
-import { IOrder } from "@/types/order";
-import { updateOrder } from "@/services/Order";
+
+
 import dayjs from "dayjs";
 import { IMeta } from "@/types/meta";
 import TablePagination from "@/components/ui/core/NBTable/TablePagination";
+import { useStatusColor } from "@/hooks/StatusColor";
+import { useOrderDelete } from "@/hooks/DeleteHandler";
 
-const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrder[],meta:IMeta}) => {
+import { IOrderCartMeal } from "@/types/cart";
+
+const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],meta:IMeta}) => {
 
   
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const router = useRouter();
-  const onGoingOrders = orders?.filter((ongoing)=>ongoing.status === "in-progress")
+  const onGoingOrders = orders?.filter((ongoing)=>ongoing.selectedMeals[0].status==="In-Progress")
+ 
  
 
-  const handleDelete = (order: IOrder) => {
-    if (!order?._id) return; // Ensure _id exists before proceeding
-  
-   
 
-    setSelectedId(order._id);
-    setSelectedItem("cancelled"); // Don't mutate state directly
-    setModalOpen(true);
-  };
-  const handleDeleteConfirm = async () => {
-    try {
-      if (selectedId) {
+  const {isModalOpen,
+    selectedItem,
+    setModalOpen,
+    handleDelete,handleDeleteConfirm} = useOrderDelete()
 
-        const res =await updateOrder({status: "cancelled" }, selectedId)
-        if (res.success) {
-          toast.success(" Order Cancelled successfully!");
-          setModalOpen(false);
-          
-        } else {
-          toast.error(res.message);
-        }
-          
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete meal.");
-    }
-  };
+  const {getStatusColor}= useStatusColor()
 
-  const columns: ColumnDef<IOrder>[] = [
+  const columns: ColumnDef<IOrderCartMeal>[] = [
    {
   accessorKey: "imageUrls",
   header: "Image",
   cell: ({ row }) => {
-    const profileImage = row.original?.customerId?.profileImage?.[0] 
+    const profileImage = row.original?.selectedMeals[0].customerId?.profileImage?.[0] 
       || "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
 
     return (
       <Image
         src={profileImage}
-        alt={row.original?.customerId?.name || "User"}
+        alt={row.original?.selectedMeals[0].customerId?.name || "User"}
         width={50}
         height={50}
         className="w-12 h-12 rounded object-cover"
@@ -79,21 +59,22 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrder[],meta:IMeta}
       accessorKey: "customername",
       header: "Customer Name",
       cell: ({ row }) => 
-        <span className="font-medium">{row.original?.customerId?.name}</span>
+        <span className="font-medium">{row.original?.selectedMeals[0].customerId?.name}</span>
+     
      
     },
     {
       accessorKey: "name",
       header: "Meal Name",
       cell: ({ row }) => 
-        <span className="font-medium">{row.original.mealName}</span>
+        <span className="font-medium">{row.original.selectedMeals[0].mealName}</span>
      
     },
     {
       accessorKey: "category",
       header: "Category",
       cell: ({ row }) => 
-      <span>{row.original.category}</span>,
+        <span>{row.original.selectedMeals[0].category}</span>,
     },
     {
          accessorKey: "deliveryDate", // Ensure the key matches your data
@@ -111,24 +92,8 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrder[],meta:IMeta}
       header: "Status",
       cell: ({ row }) => {
         // Get the status value from the row
-        const status = row.original.status ?? "unknown";
-    
-        
-        const getStatusColor = (status: string) => {
-          switch (status) {
-            case "pending":
-              return "bg-amber-500 p-2 text-gray-100 rounded-md";  
-            case "in-progress":
-              return "bg-blue-500 p-2 text-gray-100 rounded-md";  
-            case "delivered":
-              return "bg-green-500 p-2 text-gray-100 rounded-md";  
-              case "cancelled":
-              return "bg-red-500 p-2 text-gray-100 rounded-md";
-            default:
-              return "bg-gray-500 p-2 text-gray-100 rounded-md";  
-          }
-        };
-    
+        const status = row.original.selectedMeals[0].status ?? "unknown";
+ 
         return (
           <span className={`font-bold ${getStatusColor(status)}`}>
             {status}
@@ -140,7 +105,7 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrder[],meta:IMeta}
     {
       accessorKey: "price",
       header: "Price (BDT)",
-      cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.totalPrice.toFixed(2)))}</span>,
+      cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.selectedMeals[0].orderPrice.toFixed(2)))}</span>,
     },
     
     {
@@ -173,11 +138,11 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrder[],meta:IMeta}
 
          <button
   className={`text-red-500 cursor-pointer ${
-    row.original.status === "cancelled" ? "opacity-50 cursor-not-allowed" : ""
+    row.original.selectedMeals[0].status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
   }`}
   title="Delete"
   onClick={() => handleDelete(row.original)}
-  disabled={row.original.status === "cancelled"}
+  disabled={row.original.selectedMeals[0].status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
 </button>

@@ -12,7 +12,7 @@ const AllOrdersPage = async({searchParams}:{searchParams:Promise<{page:string}>}
 
   const {page} = await searchParams
     const {data,meta} = await getAllMealProviderOrder(page, '10')
-   
+   console.log(data,'data')
   return (
     <div>
       <CancelledOrdersOfMealProvider orders={data} meta={meta}/>
