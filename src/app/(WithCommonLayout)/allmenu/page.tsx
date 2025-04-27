@@ -4,7 +4,7 @@ import React from 'react'
 
 const AllMenuPage = async({searchParams}:{searchParams:Promise<{page:string}>}) => {
   const {page} = await searchParams
-  const {data, meta } = await getAllMeals(page,'7')
+  const {data, meta } = await getAllMeals(page,'6')
 
 
 

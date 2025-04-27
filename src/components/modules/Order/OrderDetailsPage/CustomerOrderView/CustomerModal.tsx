@@ -1,12 +1,12 @@
 "use client"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+
 import { Textarea } from '@/components/ui/textarea'
 import { updateOrder } from '@/services/Order'
 import { IOrderCartMeal } from '@/types/cart'
 
-import { BookOpenText, CalendarDays, Home, PackageOpen, Timer } from 'lucide-react'
+import { BookOpenText, CalendarDays, Timer } from 'lucide-react'
 import React, { useState } from 'react'
 import DatePicker from 'react-datepicker'
 
@@ -58,37 +58,17 @@ export const OrderForm = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <h1 className="flex items-center gap-2 text-primary/80">
-            <PackageOpen />
-            Portion Size</h1>
-          <Select
-            value={formData.selectedMeals[0].portionSize}
-            onValueChange={value => {
-              const updatedMeals = [...formData.selectedMeals];
-              updatedMeals[0] = {
-                ...updatedMeals[0],
-                portionSize: value,
-              };
-              setFormData({
-                ...formData,
-                selectedMeals: updatedMeals,
-              });
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select portion size" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Small">Small</SelectItem>
-              <SelectItem value="Medium">Medium</SelectItem>
-              <SelectItem value="Large">Large</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
 
-        {/* Delivery Date */}
         <div className="space-y-2">
+          <h1 className=' flex items-center gap-2 text-primary/80'>  <Timer className="w-5 h-5" />Delivery Time</h1>
+          <Input
+            type="time"
+            value={formData.deliveryTime}
+            onChange={e => setFormData({ ...formData, deliveryTime: e.target.value })}
+          />
+        </div>
+          {/* Delivery Date */}
+          <div className="space-y-2">
           <h1 className="flex items-center gap-2 text-primary/80">
 
             <CalendarDays className="w-5 h-5" />
@@ -104,24 +84,6 @@ export const OrderForm = ({
           />
         </div>
 
-        <div className="space-y-2">
-          <h1 className=' flex items-center gap-2 text-primary/80'>  <Timer className="w-5 h-5" />Delivery Time</h1>
-          <Input
-            type="time"
-            value={formData.deliveryTime}
-            onChange={e => setFormData({ ...formData, deliveryTime: e.target.value })}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <h1 className='flex items-center gap-2 text-primary/80'>
-            <Home />
-            Delivery Address</h1>
-          <Textarea
-            value={formData.deliveryAddress}
-            onChange={e => setFormData({ ...formData, deliveryAddress: e.target.value })}
-          />
-        </div>
 
         <div className="space-y-2">
           <h1 className=' flex items-center gap-2 text-primary/80'>

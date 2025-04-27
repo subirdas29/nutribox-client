@@ -11,12 +11,11 @@ interface VerifyOrderProps {
 
 export default function VerifyOrder({orderData}: VerifyOrderProps) {
 
-  console.log(orderData.customer_order_id
-    ,'dataaa')
+
 
   const dispatch = useAppDispatch();
 
-  console.log(orderData,'verifyorder')
+
   useEffect(() => {
     if (orderData?.bank_status === "Success") {
       dispatch(clearCart());
@@ -65,7 +64,7 @@ export default function VerifyOrder({orderData}: VerifyOrderProps) {
       
       </div>
      <div className="flex justify-center mt-12">
-     <Link href={`/orderdetails/${orderData.customer_order_id}`} >
+     <Link href={`/customer/mypending-orders`} >
       <button className="px-6  py-2  cursor-pointer bg-primary border  text-white font-semibold rounded-md  ">View Orders</button>
       </Link>
     

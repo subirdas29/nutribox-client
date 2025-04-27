@@ -3,10 +3,12 @@
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash, Eye } from "lucide-react";
+import { Edit, 
+  // Trash,
+   Eye } from "lucide-react";
 import Image from "next/image";
 
-import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
+// import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
@@ -16,7 +18,7 @@ import dayjs from "dayjs";
 import { IMeta } from "@/types/meta";
 import TablePagination from "@/components/ui/core/NBTable/TablePagination";
 import { useStatusColor } from "@/hooks/StatusColor";
-import { useOrderDelete } from "@/hooks/DeleteHandler";
+// import { useOrderDelete } from "@/hooks/DeleteHandler";
 
 import { IOrderCartMeal } from "@/types/cart";
 
@@ -29,10 +31,11 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
  
 
 
-  const {isModalOpen,
-    selectedItem,
-    setModalOpen,
-    handleDelete,handleDeleteConfirm} = useOrderDelete()
+  // const {isModalOpen,
+  //   selectedItem,
+  //   setModalOpen,
+  //   // handleDelete,
+  //   handleDeleteConfirm} = useOrderDelete()
 
   const {getStatusColor}= useStatusColor()
 
@@ -41,13 +44,13 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
   accessorKey: "imageUrls",
   header: "Image",
   cell: ({ row }) => {
-    const profileImage = row.original?.selectedMeals[0].customerId?.profileImage?.[0] 
+    const profileImage = row.original?.customerId?.profileImage?.[0] 
       || "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
 
     return (
       <Image
         src={profileImage}
-        alt={row.original?.selectedMeals[0].customerId?.name || "User"}
+        alt={row.original?.customerId?.name || "User"}
         width={50}
         height={50}
         className="w-12 h-12 rounded object-cover"
@@ -59,7 +62,7 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
       accessorKey: "customername",
       header: "Customer Name",
       cell: ({ row }) => 
-        <span className="font-medium">{row.original?.selectedMeals[0].customerId?.name}</span>
+        <span className="font-medium">{row.original?.customerId?.name}</span>
      
      
     },
@@ -117,8 +120,7 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
           <button className="text-green-500 cursor-pointer" title="View Details"
           onClick={() =>
             router.push(
-              `/orderdetails/${row.original._id}`
-            )
+              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals[0]._id}`)
           }
           >
             <Eye className="w-5 h-5" />
@@ -129,14 +131,13 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
             title="Edit"
             onClick={() =>
               router.push(
-                `/orderdetails/${row.original._id}`
-              )
+                `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals[0]._id}`)
             }
           >
             <Edit className="w-5 h-5" />
           </button>
 
-         <button
+         {/* <button
   className={`text-red-500 cursor-pointer ${
     row.original.selectedMeals[0].status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
   }`}
@@ -145,7 +146,7 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
   disabled={row.original.selectedMeals[0].status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
-</button>
+</button> */}
 
         </div>
       ),
@@ -159,12 +160,12 @@ const OnGoingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
       <NBTable columns={columns} data={Array.isArray(onGoingOrders) ? onGoingOrders : []} />
       <TablePagination totalPage={meta?.totalPage}/>
       </div>
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         name={selectedItem}
         isOpen={isModalOpen}
         onOpenChange={setModalOpen}
         onConfirm={handleDeleteConfirm}
-      />
+      /> */}
     </div>
   );
 };

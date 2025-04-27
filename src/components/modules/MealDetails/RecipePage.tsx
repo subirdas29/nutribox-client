@@ -101,12 +101,6 @@ export default function RecipePage({meal}:{meal:TMealsForm }) {
             <span className="text-2xl font-semibold text-primary">
               {currencyFormatter(Number(price.toFixed(2)))}
             </span>
-     
-
-
-
-
-
           </div>
           
           <div className="flex items-center gap-4 text-muted-foreground">

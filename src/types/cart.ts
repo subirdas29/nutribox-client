@@ -15,6 +15,7 @@ export interface ITransaction {
 export interface IOrderCartMeal{
     _id?:string,
     selectedMeals:IOrder[],
+    customerId?:IUser
     coupon?:string,
     deliveryCharge:number,
     deliveryArea: string

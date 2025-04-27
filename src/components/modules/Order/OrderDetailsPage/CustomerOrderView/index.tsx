@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 
-import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils,  MapPin, CalendarDays, ChefHat, XCircle } from "lucide-react"
+import { Clock, CookingPot, CheckCircle, Pencil, Truck, Utensils,  MapPin, CalendarDays, ChefHat, XCircle, PackageOpen} from "lucide-react"
 import Image from 'next/image'
 
 
@@ -71,19 +71,21 @@ const statusConfig = {
 
 
 export const CustomerOrderView = ({ order }: { order: IOrderCartMeal}) => {
-  console.log(order,'joy')
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   // const [review, setReview] = useState({ rating: 0, comment: '' })
 
 
-
+console.log(order,'before')
 
 
   const singleOrder = order?.selectedMeals[0]
+
+  console.log(singleOrder,'check')
   const transaction = order?.transaction as ITransaction
 
   const handleEditSubmit = (updatedData: IOrderCartMeal) => {
-    console.log(updatedData,'customer')
+    console.log(updatedData)
     setIsEditModalOpen(false)
   }
 
@@ -237,7 +239,17 @@ export const CustomerOrderView = ({ order }: { order: IOrderCartMeal}) => {
                       </Label>
                       <div className="space-y-1">
                         <p className="font-medium text-green-800">{singleOrder?.mealName}</p>
-                        <p className="text-sm text-green-600">{singleOrder?.portionSize} Portion</p>
+                      
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-green-600 mb-2">
+                        <PackageOpen className="w-4 h-4" />
+                        Portion Size
+                      </Label>
+                      <div className="space-y-1">
+                        <p className="font-medium text-green-800">{singleOrder?.portionSize}</p>
                       </div>
                     </div>
 
@@ -249,7 +261,18 @@ export const CustomerOrderView = ({ order }: { order: IOrderCartMeal}) => {
                       <div className="space-y-1">
                         <p className="text-green-800">{dayjs(order?.deliveryDate).format("DD-MM-YYYY")}</p>
                         
-                        <p className="text-sm text-green-600">{order?.deliveryTime}</p>
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label className="flex items-center gap-2 text-green-600 mb-2">
+                        <PackageOpen className="w-4 h-4" />
+                        Delivery Time
+                      </Label>
+                      <div className="space-y-1">
+                        {
+                          order?.deliveryTime === '' ? <p className='font-medium text-green-800'>Not Fixed</p> :<p className="font-medium text-green-800">{order.deliveryTime}</p>
+                        }
                       </div>
                     </div>
                   </div>

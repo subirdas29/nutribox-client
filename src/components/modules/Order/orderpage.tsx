@@ -134,11 +134,11 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
 
         const res = await createOrder(orderData);
           
-        console.log(res)
+
 
             if (res.success) {
                 toast.success(res.message);
-                console.log(res.data,'order')
+           
                 // router.push(`/orderdetails/${res.data._id}`);
                 if(res.data){
                   setTimeout(()=>{
@@ -147,7 +147,7 @@ const OrderPage = ({ ordermeal }: { ordermeal: TMealsForm }) => {
                 }
             } else {
                 toast.error(res.message);
-               console.log(res);
+              
             }
 
   

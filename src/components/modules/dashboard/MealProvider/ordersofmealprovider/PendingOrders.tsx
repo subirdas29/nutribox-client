@@ -3,20 +3,22 @@
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash, Eye } from "lucide-react";
+import { Edit, 
+  // Trash,
+   Eye } from "lucide-react";
 import Image from "next/image";
 
-import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
+// import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
-import { IFlatOrder } from "@/types/order";
+
 
 import dayjs from "dayjs";
 import { IMeta } from "@/types/meta";
 import TablePagination from "@/components/ui/core/NBTable/TablePagination";
 
-import { useOrderDelete } from "@/hooks/DeleteHandler";
+// import { useOrderDelete } from "@/hooks/DeleteHandler";
 import { useStatusColor } from "@/hooks/StatusColor";
 import { IOrderCartMeal } from "@/types/cart";
 
@@ -24,30 +26,34 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
 
 
 
-  const {isModalOpen,
-    selectedItem,
-    setModalOpen,
-    handleDelete,handleDeleteConfirm} = useOrderDelete()
+  // const {isModalOpen,
+  //   selectedItem,
+  //   setModalOpen,
+  //   // handleDelete,
+  //   handleDeleteConfirm} = useOrderDelete()
 
   const {getStatusColor}= useStatusColor()
 
-  const pendingOrders = myorders?.filter((pending)=>pending.selectedMeals[0].status==="Pending")
+  const pendingOrders = orders?.filter((pending)=>pending.selectedMeals[0].status==="Pending")
+
+
 
   const router = useRouter();
 
 
-  const columns: ColumnDef<IFlatOrder>[] = [
+  const columns: ColumnDef<IOrderCartMeal>[] = [
    {
   accessorKey: "imageUrls",
   header: "Image",
   cell: ({ row }) => {
+  
     const profileImage = row.original?.customerId?.profileImage?.[0] 
       || "https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
 
     return (
       <Image
         src={profileImage}
-        alt={row.original?.customerId?.name || "User"}
+        alt={row.original?.selectedMeals[0].customerId?.name || "User"}
         width={50}
         height={50}
         className="w-12 h-12 rounded object-cover"
@@ -66,14 +72,14 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
       accessorKey: "name",
       header: "Meal Name",
       cell: ({ row }) => 
-        <span className="font-medium">{row.original.mealName}</span>
+        <span className="font-medium">{row.original.selectedMeals[0].mealName}</span>
      
     },
     {
       accessorKey: "category",
       header: "Category",
       cell: ({ row }) => 
-      <span>{row.original.category}</span>,
+        <span>{row.original.selectedMeals[0].category}</span>,
     },
     {
          accessorKey: "deliveryDate", // Ensure the key matches your data
@@ -91,7 +97,7 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
       header: "Status",
       cell: ({ row }) => {
         // Get the status value from the row
-        const status = row.original.status ?? "unknown";
+        const status = row.original.selectedMeals[0].status ?? "unknown";
     
     
         return (
@@ -105,7 +111,7 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
     {
       accessorKey: "price",
       header: "Price (BDT)",
-      cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.totalPrice.toFixed(2)))}</span>,
+      cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.selectedMeals[0].orderPrice.toFixed(2)))}</span>,
     },
     
     {
@@ -117,8 +123,7 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
           <button className="text-green-500 cursor-pointer" title="View Details"
           onClick={() =>
             router.push(
-              `/orderdetails/${row.original._id}`
-            )
+              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals[0]._id}`)
           }
           >
             <Eye className="w-5 h-5" />
@@ -129,23 +134,22 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
             title="Edit"
             onClick={() =>
               router.push(
-                `/orderdetails/${row.original._id}`
-              )
+                `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals[0]._id}`)
             }
           >
             <Edit className="w-5 h-5" />
           </button>
 
-         <button
+         {/* <button
   className={`text-red-500 cursor-pointer ${
-    row.original.status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
+    row.original.selectedMeals[0].status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
   }`}
   title="Delete"
   onClick={() => handleDelete(row.original)}
-  disabled={row.original.status === "Cancelled"}
+  disabled={row.original.selectedMeals[0].status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
-</button>
+</button> */}
 
         </div>
       ),
@@ -159,12 +163,12 @@ const PendingOrdersOfMealProvider = ({ orders,meta}:{orders:IOrderCartMeal[],met
       <NBTable columns={columns} data={Array.isArray(pendingOrders) ? pendingOrders : []} />
     <TablePagination totalPage={meta?.totalPage}/>
       </div>
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         name={selectedItem}
         isOpen={isModalOpen}
         onOpenChange={setModalOpen}
         onConfirm={handleDeleteConfirm}
-      />
+      /> */}
     </div>
   );
 };

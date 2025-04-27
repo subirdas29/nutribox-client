@@ -3,10 +3,12 @@
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash, Eye } from "lucide-react";
+import { Edit, 
+  // Trash,
+   Eye } from "lucide-react";
 import Image from "next/image";
 
-import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
+// import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
@@ -17,17 +19,17 @@ import TablePagination from "@/components/ui/core/NBTable/TablePagination";
 import { IMeta } from "@/types/meta";
 import { useAllOrderMeals } from "../AllOrderMealsContext";
 import { IFlatOrder } from "@/types/order";
-import { useOrderDelete } from "@/hooks/DeleteHandler";
+// import { useOrderDelete } from "@/hooks/DeleteHandler";
 import { useStatusColor } from "@/hooks/StatusColor";
 
 const PendingOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
 
   const myorders = useAllOrderMeals()
 
-  const {isModalOpen,
-    selectedItem,
-    setModalOpen,
-    handleDelete,handleDeleteConfirm} = useOrderDelete()
+  // const {isModalOpen,
+  //   selectedItem,
+  //   setModalOpen,
+  //   handleDelete,handleDeleteConfirm} = useOrderDelete()
 
   const {getStatusColor}= useStatusColor()
 
@@ -114,8 +116,7 @@ const PendingOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
           <button className="text-green-500 cursor-pointer" title="View Details"
           onClick={() =>
             router.push(
-              `/orderdetails/${row.original._id}`
-            )
+              `/orderdetails/${row.original.orderId}/meal/${row.original._id}`)
           }
           >
             <Eye className="w-5 h-5" />
@@ -126,14 +127,13 @@ const PendingOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
             title="Edit"
             onClick={() =>
               router.push(
-                `/orderdetails/${row.original._id}`
-              )
+                `/orderdetails/${row.original.orderId}/meal/${row.original._id}`)
             }
           >
             <Edit className="w-5 h-5" />
           </button>
 
-         <button
+         {/* <button
   className={`text-red-500 cursor-pointer ${
     row.original.status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
   }`}
@@ -142,7 +142,7 @@ const PendingOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
   disabled={row.original.status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
-</button>
+</button> */}
 
         </div>
       ),
@@ -156,12 +156,12 @@ const PendingOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
       <NBTable columns={columns} data={Array.isArray(pendingOrders) ? pendingOrders : []} />
       <TablePagination totalPage={meta?.totalPage } />
       </div>
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         name={selectedItem}
         isOpen={isModalOpen}
         onOpenChange={setModalOpen}
         onConfirm={handleDeleteConfirm}
-      />
+      /> */}
     </div>
   );
 };

@@ -3,8 +3,8 @@
 
 
 
-import { IOrderCartMeal, IOrderCartMealView } from "@/types/cart";
-import { IFlatOrder } from "@/types/order";
+import { IOrderCartMeal} from "@/types/cart";
+
 
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";

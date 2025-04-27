@@ -137,7 +137,7 @@ const ingredients = Array.isArray(meal?.ingredients)
             name="dietaryPreferences"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mt-4 text-primary text-md">DietaryPreferences</FormLabel>
+                <FormLabel className="mt-4 text-primary text-md">DietaryPreferences (comma separated)</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>

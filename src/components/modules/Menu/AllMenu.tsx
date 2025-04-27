@@ -426,11 +426,15 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredMeals?.map((meal) => (
                 <Card key={meal._id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className='flex justify-between'>
-                    <CardTitle>{meal.name}</CardTitle>
+                  <div className='flex justify-between px-6'>
+                    
+                    <div className='font-bold'>{meal.name}</div>
+                    
+                    <div>
                     <ShoppingCart
                      onClick={()=>handleAddMeal(meal)}
                       />
+                    </div>
 {/* 
                       {
                         isModalOpen && selectedMeal && (
@@ -438,7 +442,7 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
                         )
                       } */}
                     {/* <p className="text-sm text-gray-500">{meal.mealProvider}</p> */}
-                  </CardHeader>
+                  </div>
                   <CardContent>
                     <div className="relative h-48 mb-4">
                       <Image

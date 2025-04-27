@@ -3,10 +3,12 @@
 import { NBTable } from "@/components/ui/core/NBTable";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash, Eye } from "lucide-react";
+import { Edit,
+  //  Trash,
+   Eye } from "lucide-react";
 import Image from "next/image";
 
-import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
+// import DeleteConfirmationModal from "@/components/ui/core/NBModal/DeleteConfirmationModal";
 import { useRouter } from "next/navigation";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 
@@ -19,7 +21,7 @@ import { IMeta } from "@/types/meta";
 import { IFlatOrder } from "@/types/order";
 import { useAllOrderMeals } from "../AllOrderMealsContext";
 import { useStatusColor } from "@/hooks/StatusColor";
-import { useOrderDelete } from "@/hooks/DeleteHandler";
+// import { useOrderDelete } from "@/hooks/DeleteHandler";
 
 
 const CancelledOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
@@ -30,10 +32,10 @@ const CancelledOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
   const cancelledOrders = myorders?.filter((ongoing)=>ongoing.status==="Cancelled")
  
 
-  const {isModalOpen,
-    selectedItem,
-    setModalOpen,
-    handleDelete,handleDeleteConfirm} = useOrderDelete()
+  // const {isModalOpen,
+  //   selectedItem,
+  //   setModalOpen,
+  //   handleDelete,handleDeleteConfirm} = useOrderDelete()
 
   const {getStatusColor}= useStatusColor()
 
@@ -113,9 +115,8 @@ const CancelledOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
         <div className="flex space-x-3 ">
           <button className="text-green-500 cursor-pointer" title="View Details"
           onClick={() =>
-            router.push(
-              `/orderdetails/${row.original._id}`
-            )
+              router.push(
+              `/orderdetails/${row.original.orderId}/meal/${row.original._id}`)
           }
           >
             <Eye className="w-5 h-5" />
@@ -126,14 +127,13 @@ const CancelledOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
             title="Edit"
             onClick={() =>
               router.push(
-                `/orderdetails/${row.original._id}`
-              )
+                `/orderdetails/${row.original.orderId}/meal/${row.original._id}`)
             }
           >
             <Edit className="w-5 h-5" />
           </button>
 
-         <button
+         {/* <button
   className={`text-red-500 cursor-pointer ${
     row.original.status === "Cancelled" ? "opacity-50 cursor-not-allowed" : ""
   }`}
@@ -142,7 +142,7 @@ const CancelledOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
   disabled={row.original.status === "Cancelled"}
 >
   <Trash className="w-5 h-5" />
-</button>
+</button> */}
 
         </div>
       ),
@@ -156,12 +156,12 @@ const CancelledOrdersOfCustomer = ({ meta}:{meta:IMeta}) => {
       <NBTable columns={columns} data={Array.isArray(cancelledOrders) ? cancelledOrders : []} />
       <TablePagination totalPage={meta?.totalPage } />
       </div>
-      <DeleteConfirmationModal
+      {/* <DeleteConfirmationModal
         name={selectedItem}
         isOpen={isModalOpen}
         onOpenChange={setModalOpen}
         onConfirm={handleDeleteConfirm}
-      />
+      /> */}
     </div>
   );
 };

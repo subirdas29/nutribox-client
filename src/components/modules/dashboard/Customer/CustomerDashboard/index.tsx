@@ -30,7 +30,7 @@ export default function CustomerDashboard() {
 const allOrderMeals = useAllOrderMeals()
 
 const {getStatusColor} = useStatusColor()
-console.log(allOrderMeals,'context data')
+
 
   const router = useRouter();
 
@@ -116,9 +116,9 @@ console.log(allOrderMeals,'context data')
            header: "Actions",
            cell: ({ row }) => 
           {
-           
             const orderId = row.original.orderId
             const orderMealId = row.original._id
+            console.log(orderMealId,'allcheck data')
              return (
               <div className="flex space-x-3 ">
                 <button className="text-green-500 cursor-pointer" title="View Details"

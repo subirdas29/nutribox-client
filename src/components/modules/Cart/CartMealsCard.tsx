@@ -76,11 +76,11 @@ export default function CartMealsCard() {
 
    
            const res = await createOrder(finalOrder);
-          console.log(res)
+       
 
       if (res.success) {
         toast.success(res.message);
-                console.log(res.data,'order')
+                
                 // router.push(`/orderdetails/${res.data._id}`);
                 if(res.data){
                   setTimeout(()=>{

@@ -6,14 +6,9 @@ import { getSingleMealOrder } from "@/services/Order"
 
 
 const MealDetailPage= async({params}:{params:Promise<{orderdetailsId:string,mealdetailsId:string}>}) => {
-    
-
     const {orderdetailsId,mealdetailsId} = await params
-
-   
     const {data} = await getSingleMealOrder(orderdetailsId,mealdetailsId)
-
-    console.log(data,'check')
+ 
    
   return (
     <div>

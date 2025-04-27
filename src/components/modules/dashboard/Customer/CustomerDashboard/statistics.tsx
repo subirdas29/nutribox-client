@@ -63,7 +63,7 @@ const StatisticsCustomer = ({myOrders}:{myOrders:IFlatOrder[]}) => {
         uniqueMealsSet.add(meal._id)
       }
     });
-    console.log(uniqueMealsSet)
+
     
     const uniqueMealsCount = uniqueMealsSet.size;
   return (

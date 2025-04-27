@@ -1,6 +1,7 @@
-import CustomerProfile from "@/components/modules/Customer/Profile"
 
 
+
+import CustomerProfile from "@/components/modules/dashboard/Customer/Profile"
 import { getMe } from "@/services/User"
 
 

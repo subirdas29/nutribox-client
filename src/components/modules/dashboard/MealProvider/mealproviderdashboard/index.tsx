@@ -15,25 +15,26 @@ import { NBTable } from "@/components/ui/core/NBTable";
 import { StatisticsProvider } from "./statistics";
 
 import { useStatusColor } from "@/hooks/StatusColor";
-import { IOrderCartMealViewForProvider } from "@/types/cart";
+import { IOrderCartMeal, } from "@/types/cart";
 
 
 
 
-export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartMealViewForProvider[]}) {
+export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartMeal[]}) {
 
+  console.log(allOrders)
     const router = useRouter();
 
     const {getStatusColor} = useStatusColor()
 
   
-  const columns: ColumnDef<IOrderCartMealViewForProvider>[] = [
+  const columns: ColumnDef<IOrderCartMeal>[] = [
     {
    accessorKey: "imageUrls",
    header: "Image",
    cell: ({ row }) => {
-    const meal = row.original.selectedMeals.mealId
-     const profileImage = typeof meal==='object' && meal?.imageUrls?.[0] ? meal?.imageUrls[0]:"https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
+    const meal = row.original.selectedMeals[0].mealId
+     const profileImage = typeof meal==='object' && meal?.imageUrls ? meal?.imageUrls[0]:"https://res.cloudinary.com/dsgnwjmlv/image/upload/v1741199867/male-avatar-maker-2a7919_1_ifuzwo.webp";
  
      return (
        <Image
@@ -50,14 +51,14 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
   accessorKey: "orderId",
   header: "Order Id",
   cell: ({ row }) => 
-    <span className="font-medium">{row.original?.selectedMeals._id}</span>
+    <span className="font-medium">{row.original?.selectedMeals[0]._id}</span>
  
 },
      {
        accessorKey: "mealname",
        header: "Meal Name",
        cell: ({ row }) => 
-         <span className="font-medium">{row.original?.selectedMeals.mealName}</span>
+         <span className="font-medium">{row.original?.selectedMeals[0].mealName}</span>
       
      },
   
@@ -65,7 +66,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
        accessorKey: "quantity",
        header: "Order Quantity",
        cell: ({ row }) => 
-       <span>{row.original.selectedMeals.quantity}</span>,
+       <span>{row.original.selectedMeals[0].quantity}</span>,
      },
      {
           accessorKey: "deliveryDate", // Ensure the key matches your data
@@ -83,7 +84,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
        header: "Status",
        cell: ({ row }) => {
          // Get the status value from the row
-         const status = row.original.selectedMeals.status ?? "unknown";
+         const status = row.original.selectedMeals[0].status ?? "unknown";
      
          
     
@@ -98,7 +99,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
      {
        accessorKey: "price",
        header: "Price (BDT)",
-       cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.selectedMeals.orderPrice.toFixed(2)))}</span>,
+       cell: ({ row }) => <span>{currencyFormatter(parseFloat(row.original.selectedMeals[0].orderPrice.toFixed(2)))}</span>,
      },
      
      {
@@ -110,7 +111,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
            <button className="text-green-500 cursor-pointer" title="View Details"
            onClick={() =>
             router.push(
-              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals._id}`)
+              `/orderdetails/${row.original._id}/meal/${row.original.selectedMeals[0]._id}`)
            }
            >
              <Eye className="w-5 h-5" />
