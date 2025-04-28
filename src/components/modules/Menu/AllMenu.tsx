@@ -21,6 +21,7 @@ import { useAppDispatch} from '@/redux/hook';
 import { toast } from 'sonner';
 import TablePagination from '@/components/ui/core/NBTable/TablePagination';
 import { IMeta } from '@/types/meta';
+import FilterSidebar from './FilterSidebar';
 // import { useAppDispatch } from '@/redux/hook';
 // import { addMeal } from '@/redux/features/cartSlice';
 
@@ -121,6 +122,7 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
      
       <main className="mx-12 md:mx-16 lg:mx-20 px-4 py-8">
         <div className="lg:hidden mb-4">
+        <FilterSidebar/>
           <Button 
             variant="outline" 
             className="w-full"

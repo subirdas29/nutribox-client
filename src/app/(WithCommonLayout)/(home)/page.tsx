@@ -1,4 +1,5 @@
 "use client";
+
 import { useUser } from "@/context/UserContext";
 
 import { HeroBanner } from "@/components/modules/home/Banner/banner";

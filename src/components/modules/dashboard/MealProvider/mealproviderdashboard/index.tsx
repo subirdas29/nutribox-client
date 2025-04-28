@@ -134,7 +134,7 @@ export default function MealProviderDashboard({allOrders}:{allOrders:IOrderCartM
     <div className="overflow-x-auto p-6">
 <h1 className="text-center text-2xl font-bold mt-10 mb-4">All Meals</h1>
 <NBTable columns={columns} data={Array.isArray(allOrders) ? allOrders.slice(0, 6) : []} />
-  <div className="flex justify-center mt-4">
+  <div className="flex justify-center mt-4 cursor-pointer">
   <Link href="/mealprovider/meals/allmeals">
   <Button>All Meals</Button>
   </Link>

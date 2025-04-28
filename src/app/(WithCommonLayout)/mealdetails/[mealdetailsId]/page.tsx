@@ -1,6 +1,16 @@
 
 import RecipePage from "@/components/modules/MealDetails/RecipePage"
-import { getSingleMeal } from "@/services/Meals"
+import { getAllMeals, getSingleMeal } from "@/services/Meals"
+import { TMealsForm } from "@/types/meals"
+
+export const generateStaticParams = async()=>{
+  
+  const {data} = await getAllMeals()
+  
+  return data.slice(0,6).map((meal:TMealsForm)=>({
+    mealdetailsId:meal._id
+  }))
+}
 
 
 

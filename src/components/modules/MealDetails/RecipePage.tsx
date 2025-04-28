@@ -362,10 +362,11 @@ export default function RecipePage({meal}:{meal:TMealsForm }) {
             </Card>
 
             {/* Order Button */}
+            <Link href={`/ordermeal/${_id}`}>
             <Button className="w-full h-14 text-lg font-bold gap-2 hover:shadow-lg transition-shadow cursor-pointer">
               <Utensils className="w-5 h-5" />
-              <Link href={`/ordermeal/${_id}`}>Customize & Order Now</Link>
-            </Button>
+            Customize & Order Now
+            </Button></Link>
 
             <Card className="border-primary/20 block lg:hidden">
               <CardHeader className="bg-primary/5">
