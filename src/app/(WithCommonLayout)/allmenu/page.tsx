@@ -1,10 +1,16 @@
-import AllMenu from '@/components/modules/Menu/AllMenu'
+import AllMenu from '@/components/modules/AllMenu'
 import { getAllMeals } from '@/services/Meals'
 import React from 'react'
 
-const AllMenuPage = async({searchParams}:{searchParams:Promise<{page:string}>}) => {
-  const {page} = await searchParams
-  const {data, meta } = await getAllMeals(page,'6')
+type TSearchParams = 
+  Promise<{
+    page:string, [key:string]:string | string[] | undefined}>
+  
+
+
+const AllMenuPage = async({searchParams}:{searchParams:TSearchParams}) => {
+  const query = await searchParams
+  const {data, meta } = await getAllMeals(query.page,'6',query)
 
 
 

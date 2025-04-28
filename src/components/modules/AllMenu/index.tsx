@@ -122,7 +122,7 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
      
       <main className="mx-12 md:mx-16 lg:mx-20 px-4 py-8">
         <div className="lg:hidden mb-4">
-        <FilterSidebar/>
+      
           <Button 
             variant="outline" 
             className="w-full"
@@ -141,9 +141,9 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
                 <CardTitle className='font-bold text-xl'>Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-
+              <FilterSidebar/>
                  {/* cuisine */}
-                 <div>
+                 {/* <div>
                   <label className="block text-lg font-semibold mb-2 ">Meal Name</label>
                   <div className="space-y-2">
                     {name?.map((pref) => (
@@ -171,7 +171,7 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
                       </div>
                     ))}
                   </div>
-                </div>
+                </div> */}
                 {/* ProviderName */}
                  <div>
                   <label className="block text-lg font-semibold mb-2 ">Meal Provider Name</label>
