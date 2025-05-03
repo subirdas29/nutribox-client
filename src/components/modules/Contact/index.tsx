@@ -1,50 +1,126 @@
-// pages/contact.js
-import Head from 'next/head';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { createContacts } from "@/services/Contact";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import Head from "next/head";
+
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { contactSchema } from "./contactValidation";
+// import { IContact } from "@/types/contact";
 
 export default function ContactUs() {
+  const form = useForm(
+    {
+      resolver: zodResolver(contactSchema),
+    }
+  )
+   
+  const {
+    formState: { isSubmitting },
+  } = form;
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log(data)
+    try {
+      const res = await createContacts(data);
+      console.log(res)
+      if (res?.success) {
+        toast.success(res?.message);
+        form.reset()
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-green-50 flex flex-col items-center justify-center p-4">
       <Head>
         <title>Contact Us</title>
-        <meta name="description" content="Contact us for any queries or support." />
+        <meta
+          name="description"
+          content="Contact us for any queries or support."
+        />
       </Head>
 
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h1 className="text-3xl font-bold text-green-700 mb-6 text-center">Contact Us</h1>
-        <form className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-green-700">Name</label>
-            <input
-              type="text"
-              className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-              placeholder="Your Name"
+        <h1 className="text-3xl font-bold text-green-700 mb-6 text-center">
+          Contact Us
+        </h1>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-md">Name</FormLabel>
+                  <FormControl>
+                    <Input type="name" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-green-700">Email</label>
-            <input
-              type="email"
-              className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-              placeholder="Your Email"
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-md mt-4">Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" {...field} value={field.value || ""} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-green-700">Message</label>
-            <textarea
-              rows={4}
-              className="mt-1 block w-full px-3 py-2 border border-green-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-              placeholder="Your Message"
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-md mt-4">Message</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Write A Message"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-          <div>
-            <button
+            <Button
               type="submit"
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+              className="mt-5 w-full bg-primary hover:bg-primary-dark text-white py-2 rounded-md"
             >
-              Send Message
-            </button>
-          </div>
-        </form>
+              {isSubmitting ? (
+                <Loader2 className="animate-spin h-5 w-5 mx-auto" />
+              ) : (
+                "Send Message"
+              )}
+            </Button>
+          </form>
+
+         
+        </Form>
       </div>
     </div>
   );

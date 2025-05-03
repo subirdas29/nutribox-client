@@ -110,7 +110,7 @@ export default function LoginForm() {
           <h1 className="text-2xl font-semibold text-gray-900">Login</h1>
           <p className="text-sm text-gray-600">Welcome Back!</p>
         </div>
-        <div className="flex justify-center my-6 px-4 gap-2">
+        <div className="flex flex-col lg:flex-row justify-center my-6 px-4 gap-2">
           <Button onClick={()=>setCredentials(defaultLoginUser)}>
             User Credentials
           </Button>

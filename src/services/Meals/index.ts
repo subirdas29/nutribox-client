@@ -9,7 +9,7 @@ import { cookies } from "next/headers";
 
 export const createMeals = async (meals: TMealsForm) => {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/providers/menu`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/allmeals/menu`, {
       method: "POST",
       headers: {
         Authorization: (await cookies()).get("accessToken")!.value,
@@ -29,7 +29,7 @@ export const createMeals = async (meals: TMealsForm) => {
 export const getSingleMeal = async (mealId: string) => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals/${mealId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/allmeals/meals/${mealId}`,
       {
         next: {
           tags: ["Meals"],
@@ -51,7 +51,7 @@ export const updateMeal = async (
 ): Promise<any> => {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals/update/${mealId}`,
+      `${process.env.NEXT_PUBLIC_BASE_API}/allmeals/meals/update/${mealId}`,
       {
         method: "PATCH",
       
@@ -74,7 +74,7 @@ export const updateMeal = async (
 export const getAllProviderMeals = async (page?: string,limit?:string) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_API}/providers/meals/mymeals?limit=${limit}&page=${page}`,
+        `${process.env.NEXT_PUBLIC_BASE_API}/allmeals/meals/mymeals?limit=${limit}&page=${page}`,
         {
           headers: {
             Authorization: (await cookies()).get("accessToken")!.value,
@@ -97,7 +97,14 @@ export const getAllProviderMeals = async (page?: string,limit?:string) => {
 export const getAllMeals = async (page?: string,limit?:string, query?:{[key:string]:string | string[] | undefined}) => {
   try {
     
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/allmeals/meals?limit=${limit}&page=${page}`,
+    const params = new URLSearchParams();
+
+    if(query?.price){
+      params.append("minPrice","0")
+      params.append("maxPrice",query?.price.toString())
+    }
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/allmeals/meals?limit=${limit}&page=${page}&${params}`,
       {
         next: { tags: ["Meals"] },
       }

@@ -17,7 +17,7 @@ export default function MealPicker() {
           Pick Your Meal
         </h1>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 transition-colors cursor-pointer ">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 transition-colors ">
           {/* Image with Hover Effect */}
           <div className="relative group">
             <Image

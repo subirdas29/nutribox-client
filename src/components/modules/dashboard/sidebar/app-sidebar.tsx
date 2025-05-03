@@ -97,18 +97,24 @@ export function AppSidebar({ userData,...props }: {userData:IUser} & React.Compo
   const navItems =
     user?.role === "mealprovider" ? data.mealProviderNav : data.customerNav;
 
+  
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton>
               <Link href="/">
                 <div className="flex items-center justify-center gap-2">
-                <Image src={logo} alt="logo" className="h-8 w-8" />
-           
-       
-                  <h2 className="font-bold text-2xl">NutriBox</h2>
+               <SidebarMenuButton >
+               <Image src={logo} alt="logo" className=" h-8 w-8" />
+               </SidebarMenuButton>
+             
+               
+                
+                <h2  className="font-bold text-2xl">NutriBox</h2>
+  
                   </div>
               </Link>
             </SidebarMenuButton>

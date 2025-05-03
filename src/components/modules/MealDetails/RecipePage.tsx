@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import { useState } from "react";
-import { Clock, Utensils, Flame, ChefHat, Star, Leaf, Droplet, Wheat, Beef, Salad } from "lucide-react";
+import { Clock, Utensils, Flame, ChefHat, Star, Leaf, Droplet, Wheat, Beef, Salad, CircleCheckBig } from "lucide-react";
 import { TMealsForm } from "@/types/meals";
 import { currencyFormatter } from "@/lib/currencyFormatter";
 import Link from "next/link";
@@ -19,8 +19,12 @@ interface Review {
   date: string;
 }
 
+
+
 export default function RecipePage({meal}:{meal:TMealsForm }) {
 
+  
+  const [follow, setFollow] = useState(false)
 
   const {category,description,dietaryPreferences,imageUrls,ingredients,mealProvider,name,price,_id,portionSize} = meal
  
@@ -293,8 +297,13 @@ export default function RecipePage({meal}:{meal:TMealsForm }) {
                     </div>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full gap-2 cursor-pointer">
-                  <span>👩🍳 Follow Chef</span>
+                <Button onClick={()=>setFollow(!follow)} variant="outline" className="w-full gap-2 cursor-pointer">
+
+                      {
+                        follow ? <div className='flex items-center gap-1'>
+                         <CircleCheckBig size={48} strokeWidth={3} className="text-primary"/> <span> Following Chef</span>
+                        </div> : <span>👩🍳 Follow Chef</span>
+                      }  
                 </Button>
               </CardContent>
             </Card>

@@ -21,7 +21,8 @@ import { useAppDispatch} from '@/redux/hook';
 import { toast } from 'sonner';
 import TablePagination from '@/components/ui/core/NBTable/TablePagination';
 import { IMeta } from '@/types/meta';
-import FilterSidebar from './FilterSidebar';
+import noData from '../../../assets/no-data/no-data.png'
+// import FilterSidebar from './FilterSidebar';
 // import { useAppDispatch } from '@/redux/hook';
 // import { addMeal } from '@/redux/features/cartSlice';
 
@@ -117,6 +118,9 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
 
   const filteredMeals = menu?.filter(applyFilters);
 
+  
+  console.log(filteredMeals,'check')
+
   return (
     <div className="min-h-screen bg-gray-50">
      
@@ -141,9 +145,9 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
                 <CardTitle className='font-bold text-xl'>Filters</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-              <FilterSidebar/>
+              {/* <FilterSidebar/> */}
                  {/* cuisine */}
-                 {/* <div>
+                 <div>
                   <label className="block text-lg font-semibold mb-2 ">Meal Name</label>
                   <div className="space-y-2">
                     {name?.map((pref) => (
@@ -171,7 +175,7 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
                       </div>
                     ))}
                   </div>
-                </div> */}
+                </div>
                 {/* ProviderName */}
                  <div>
                   <label className="block text-lg font-semibold mb-2 ">Meal Provider Name</label>
@@ -426,7 +430,18 @@ export default function AllMenu({menu,meta}:{menu:Meal[],meta:IMeta}) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredMeals?.map((meal) => (
+              { filteredMeals.length === 0 ? 
+                
+                   <div className="flex flex-col items-center justify-center p-6 text-center text-gray-600 ">
+                 <Image src={noData} alt="No data" width={300} height={200} />
+                 <h2 className="text-xl font-semibold mt-4">No results found</h2>
+                 <p className="mt-2 text-sm">
+                   Try adjusting your filters or searching with different keywords.
+                 </p>
+               </div>
+               :
+              
+              filteredMeals?.map((meal) => (
                 <Card key={meal._id} className="hover:shadow-lg transition-shadow">
                   <div className='flex justify-between px-6'>
                     

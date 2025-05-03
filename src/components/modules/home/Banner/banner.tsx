@@ -5,6 +5,7 @@ import banner from '../../../../assets/banner/banner.jpg';
 import img1 from '../../../../assets/banner/allimage/joseph-gonzalez-zcUgjyqEwe8-unsplash.jpg';
 import img2 from '../../../../assets/banner/allimage/lily-banse--YHSwy6uqvk-unsplash.jpg';
 import img3 from '../../../../assets/banner/allimage/rachel-park-hrlvr2ZlUNk-unsplash.jpg';
+import Link from "next/link";
 
 export function HeroBanner() {
   return (
@@ -47,22 +48,24 @@ export function HeroBanner() {
             Chef-prepared meals designed for your lifestyle.
           </p>
           
-          <Button size="lg" className="text-lg px-8 h-14 gap-2 bg-primary hover:bg-primary-dark transition duration-300 ease-in-out">
+         <Link href="/allmenu">
+         <Button size="lg" className="text-lg px-8 h-14 gap-2 bg-primary hover:bg-primary-dark transition duration-300 ease-in-out cursor-pointer">
             <Salad className="h-6 w-6" />
             Get Started
           </Button>
+         </Link>
 
           {/* Stats */}
-          <div className="flex flex-wrap gap-6 pt-6 justify-center">
-            <div className="flex items-center gap-2 mx-auto text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
+          <div className="flex flex-col lg:flex-row gap-6 pt-6 justify-center">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
               <Clock className="h-6 w-6" />
               <span className="font-medium">Ready in Minutes</span>
             </div>
-            <div className="flex items-center gap-2 mx-auto text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
               <HeartHandshake className="h-6 w-6" />
               <span className="font-medium">100% Satisfaction</span>
             </div>
-            <div className="flex items-center gap-2 mx-auto text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-lg font-semibold text-primary hover:text-primary-dark transition duration-300">
               <Bike className="h-6 w-6" />
               <span className="font-medium">Free Delivery</span>
             </div>
