@@ -18,7 +18,7 @@ export const middleware = async(request:NextRequest)=>{
             return NextResponse.next()
         }
         else{
-            return NextResponse.redirect(new URL(`http://localhost:3000/login?redirectPath=${pathname}`,request.url))
+            return NextResponse.redirect(new URL(`https://nutribox-client.vercel.app/login?redirectPath=${pathname}`,request.url))
         }
     }
     if(userInfo?.role && roleBasedPrivateRoutes[userInfo?.role as Role]){
